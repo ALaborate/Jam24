@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2024-01-20T20:08:49.435Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.5.0 Chrome/112.0.5615.204 Electron/24.5.1 Safari/537.36" etag="NuRXGPAZRkRLdloqtsRQ" version="21.5.0" type="device">
+<mxfile host="Electron" modified="2024-01-20T20:11:51.955Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.5.0 Chrome/112.0.5615.204 Electron/24.5.1 Safari/537.36" etag="XfuqaoLK4PTUq4X_BVx7" version="21.5.0" type="device">
   <diagram name="Page-1" id="KfN3-ES_ZNWc4N_3WJaF">
     <mxGraphModel dx="2922" dy="1833" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -167,7 +167,7 @@
         <mxCell id="_0yapwOF6thnZx6yAsIb-53" value="Локальні меми" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="60" y="-270" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="_0yapwOF6thnZx6yAsIb-55" value="2 помічники 4 з яких уже 2й тиждень лежать в кабміні" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="_0yapwOF6thnZx6yAsIb-55" value="2 помічники 4 з яких уже місяць лежать в кабміні" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="190" y="-480" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="_0yapwOF6thnZx6yAsIb-56" value="2-3 тижні, максимум 5" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
