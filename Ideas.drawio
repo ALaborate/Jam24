@@ -1,0 +1,206 @@
+<mxfile host="Electron" modified="2024-01-20T19:49:48.188Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.5.0 Chrome/112.0.5615.204 Electron/24.5.1 Safari/537.36" etag="CNSpqL6oEVPtE251aDR2" version="21.5.0" type="device">
+  <diagram name="Page-1" id="KfN3-ES_ZNWc4N_3WJaF">
+    <mxGraphModel dx="3506" dy="2169" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_0yapwOF6thnZx6yAsIb-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-2" target="_0yapwOF6thnZx6yAsIb-9">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="-49.99999999999994" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-2" value="Лоскотання" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="10" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-4" value="Звук сміху" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="940" y="130" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-7" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-5" target="_0yapwOF6thnZx6yAsIb-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-5" value="Мене це кого?" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="240" width="120" height="80" as="geometry" />
+        </mxCell>
+        <UserObject label="Гру зі смішним кодом для девелоперів" link="https://www.reddit.com/r/ProgrammerHumor/comments/9axy74/the_wonders_of_c/?rdt=42821" id="_0yapwOF6thnZx6yAsIb-6">
+          <mxCell style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+            <mxGeometry x="30" y="360" width="120" height="60" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-9" value="Мультиплеєр.&amp;nbsp;&lt;br&gt;Лоскотання пером по 10 секунд. Хто більше." style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="-80" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-11" target="_0yapwOF6thnZx6yAsIb-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-11" value="Локація?&lt;br&gt;Сеттинг?" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="280" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-12" value="Циркова арена" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="390" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-14" value="Батут?" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="280" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-15" target="_0yapwOF6thnZx6yAsIb-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-15" value="Хочемо вертикальний вимір геймплею" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="180" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-68" target="_0yapwOF6thnZx6yAsIb-20">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="950" y="-40" as="targetPoint" />
+            <mxPoint x="1040" y="20" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-20" value="Різні кольори" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="-110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-29" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-21" target="_0yapwOF6thnZx6yAsIb-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-21" target="_0yapwOF6thnZx6yAsIb-34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-21" value="Меми" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="-130" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-22" value="Котики" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="400" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-24" target="_0yapwOF6thnZx6yAsIb-48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-24" value="Каннабіс" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="430" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-25" value="Розсміши мене" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="-240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-26" value="Капітошка" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="790" y="90" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-27" target="_0yapwOF6thnZx6yAsIb-36">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-27" value="Чорний гумор?&lt;br&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="-470" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-28" target="_0yapwOF6thnZx6yAsIb-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-28" value="Прихований біль" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="-260" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-30" target="_0yapwOF6thnZx6yAsIb-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-30" value="Серед смішного знайти прихований біль" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="-380" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-32" value="Радянські анекдоти" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="710" y="-380" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-37" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-34" target="_0yapwOF6thnZx6yAsIb-36">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-34" value="Стендапи?" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="710" y="-130" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-36" value="Джордж Карлін" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="870" y="-190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-39" target="_0yapwOF6thnZx6yAsIb-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-42" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-39" target="_0yapwOF6thnZx6yAsIb-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-39" target="_0yapwOF6thnZx6yAsIb-43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-39" value="Що значить розсмішити?" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="-30" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-46" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-41" target="_0yapwOF6thnZx6yAsIb-45">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-41" value="Жарти" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="140" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-43" value="Сміх заражає" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="-20" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-49" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-45" target="_0yapwOF6thnZx6yAsIb-48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-45" value="Жартами можна стріляти" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-48" value="І косяками теж" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="290" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-54" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-21" target="_0yapwOF6thnZx6yAsIb-53">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="129.99999999999977" y="-290" as="targetPoint" />
+            <mxPoint x="510" y="-100" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-53" target="_0yapwOF6thnZx6yAsIb-56">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-53" target="_0yapwOF6thnZx6yAsIb-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-70" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-53" target="_0yapwOF6thnZx6yAsIb-69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-75" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-53" target="_0yapwOF6thnZx6yAsIb-74">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-53" value="Локальні меми" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="-270" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-55" value="2 помічники 4 з яких уже 2й тиждень лежать в кабміні" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="-480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-56" value="2-3 тижні, максимум 5" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="-480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-63" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-61" target="_0yapwOF6thnZx6yAsIb-62">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-61" target="_0yapwOF6thnZx6yAsIb-64">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-72" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-61" target="_0yapwOF6thnZx6yAsIb-71">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-61" value="Використання мікрофона&amp;nbsp;як інпуту" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="-600" width="110" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-62" value="Стріліти на кожне Хахаха" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="-670" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-64" value="Хахаха поповнює патрони" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="-470" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-66" value="Музика" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;size=20;" vertex="1" parent="1">
+          <mxGeometry x="770" y="-540" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-68" value="Хто смішніше обляпав?" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-69" value="Маєм те, що маєм" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-80" y="-480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-71" value="Lol, kek, rofl, lmao" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="555" y="-770" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-74" value="Кожна кафедра має висунути свого члена" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-220" y="-480" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
