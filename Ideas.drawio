@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2024-01-20T19:49:48.188Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.5.0 Chrome/112.0.5615.204 Electron/24.5.1 Safari/537.36" etag="CNSpqL6oEVPtE251aDR2" version="21.5.0" type="device">
+<mxfile host="Electron" modified="2024-01-20T20:08:49.435Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.5.0 Chrome/112.0.5615.204 Electron/24.5.1 Safari/537.36" etag="NuRXGPAZRkRLdloqtsRQ" version="21.5.0" type="device">
   <diagram name="Page-1" id="KfN3-ES_ZNWc4N_3WJaF">
-    <mxGraphModel dx="3506" dy="2169" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="2922" dy="1833" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -77,8 +77,14 @@
         <mxCell id="_0yapwOF6thnZx6yAsIb-25" value="Розсміши мене" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="1">
           <mxGeometry x="280" y="-240" width="120" height="60" as="geometry" />
         </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-79" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-26" target="_0yapwOF6thnZx6yAsIb-78">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-81" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-26" target="_0yapwOF6thnZx6yAsIb-80">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="_0yapwOF6thnZx6yAsIb-26" value="Капітошка" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="790" y="90" width="120" height="60" as="geometry" />
+          <mxGeometry x="1040" y="250" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="_0yapwOF6thnZx6yAsIb-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-27" target="_0yapwOF6thnZx6yAsIb-36">
           <mxGeometry relative="1" as="geometry" />
@@ -199,6 +205,42 @@
         </mxCell>
         <mxCell id="_0yapwOF6thnZx6yAsIb-74" value="Кожна кафедра має висунути свого члена" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="-220" y="-480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-76" value="Гра очами" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="540" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-84" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-78" target="_0yapwOF6thnZx6yAsIb-83">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-86" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-78" target="_0yapwOF6thnZx6yAsIb-85">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-90" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-78" target="_0yapwOF6thnZx6yAsIb-89">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-78" value="Хованки" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-82" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-80" target="_0yapwOF6thnZx6yAsIb-76">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-80" value="Смішна незграбність" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="414" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-83" value="Props hide-and-seek" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="140" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-88" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_0yapwOF6thnZx6yAsIb-85" target="_0yapwOF6thnZx6yAsIb-87">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-85" value="Stealth?" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1470" y="250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-87" value="Crysis&lt;br&gt;Maximum stealth" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1470" y="390" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_0yapwOF6thnZx6yAsIb-89" value="Хованки під травою" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="390" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
