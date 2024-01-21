@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2024-01-21T10:20:28.934Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.5.0 Chrome/112.0.5615.204 Electron/24.5.1 Safari/537.36" etag="_gl1DI9WQT4ITmz1sxv_" version="21.5.0" type="device">
+<mxfile host="Electron" modified="2024-01-21T10:25:08.568Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.5.0 Chrome/112.0.5615.204 Electron/24.5.1 Safari/537.36" etag="ZHVt9doCaDskI-FqTWv7" version="21.5.0" type="device">
   <diagram name="Page-1" id="KfN3-ES_ZNWc4N_3WJaF">
-    <mxGraphModel dx="3326" dy="2065" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="2571" dy="1632" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -309,9 +309,11 @@
         <mxCell id="G07vMpwZUSxwYoVqWoru-7" value="Друга концептуальна проблема полягає в тому, що сміх&amp;nbsp; не має об&#39;єктиної метрики" style="whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
           <mxGeometry x="1355" y="130" width="170" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="G07vMpwZUSxwYoVqWoru-10" value="You laught you loose" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="585" y="-690" width="120" height="60" as="geometry" />
-        </mxCell>
+        <UserObject label="You laught you loose" link="https://www.youtube.com/watch?v=VOGDF9FjCKU" id="G07vMpwZUSxwYoVqWoru-10">
+          <mxCell style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+            <mxGeometry x="585" y="-690" width="120" height="60" as="geometry" />
+          </mxCell>
+        </UserObject>
         <mxCell id="G07vMpwZUSxwYoVqWoru-11" value="Спокій (відсутність сміху) може позначати HP" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="-130" y="250" width="120" height="60" as="geometry" />
         </mxCell>
