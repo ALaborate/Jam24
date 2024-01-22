@@ -2,9 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-using System;
 
-[RequireComponent(typeof(Rigidbody))]
 #if UNITY_WEBGL
 public class NetworkCharacterController : MonoBehaviour
 #else
@@ -31,45 +29,79 @@ public class NetworkCharacterController : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Get the rigidbody component
-        rb = GetComponent<Rigidbody>();
-        col = GetComponentInChildren<CapsuleCollider>();
-        cam = GetComponentInChildren<Camera>();
+        Initialize();
     }
+
+    private void Initialize()
+    {
+        if (col == null)
+        {
+            rb = GetComponent<Rigidbody>();
+            col = GetComponentInChildren<CapsuleCollider>();
+            cam = GetComponentInChildren<Camera>();
+            DisableControlAndCamera();
+        }
+    }
+    private void DisableControlAndCamera()
+    {
+        if (!isLocalPlayer)
+        {
+            Destroy(cam.gameObject);
+            Destroy(rb);
+        }
+    }
+
+    //public override void OnStartClient()
+    //{
+    //    base.OnStartClient();
+    //    Initialize();
+    //}
+
+    //public override void OnStartServer()
+    //{
+    //    base.OnStartServer();
+    //    Initialize();
+    //}
 
 
     private void Update()
     {
-#if !UNITY_WEBGL
-        if (!isLocalPlayer)
-            return; 
-#endif
-
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
-        Vector3 moveDirection = new Vector3(horizontal, 0, vertical);
-        moveDirection = transform.TransformDirection(moveDirection);
-        rb.AddForce(moveDirection * moveSpeed * Time.deltaTime, ForceMode.Acceleration);
-
-
-        
-        isGrounded = Physics.CheckSphere(transform.position + Vector3.down * col.height / 2, groundCheckRadius, groundLayer);
-
-        if (isGrounded && Input.GetKey(KeyCode.Space))
+        if (rb != null)
         {
-            // Add an upward force to the rigidbody to make the character jump
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isGrounded = false;
-        }
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
 
-        var mouseMovement = Input.GetAxis("Mouse X");
-        transform.localRotation *= Quaternion.Euler(0, mouseMovement * (rotationSpeed * Time.deltaTime), 0);
+            Vector3 moveDirection = new Vector3(horizontal, 0, vertical);
+            moveDirection = transform.TransformDirection(moveDirection);
+            rb.AddForce(moveDirection * moveSpeed * Time.deltaTime, ForceMode.Acceleration);
+
+
+            isGrounded = Physics.CheckSphere(transform.position + Vector3.down * col.height / 2, groundCheckRadius, groundLayer);
+
+            if (isGrounded && Input.GetKey(KeyCode.Space))
+            {
+                // Add an upward force to the rigidbody to make the character jump
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                isGrounded = false;
+            }
+
+            var mouseMovement = Input.GetAxis("Mouse X");
+            transform.localRotation *= Quaternion.Euler(0, mouseMovement * (rotationSpeed * Time.deltaTime), 0);
+        }
         //transform.Rotate(mouseMovement * (rotationSpeed * Time.deltaTime) * Vector3.up);
     }
 
     private void LateUpdate()
     {
+        RotateCamera();
+    }
+
+    private void RotateCamera()
+    {
+        if (cam == null)
+        {
+            return;
+        }
         var mouseMovement = Input.GetAxis("Mouse Y");
         var container = cam.transform.parent;
         container.localRotation *= Quaternion.Euler(mouseMovement * (rotationSpeed * Time.deltaTime) * Vector3.left);
