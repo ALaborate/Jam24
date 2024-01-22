@@ -5,7 +5,11 @@ using Mirror;
 using System;
 
 [RequireComponent(typeof(Rigidbody))]
+#if UNITY_WEBGL
+public class NetworkCharacterController : MonoBehaviour
+#else
 public class NetworkCharacterController : NetworkBehaviour
+#endif
 {
     public float moveSpeed = 10f;
     public float jumpForce = 10f;
@@ -29,15 +33,17 @@ public class NetworkCharacterController : NetworkBehaviour
     {
         // Get the rigidbody component
         rb = GetComponent<Rigidbody>();
-        col = GetComponent<CapsuleCollider>();
+        col = GetComponentInChildren<CapsuleCollider>();
         cam = GetComponentInChildren<Camera>();
     }
 
 
     private void Update()
     {
-        //if (!isLocalPlayer)
-        //    return;
+#if !UNITY_WEBGL
+        if (!isLocalPlayer)
+            return; 
+#endif
 
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
