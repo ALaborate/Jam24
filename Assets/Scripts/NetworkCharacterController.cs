@@ -12,12 +12,16 @@ public class NetworkCharacterController : NetworkBehaviour
     public float moveSpeed = 10f;
     public float jumpForce = 10f;
     public float rotationSpeed = 1f;
-    public float groundCheckRadius = 0.3f;
+    public float groundCastDistance = 1.1f;
     public LayerMask groundLayer = Physics.DefaultRaycastLayers;
 
     public float minCamAngle = -30;
     public float maxCamAngle = 60;
     public Vector3 camOffset = new Vector3(1, 0, 0);
+
+    public float maxFloatingForce = 500;
+    public AnimationCurve floatingForceCurve = AnimationCurve.Linear(0.5f, 1, 1.5f, 0);
+
 
 
 
@@ -26,6 +30,7 @@ public class NetworkCharacterController : NetworkBehaviour
     private Rigidbody rb;
     private CapsuleCollider col;
     private Camera cam;
+    private float height;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +43,7 @@ public class NetworkCharacterController : NetworkBehaviour
         {
             rb = GetComponent<Rigidbody>();
             col = GetComponentInChildren<CapsuleCollider>();
+            height = col.center.y + col.height / 2;
             DisableControlAndCamera();
         }
     }
@@ -68,6 +74,11 @@ public class NetworkCharacterController : NetworkBehaviour
     }
 
     private double lastCmdMoveTime = 0;
+    private RaycastHit[] groundHits;
+    /// <summary>
+    /// Distance between the ground and body center (not equal to center of collider)
+    /// </summary>
+    [SerializeField][ReadOnly] private float minGroundDistance = float.MaxValue;
     [Command]
     private void CmdMove(float run, float strafe, bool jump, float targetRotationY)
     {
@@ -77,19 +88,61 @@ public class NetworkCharacterController : NetworkBehaviour
         moveDirection = transform.TransformDirection(moveDirection);
         rb.AddForce(moveDirection * moveSpeed * (float)dt, ForceMode.Acceleration);
 
-        isGrounded = Physics.CheckSphere(transform.position + Vector3.down * col.height / 2, groundCheckRadius, groundLayer);
-        if (isGrounded && jump)
+        isGrounded = minGroundDistance <= 1;
+        if (isGrounded && jump && dt > 0)
         {
             // Add an upward force to the rigidbody to make the character jump
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
         }
 
         transform.rotation = Quaternion.Euler(0, targetRotationY, 0);
     }
 
+    private int mainColliderGroundCollision = 0;
+    private void FixedUpdate()
+    {
+        if (rb != null)
+        {//server
+            const int GROUND_RAY_COUNT = 4;
+            if(groundHits == null) groundHits = new RaycastHit[GROUND_RAY_COUNT];
+
+            minGroundDistance = float.MaxValue;
+            if(mainColliderGroundCollision > 0)
+            {
+                minGroundDistance = col.height / 2 - col.center.y;
+            }
+            for (int i = 0; i < groundHits.Length; i++)
+            {
+                var ray = new Ray(transform.position + Quaternion.Euler(0, i * (360 / groundHits.Length), 0) * Vector3.forward, Vector3.down);
+                var hit = Physics.Raycast(ray, out groundHits[i], groundCastDistance, groundLayer);
+                if(!hit) groundHits[i].distance = float.PositiveInfinity;
+                if (groundHits[i].distance < minGroundDistance)
+                    minGroundDistance = groundHits[i].distance;
+            }
+            var floatingForceValue = floatingForceCurve.Evaluate(minGroundDistance) * maxFloatingForce;
+            rb.AddForce(Vector3.up * floatingForceValue * Time.fixedDeltaTime, ForceMode.Acceleration);
+        }
+    }
+
+    private void OnCollisionEnter (Collision collision)
+    {
+        if (((1 << collision.gameObject.layer) & groundLayer) > 0)
+        {
+            mainColliderGroundCollision++;
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (((1 << collision.gameObject.layer) & groundLayer) > 0 && mainColliderGroundCollision > 0)
+        {
+            mainColliderGroundCollision--;
+        }
+    }
+
     private void LateUpdate()
     {
         RotateCamera();
+
     }
 
     private void RotateCamera()
