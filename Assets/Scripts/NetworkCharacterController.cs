@@ -98,24 +98,24 @@ public class NetworkCharacterController : NetworkBehaviour
         transform.rotation = Quaternion.Euler(0, targetRotationY, 0);
     }
 
-    private int mainColliderGroundCollision = 0;
     private void FixedUpdate()
     {
         if (rb != null)
         {//server
             const int GROUND_RAY_COUNT = 4;
-            if(groundHits == null) groundHits = new RaycastHit[GROUND_RAY_COUNT];
+            if (groundHits == null) groundHits = new RaycastHit[GROUND_RAY_COUNT];
 
             minGroundDistance = float.MaxValue;
-            if(mainColliderGroundCollision > 0)
+            if (groundCollisionHashes.Count > 0)
             {
                 minGroundDistance = col.height / 2 - col.center.y;
             }
             for (int i = 0; i < groundHits.Length; i++)
             {
-                var ray = new Ray(transform.position + Quaternion.Euler(0, i * (360 / groundHits.Length), 0) * Vector3.forward, Vector3.down);
+                var ray = new Ray(transform.position + Quaternion.Euler(0, i * (360 / groundHits.Length), 0) * (Vector3.forward * col.radius * .5f), Vector3.down);
+                Debug.DrawLine(ray.origin, ray.origin + ray.direction * groundCastDistance, Color.green, 0f, true);
                 var hit = Physics.Raycast(ray, out groundHits[i], groundCastDistance, groundLayer);
-                if(!hit) groundHits[i].distance = float.PositiveInfinity;
+                if (!hit) groundHits[i].distance = float.PositiveInfinity;
                 if (groundHits[i].distance < minGroundDistance)
                     minGroundDistance = groundHits[i].distance;
             }
@@ -124,19 +124,30 @@ public class NetworkCharacterController : NetworkBehaviour
         }
     }
 
-    private void OnCollisionEnter (Collision collision)
+    private SortedSet<int> groundCollisionHashes = new();
+    private void OnCollisionEnter(Collision collision)
     {
-        if (((1 << collision.gameObject.layer) & groundLayer) > 0)
+        if (IsColisionWithGround(collision))
         {
-            mainColliderGroundCollision++;
+            groundCollisionHashes.Add(collision.collider.GetInstanceID());
         }
     }
     private void OnCollisionExit(Collision collision)
     {
-        if (((1 << collision.gameObject.layer) & groundLayer) > 0 && mainColliderGroundCollision > 0)
-        {
-            mainColliderGroundCollision--;
-        }
+        groundCollisionHashes.Remove(collision.collider.GetInstanceID());
+    }
+    private bool IsColisionWithGround(Collision collision)
+    {
+        var isGroundLayer = ((1 << collision.gameObject.layer) & groundLayer) > 0;
+        collision.GetHashCode();
+        var averageColinearity = 0f;
+        if (isGroundLayer)
+            for (int i = 0; i < collision.contactCount; i++)
+            {
+                var colinearity = Vector3.Dot(collision.contacts[i].normal, Vector3.up);
+                averageColinearity = (averageColinearity * i + colinearity) / (i + 1);
+            }
+        return averageColinearity > 0.4f;
     }
 
     private void LateUpdate()
@@ -154,10 +165,10 @@ public class NetworkCharacterController : NetworkBehaviour
         var rot = new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X")) * (rotationSpeed * Time.deltaTime);
         var newEuler = container.rotation.eulerAngles + rot;
         newEuler.z = 0;
-        while(newEuler.x > 180)
+        while (newEuler.x > 180)
             newEuler.x -= 360;
         newEuler.x = Mathf.Clamp(newEuler.x, minCamAngle, maxCamAngle);
-        while(newEuler.x < 0)
+        while (newEuler.x < 0)
             newEuler.x += 360;
         container.rotation = Quaternion.Euler(newEuler);
 
