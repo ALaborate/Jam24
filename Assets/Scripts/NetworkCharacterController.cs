@@ -9,7 +9,8 @@ public class NetworkCharacterController : NetworkBehaviour
     public float moveSpeed = 10f;
     public float jumpForce = 10f;
     public float camRotationSpeed = 1f;
-    public float bodyRotationTorque = 11;
+    public Vector3 bodyRotationTorque;
+    
     public float groundCastDistance = 1.1f;
     public LayerMask groundLayer = Physics.DefaultRaycastLayers;
 
@@ -146,8 +147,7 @@ public class NetworkCharacterController : NetworkBehaviour
             
             for (int i = 0; i < 3; i++)
             {
-                if (i != 1) continue;
-                var acc = GetAngularAcceleration(rb.angularVelocity[i] * Mathf.Rad2Deg, transform.rotation.eulerAngles[i], targetRotation[i], bodyRotationTorque, Time.fixedDeltaTime);
+                var acc = GetAngularAcceleration(rb.angularVelocity[i] * Mathf.Rad2Deg, transform.rotation.eulerAngles[i], targetRotation[i], bodyRotationTorque[i], Time.fixedDeltaTime);
                 if(acc == 0f)
                 {
                     Vector3 newAngularVelocity = rb.angularVelocity;
