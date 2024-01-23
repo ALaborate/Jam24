@@ -55,14 +55,40 @@ MonoBehaviour:
   moveSpeed: 324
   jumpForce: 2
   rotationSpeed: 2048
-  groundCheckRadius: 0.3
+  groundCastDistance: 1.5
   groundLayer:
     serializedVersion: 2
     m_Bits: 4294967283
   minCamAngle: -30
   maxCamAngle: 60
   camOffset: {x: 0.5, y: 0, z: 0}
+  maxFloatingForce: 2400
+  floatingForceCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: -3.6519947
+      outSlope: -3.6519947
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.04077667
+    - serializedVersion: 3
+      time: 1.5
+      value: 0
+      inSlope: -1
+      outSlope: -1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   isGrounded: 0
+  minGroundDistance: 3.4028235e+38
 --- !u!54 &3177437201413902892
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -226,9 +252,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 1.6947374
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.15263128, z: 0}
 --- !u!114 &9171733537467070034
 MonoBehaviour:
   m_ObjectHideFlags: 0
