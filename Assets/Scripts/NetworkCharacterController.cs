@@ -21,6 +21,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
     public float maxFloatingForce = 500;
     public AnimationCurve floatingForceCurve = AnimationCurve.Linear(0.5f, 1, 1.5f, 0);
+    public float floatingForceReductionDenominator = 10;
 
 
 
@@ -120,6 +121,8 @@ public class NetworkCharacterController : NetworkBehaviour
                     minGroundDistance = groundHits[i].distance;
             }
             var floatingForceValue = floatingForceCurve.Evaluate(minGroundDistance) * maxFloatingForce;
+            if(rb.velocity.y > 0)
+                floatingForceValue *= Mathf.Clamp01(1-rb.velocity.y / floatingForceReductionDenominator);
             rb.AddForce(Vector3.up * floatingForceValue * Time.fixedDeltaTime, ForceMode.Acceleration);
         }
     }
