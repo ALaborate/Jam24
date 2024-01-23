@@ -161,7 +161,7 @@ public class NetworkCharacterController : NetworkBehaviour
                 {
                     Vector3 torque = Vector3.zero;
                     torque[i] = acc;
-                    rb.AddTorque(torque * Time.fixedDeltaTime, ForceMode.VelocityChange);
+                    rb.AddTorque(torque * Time.fixedDeltaTime, ForceMode.Acceleration);
                 }
             }
             
@@ -171,7 +171,7 @@ public class NetworkCharacterController : NetworkBehaviour
     {
         var delta = Mathf.DeltaAngle(currentPosition, targetPosition);
         var breakingDistance = currentSpeed * currentSpeed / (2 * maxTorque);
-        if (Mathf.Abs(delta) < currentSpeed * dt)
+        if (Mathf.Abs(delta) < maxTorque * 2 * dt)
             return 0f;
         else if (Mathf.Abs(delta) > breakingDistance)
             return maxTorque * Mathf.Sign(delta);
