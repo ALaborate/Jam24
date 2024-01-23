@@ -9,7 +9,9 @@ public class NetworkCharacterController : NetworkBehaviour
     public float moveSpeed = 10f;
     public float jumpForce = 10f;
     public float camRotationSpeed = 1f;
-    public Vector3 bodyRotationTorque;
+    public float bodyYRotationSpeed = 1f;
+    public float bodyStabilizationSpeed = 4;
+    public float bodyStability = 0.3f;
 
     public float groundCastDistance = 1.1f;
     public LayerMask groundLayer = Physics.DefaultRaycastLayers;
@@ -143,42 +145,35 @@ public class NetworkCharacterController : NetworkBehaviour
                 rb.AddForce(moveDirection.normalized * moveSpeed * Time.fixedDeltaTime * footGrip, ForceMode.Acceleration);
             }
 
-
-
-            for (int j = 0; j < 3; j++)
+            var predictedUp = Quaternion.AngleAxis(
+                 rb.angularVelocity.magnitude * Mathf.Rad2Deg * bodyStability / bodyStabilizationSpeed,
+                 rb.angularVelocity) * transform.up;
+            Vector3 torqueVector = Vector3.Cross(predictedUp, Vector3.up);
+            if (torqueVector.sqrMagnitude > 0.001f)
+                rb.AddTorque(torqueVector * bodyStabilizationSpeed * bodyStabilizationSpeed, ForceMode.Acceleration);
+            else
             {
-                int i = (j + 2) % 3; //2, 0 , 1 order for z, x, y as in eualer angles
-                var acc = GetAngularAcceleration(rb.angularVelocity[i] * Mathf.Rad2Deg, transform.rotation.eulerAngles[i], targetRotation[i], bodyRotationTorque[i], Time.fixedDeltaTime);
-                if (acc == 0f)
+                var yVelocity = rb.angularVelocity.y * Mathf.Rad2Deg;
+                var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y);
+                var breakingDistance = yVelocity * yVelocity / (2 * bodyYRotationSpeed);
+                if (Mathf.Abs(yDelta) < 2 * bodyYRotationSpeed * Time.fixedDeltaTime && Mathf.Abs(yVelocity) < 2 * bodyYRotationSpeed * Time.fixedDeltaTime)
                 {
-                    Vector3 newAngularVelocity = rb.angularVelocity;
-                    newAngularVelocity[i] = 0f;
-                    var newRotation = transform.rotation.eulerAngles;
-                    newRotation[i] = targetRotation[i];
-                    transform.rotation = Quaternion.Euler(newRotation);
-                    rb.angularVelocity = newAngularVelocity;
+                    rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0, rb.angularVelocity.z);
+                    rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles.x, targetRotation.y, rb.rotation.eulerAngles.z);
+                }
+                else if (Mathf.Abs(yDelta) > breakingDistance)
+                {
+                    torqueVector.y = bodyYRotationSpeed * Mathf.Sign(yDelta);
+                    //torqueVector.y *= Mathf.Clamp01(Mathf.Abs(yDelta) / bodyYRotationSpeed * Time.fixedDeltaTime * Time.fixedDeltaTime * 0.5f); //dont speed up more than necessary
                 }
                 else
                 {
-                    Vector3 torque = Vector3.zero;
-                    torque[i] = acc;
-                    rb.AddTorque(torque * Time.fixedDeltaTime, ForceMode.Acceleration);
-                    break;
+                    torqueVector.y = -Mathf.Min(Mathf.Abs(yVelocity), bodyYRotationSpeed) * Mathf.Sign(yVelocity);
                 }
+                rb.AddTorque(torqueVector * Time.fixedDeltaTime, ForceMode.Acceleration);
             }
 
         }
-    }
-    private float GetAngularAcceleration(float currentSpeed, float currentPosition, float targetPosition, float maxTorque, float dt)
-    {
-        var delta = Mathf.DeltaAngle(currentPosition, targetPosition);
-        var breakingDistance = currentSpeed * currentSpeed / (2 * maxTorque);
-        if (Mathf.Abs(delta) < maxTorque * 2 * dt && Mathf.Abs(currentSpeed) < 2 * maxTorque * dt)
-            return 0f;
-        else if (Mathf.Abs(delta) > breakingDistance)
-            return maxTorque * Mathf.Sign(delta);
-        else
-            return -maxTorque * Mathf.Sign(currentSpeed);
     }
 
 
