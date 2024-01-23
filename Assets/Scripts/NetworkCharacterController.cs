@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.EventSystems;
 
 #if UNITY_WEBGL
 public class NetworkCharacterController : MonoBehaviour
@@ -22,6 +23,8 @@ public class NetworkCharacterController : NetworkBehaviour
     public float maxFloatingForce = 500;
     public AnimationCurve floatingForceCurve = AnimationCurve.Linear(0.5f, 1, 1.5f, 0);
     public float floatingForceReductionDenominator = 10;
+
+    public float maxRunningSpeed = 10;
 
 
 
@@ -80,6 +83,7 @@ public class NetworkCharacterController : NetworkBehaviour
     /// Distance between the ground and body center (not equal to center of collider)
     /// </summary>
     [SerializeField][ReadOnly] private float minGroundDistance = float.MaxValue;
+    [SerializeField][ReadOnly] private float footGrip = 0f;
     [Command]
     private void CmdMove(float run, float strafe, bool jump, float targetRotationY)
     {
@@ -87,7 +91,11 @@ public class NetworkCharacterController : NetworkBehaviour
         lastCmdMoveTime = NetworkTime.time;
         Vector3 moveDirection = new Vector3(strafe, 0, run);
         moveDirection = transform.TransformDirection(moveDirection);
-        rb.AddForce(moveDirection * moveSpeed * (float)dt, ForceMode.Acceleration);
+        var groundVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        var speed = groundVelocity.magnitude;
+        var forceSpeedReduction = Mathf.Clamp01(1 - speed / maxRunningSpeed);
+        forceSpeedReduction = Mathf.Lerp(1, forceSpeedReduction, Vector3.Dot(groundVelocity.normalized, moveDirection.normalized));
+        rb.AddForce(moveDirection * moveSpeed * (float)dt * forceSpeedReduction * footGrip, ForceMode.Acceleration);
 
         isGrounded = minGroundDistance <= 1;
         if (isGrounded && jump && dt > 0)
@@ -97,13 +105,16 @@ public class NetworkCharacterController : NetworkBehaviour
         }
 
         transform.rotation = Quaternion.Euler(0, targetRotationY, 0);
+
+        receivedUserInput = strafe != 0 || run != 0;
     }
 
+    private bool receivedUserInput = false;
     private void FixedUpdate()
     {
         if (rb != null)
         {//server
-            const int GROUND_RAY_COUNT = 4;
+            const int GROUND_RAY_COUNT = 4; 
             if (groundHits == null) groundHits = new RaycastHit[GROUND_RAY_COUNT];
 
             minGroundDistance = float.MaxValue;
@@ -119,11 +130,21 @@ public class NetworkCharacterController : NetworkBehaviour
                 if (!hit) groundHits[i].distance = float.PositiveInfinity;
                 if (groundHits[i].distance < minGroundDistance)
                     minGroundDistance = groundHits[i].distance;
+                if(hit)
+                    footGrip = (footGrip * i + groundHits[i].collider.material.dynamicFriction) / (i + 1);
             }
+
             var floatingForceValue = floatingForceCurve.Evaluate(minGroundDistance) * maxFloatingForce;
-            if(rb.velocity.y > 0)
-                floatingForceValue *= Mathf.Clamp01(1-rb.velocity.y / floatingForceReductionDenominator);
+            if (rb.velocity.y > 0)
+                floatingForceValue *= Mathf.Clamp01(1 - rb.velocity.y / floatingForceReductionDenominator);
             rb.AddForce(Vector3.up * floatingForceValue * Time.fixedDeltaTime, ForceMode.Acceleration);
+
+            if (!receivedUserInput)
+            {
+                //apply counterforce
+                var moveDirection = new Vector3(-rb.velocity.x, 0, -rb.velocity.z);
+                rb.AddForce(moveDirection.normalized * moveSpeed * Time.fixedDeltaTime * footGrip, ForceMode.Acceleration);
+            }
         }
     }
 
