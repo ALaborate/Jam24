@@ -56,7 +56,7 @@ MonoBehaviour:
   moveSpeed: 556
   jumpForce: 1
   camRotationSpeed: 2048
-  bodyRotationTorque: 64
+  bodyRotationTorque: {x: 144, y: 144, z: 144}
   groundCastDistance: 1.6
   groundLayer:
     serializedVersion: 2
