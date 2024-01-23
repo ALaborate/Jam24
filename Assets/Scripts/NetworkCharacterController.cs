@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-using UnityEngine.EventSystems;
 
-#if UNITY_WEBGL
-public class NetworkCharacterController : MonoBehaviour
-#else
+
 public class NetworkCharacterController : NetworkBehaviour
-#endif
 {
     public float moveSpeed = 10f;
     public float jumpForce = 10f;
-    public float rotationSpeed = 1f;
+    public float camRotationSpeed = 1f;
+    public float bodyRotationTorque = 11;
     public float groundCastDistance = 1.1f;
     public LayerMask groundLayer = Physics.DefaultRaycastLayers;
 
@@ -26,10 +23,6 @@ public class NetworkCharacterController : NetworkBehaviour
 
     public float maxRunningSpeed = 10;
 
-
-
-
-    [SerializeField][ReadOnly] private bool isGrounded;
 
     private Rigidbody rb;
     private CapsuleCollider col;
@@ -84,6 +77,7 @@ public class NetworkCharacterController : NetworkBehaviour
     /// </summary>
     [SerializeField][ReadOnly] private float minGroundDistance = float.MaxValue;
     [SerializeField][ReadOnly] private float footGrip = 0f;
+    [SerializeField][ReadOnly] private bool isGrounded;
     [Command]
     private void CmdMove(float run, float strafe, bool jump, float targetRotationY)
     {
@@ -102,19 +96,21 @@ public class NetworkCharacterController : NetworkBehaviour
         {
             // Add an upward force to the rigidbody to make the character jump
             rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+            //rb.AddTorque(Vector3.one * jumpForce, ForceMode.VelocityChange);
         }
 
-        transform.rotation = Quaternion.Euler(0, targetRotationY, 0);
+        targetRotation = new Vector3(0, targetRotationY);
 
         receivedUserInput = strafe != 0 || run != 0;
     }
 
     private bool receivedUserInput = false;
+    [SerializeField][ReadOnly] private Vector3 targetRotation;
     private void FixedUpdate()
     {
         if (rb != null)
         {//server
-            const int GROUND_RAY_COUNT = 4; 
+            const int GROUND_RAY_COUNT = 4;
             if (groundHits == null) groundHits = new RaycastHit[GROUND_RAY_COUNT];
 
             minGroundDistance = float.MaxValue;
@@ -130,7 +126,7 @@ public class NetworkCharacterController : NetworkBehaviour
                 if (!hit) groundHits[i].distance = float.PositiveInfinity;
                 if (groundHits[i].distance < minGroundDistance)
                     minGroundDistance = groundHits[i].distance;
-                if(hit)
+                if (hit)
                     footGrip = (footGrip * i + groundHits[i].collider.material.dynamicFriction) / (i + 1);
             }
 
@@ -145,8 +141,45 @@ public class NetworkCharacterController : NetworkBehaviour
                 var moveDirection = new Vector3(-rb.velocity.x, 0, -rb.velocity.z);
                 rb.AddForce(moveDirection.normalized * moveSpeed * Time.fixedDeltaTime * footGrip, ForceMode.Acceleration);
             }
+
+
+            
+            for (int i = 0; i < 3; i++)
+            {
+                if (i != 1) continue;
+                var acc = GetAngularAcceleration(rb.angularVelocity[i], transform.rotation.eulerAngles[i], targetRotation[i], bodyRotationTorque, Time.fixedDeltaTime);
+                if(acc == 0f)
+                {
+                    Vector3 newAngularVelocity = rb.angularVelocity;
+                    newAngularVelocity[i] = 0f;
+                    var newRotation = transform.rotation.eulerAngles;
+                    newRotation[i] = targetRotation[i];
+                    transform.rotation = Quaternion.Euler(newRotation);
+                    rb.angularVelocity = newAngularVelocity;
+                }
+                else
+                {
+                    Vector3 torque = Vector3.zero;
+                    torque[i] = acc;
+                    rb.AddTorque(torque * Time.fixedDeltaTime, ForceMode.VelocityChange);
+                }
+            }
+            
         }
     }
+    private float GetAngularAcceleration(float currentSpeed, float currentPosition, float targetPosition, float maxTorque, float dt)
+    {
+        var delta = Mathf.DeltaAngle(currentPosition, targetPosition);
+        var breakingDistance = currentSpeed * currentSpeed / (2 * maxTorque);
+        if (Mathf.Abs(delta) < currentSpeed * dt)
+            return 0f;
+        else if (Mathf.Abs(delta) > breakingDistance)
+            return maxTorque * Mathf.Sign(delta);
+        else
+            return -maxTorque * Mathf.Sign(delta);
+    }
+
+
 
     private SortedSet<int> groundCollisionHashes = new();
     private void OnCollisionEnter(Collision collision)
@@ -186,7 +219,7 @@ public class NetworkCharacterController : NetworkBehaviour
             return;
         var container = cam.transform.parent;
         container.position = transform.position + container.TransformDirection(camOffset);
-        var rot = new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X")) * (rotationSpeed * Time.deltaTime);
+        var rot = new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X")) * (camRotationSpeed * Time.deltaTime);
         var newEuler = container.rotation.eulerAngles + rot;
         newEuler.z = 0;
         while (newEuler.x > 180)
