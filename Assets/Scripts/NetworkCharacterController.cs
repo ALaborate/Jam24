@@ -10,7 +10,7 @@ public class NetworkCharacterController : NetworkBehaviour
     public float jumpForce = 10f;
     public float camRotationSpeed = 1f;
     public Vector3 bodyRotationTorque;
-    
+
     public float groundCastDistance = 1.1f;
     public LayerMask groundLayer = Physics.DefaultRaycastLayers;
 
@@ -144,11 +144,12 @@ public class NetworkCharacterController : NetworkBehaviour
             }
 
 
-            
-            for (int i = 0; i < 3; i++)
+
+            for (int j = 0; j < 3; j++)
             {
+                int i = (j + 2) % 3; //2, 0 , 1 order for z, x, y as in eualer angles
                 var acc = GetAngularAcceleration(rb.angularVelocity[i] * Mathf.Rad2Deg, transform.rotation.eulerAngles[i], targetRotation[i], bodyRotationTorque[i], Time.fixedDeltaTime);
-                if(acc == 0f)
+                if (acc == 0f)
                 {
                     Vector3 newAngularVelocity = rb.angularVelocity;
                     newAngularVelocity[i] = 0f;
@@ -162,16 +163,17 @@ public class NetworkCharacterController : NetworkBehaviour
                     Vector3 torque = Vector3.zero;
                     torque[i] = acc;
                     rb.AddTorque(torque * Time.fixedDeltaTime, ForceMode.Acceleration);
+                    break;
                 }
             }
-            
+
         }
     }
     private float GetAngularAcceleration(float currentSpeed, float currentPosition, float targetPosition, float maxTorque, float dt)
     {
         var delta = Mathf.DeltaAngle(currentPosition, targetPosition);
         var breakingDistance = currentSpeed * currentSpeed / (2 * maxTorque);
-        if (Mathf.Abs(delta) < maxTorque * 2 * dt)
+        if (Mathf.Abs(delta) < maxTorque * 2 * dt && Mathf.Abs(currentSpeed) < 2 * maxTorque * dt)
             return 0f;
         else if (Mathf.Abs(delta) > breakingDistance)
             return maxTorque * Mathf.Sign(delta);
