@@ -147,7 +147,7 @@ public class NetworkCharacterController : NetworkBehaviour
             for (int i = 0; i < 3; i++)
             {
                 if (i != 1) continue;
-                var acc = GetAngularAcceleration(rb.angularVelocity[i], transform.rotation.eulerAngles[i], targetRotation[i], bodyRotationTorque, Time.fixedDeltaTime);
+                var acc = GetAngularAcceleration(rb.angularVelocity[i] * Mathf.Rad2Deg, transform.rotation.eulerAngles[i], targetRotation[i], bodyRotationTorque, Time.fixedDeltaTime);
                 if(acc == 0f)
                 {
                     Vector3 newAngularVelocity = rb.angularVelocity;
@@ -176,7 +176,7 @@ public class NetworkCharacterController : NetworkBehaviour
         else if (Mathf.Abs(delta) > breakingDistance)
             return maxTorque * Mathf.Sign(delta);
         else
-            return -maxTorque * Mathf.Sign(delta);
+            return -maxTorque * Mathf.Sign(currentSpeed);
     }
 
 
