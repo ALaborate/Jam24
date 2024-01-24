@@ -26,6 +26,8 @@ public class NetworkCharacterController : NetworkBehaviour
 
     public float maxRunningSpeed = 10;
 
+    public Transform hand;
+
 
     private Rigidbody rb;
     private CapsuleCollider col;
@@ -52,6 +54,10 @@ public class NetworkCharacterController : NetworkBehaviour
         if (!isServer)
         {
             Destroy(rb);
+        }
+        else
+        {
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         }
         if (isLocalPlayer)
         {
@@ -145,13 +151,19 @@ public class NetworkCharacterController : NetworkBehaviour
                 rb.AddForce(moveDirection.normalized * moveSpeed * Time.fixedDeltaTime * footGrip, ForceMode.Acceleration);
             }
 
-            var predictedUp = Quaternion.AngleAxis(
-                 rb.angularVelocity.magnitude * Mathf.Rad2Deg * bodyStability / bodyStabilizationSpeed,
-                 rb.angularVelocity) * transform.up;
-            Vector3 torqueVector = Vector3.Cross(predictedUp, Vector3.up);
-            if (torqueVector.sqrMagnitude > 0.001f)
-                rb.AddTorque(torqueVector * bodyStabilizationSpeed * bodyStabilizationSpeed, ForceMode.Acceleration);
-            else
+            Vector3 torqueVector = Vector3.zero;
+            ///this vertical stabilization does not work well in conjunction with Y rotation. That sucks.
+            //var predictedUp = Quaternion.AngleAxis(
+            //     rb.angularVelocity.magnitude * Mathf.Rad2Deg * bodyStability / bodyStabilizationSpeed,
+            //     rb.angularVelocity) * transform.up;
+            //torqueVector = Vector3.Cross(predictedUp, Vector3.up);
+            //if (torqueVector.sqrMagnitude > 0.001f)
+            //{
+            //    rb.AddTorque(torqueVector * bodyStabilizationSpeed * bodyStabilizationSpeed, ForceMode.Acceleration);
+            //}
+            //else
+
+
             {
                 var yVelocity = rb.angularVelocity.y * Mathf.Rad2Deg;
                 var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y);
@@ -169,7 +181,7 @@ public class NetworkCharacterController : NetworkBehaviour
                 else
                 {
                     torqueVector.y = -Mathf.Min(Mathf.Abs(yVelocity) / Time.fixedDeltaTime, bodyYRotationTorque) * Mathf.Sign(yVelocity);
-                 }
+                }
                 rb.AddTorque(torqueVector * Time.fixedDeltaTime, ForceMode.Acceleration);
             }
 
