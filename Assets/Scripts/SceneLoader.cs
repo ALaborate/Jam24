@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using Mirror;
-using UnityEditor.SearchService;
 
 public class SceneLoader : NetworkBehaviour
 {
@@ -46,18 +45,21 @@ public class SceneLoader : NetworkBehaviour
         }
 
         var spawns = GameObject.FindGameObjectsWithTag("FeatherSpawn");
-        for (int i = 0; i < numberOfFeathers; i++)
+        if (isServer)
         {
-            Vector3 spawnPos = Vector3.up * 30;
-            if (spawns.Length > 0)
+            for (int i = 0; i < numberOfFeathers; i++)
             {
-                var spawnInx = Random.Range(0, spawns.Length);
-                spawnPos = spawns[spawnInx].transform.position;
-            }
+                Vector3 spawnPos = Vector3.up * 30;
+                if (spawns.Length > 0)
+                {
+                    var spawnInx = Random.Range(0, spawns.Length);
+                    spawnPos = spawns[spawnInx].transform.position;
+                }
 
-            var feather = Instantiate(featherPrefab, spawnPos + Random.onUnitSphere, Quaternion.identity);
-            SceneManager.MoveGameObjectToScene(feather, scene);
-            NetworkServer.Spawn(feather);
+                var feather = Instantiate(featherPrefab, spawnPos + Random.onUnitSphere, Quaternion.identity);
+                SceneManager.MoveGameObjectToScene(feather, scene);
+                NetworkServer.Spawn(feather);
+            }
         }
     }
 
