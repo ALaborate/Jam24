@@ -249,7 +249,7 @@ public class NetworkCharacterController : NetworkBehaviour
             }
         }
     }
-
+    
     [ClientRpc]
     private void RpcPickObject(NetworkIdentity target)
     {
@@ -281,6 +281,7 @@ public class NetworkCharacterController : NetworkBehaviour
         var mag = Vector3.Dot(collision.contacts[0].normal.normalized, collision.relativeVelocity.normalized) * collision.relativeVelocity.magnitude;
         var fallDamageReductionCoef = Mathf.Lerp(1, .2f, Mathf.Clamp01(Vector3.Dot(Vector3.up, collision.contacts[0].normal)));
         var roflDamageReductionCoef = health.IsRofled ? 0.1f : 1;
+        roflDamageReductionCoef *= hand.childCount > 0 && collision.rigidbody?.GetComponent<NetworkCharacterController>() != null ? 0.1f : 1;
         var damage = (mag / maxRunningSpeed) * maxVelocityDamage * asymmetryCoef * fallDamageReductionCoef * roflDamageReductionCoef;
         health.TakeDamage(Mathf.Clamp01(damage));
     }
