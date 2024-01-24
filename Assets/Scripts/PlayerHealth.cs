@@ -28,7 +28,10 @@ public class PlayerHealth : NetworkBehaviour
         {
             return isRofled;
         }
-    }   
+    }
+
+    public event System.Action OnRofl;
+    public event System.Action OnRoflOver;
 
     public void TakeDamage(float damage)
     {
@@ -39,6 +42,7 @@ public class PlayerHealth : NetworkBehaviour
             if(health == 0)
             {
                 isRofled = true;
+                OnRofl?.Invoke();
             } 
         }
     }
@@ -50,9 +54,10 @@ public class PlayerHealth : NetworkBehaviour
         {
             health = health + regenerationRate * Time.deltaTime;
             health = Mathf.Clamp01(health); 
-            if(health == 1)
+            if(health == 1 && isRofled)
             {
                 isRofled = false;
+                OnRoflOver?.Invoke();
             }
         }
     }

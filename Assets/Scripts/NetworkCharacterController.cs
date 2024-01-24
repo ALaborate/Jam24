@@ -6,12 +6,14 @@ using Mirror;
 
 public class NetworkCharacterController : NetworkBehaviour
 {
+    private const RigidbodyConstraints RB_ROT_CONSTR = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     public float moveSpeed = 10f;
     public float jumpForce = 10f;
     public float camRotationSpeed = 1f;
     public float bodyYRotationTorque = 1f;
     public float bodyStabilizationSpeed = 4;
     public float bodyStability = 0.3f;
+    float roflRandomVelocityMultiplier = 3.14f;
 
     public float groundCastDistance = 1.1f;
     public LayerMask groundLayer = Physics.DefaultRaycastLayers;
@@ -28,7 +30,6 @@ public class NetworkCharacterController : NetworkBehaviour
 
     [Header("Self-damage")]
     public float maxVelocityDamage = .8f;
-    public float maxAsymmetryMultiplier = 4f;
 
     public Transform hand;
 
@@ -52,6 +53,13 @@ public class NetworkCharacterController : NetworkBehaviour
             col = GetComponentInChildren<CapsuleCollider>();
             health = GetComponent<PlayerHealth>();
             height = col.center.y + col.height / 2;
+
+            if (isServer)
+            {
+                health.OnRofl += OnRofl;
+                health.OnRoflOver += OnRoflOver;
+            }
+
             DisableControlAndCamera();
         }
     }
@@ -63,7 +71,7 @@ public class NetworkCharacterController : NetworkBehaviour
         }
         else
         {
-            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            rb.constraints = RB_ROT_CONSTR;
         }
         if (isLocalPlayer)
         {
@@ -119,6 +127,8 @@ public class NetworkCharacterController : NetworkBehaviour
         receivedUserInput = strafe != 0 || run != 0;
     }
 
+
+
     private bool receivedUserInput = false;
     [SerializeField][ReadOnly] private Vector3 targetRotation;
     private void FixedUpdate()
@@ -145,53 +155,68 @@ public class NetworkCharacterController : NetworkBehaviour
                     footGrip = (footGrip * i + groundHits[i].collider.material.dynamicFriction) / (i + 1);
             }
 
-            var floatingForceValue = floatingForceCurve.Evaluate(minGroundDistance) * maxFloatingForce;
-            if (rb.velocity.y > 0)
-                floatingForceValue *= Mathf.Clamp01(1 - rb.velocity.y / floatingForceReductionDenominator);
-            rb.AddForce(Vector3.up * floatingForceValue * Time.fixedDeltaTime, ForceMode.Acceleration);
+            AddFloatingForce();
 
-            if (!receivedUserInput)
-            {
-                //apply counterforce
-                var moveDirection = new Vector3(-rb.velocity.x, 0, -rb.velocity.z);
-                rb.AddForce(moveDirection.normalized * moveSpeed * Time.fixedDeltaTime * footGrip, ForceMode.Acceleration);
-            }
+            ApplyStoppingForce();
 
-            Vector3 torqueVector = Vector3.zero;
-            ///this vertical stabilization does not work well in conjunction with Y rotation. That sucks.
-            //var predictedUp = Quaternion.AngleAxis(
-            //     rb.angularVelocity.magnitude * Mathf.Rad2Deg * bodyStability / bodyStabilizationSpeed,
-            //     rb.angularVelocity) * transform.up;
-            //torqueVector = Vector3.Cross(predictedUp, Vector3.up);
-            //if (torqueVector.sqrMagnitude > 0.001f)
-            //{
-            //    rb.AddTorque(torqueVector * bodyStabilizationSpeed * bodyStabilizationSpeed, ForceMode.Acceleration);
-            //}
-            //else
-
-
-            {
-                var yVelocity = rb.angularVelocity.y * Mathf.Rad2Deg;
-                var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y);
-                var breakingDistance = yVelocity * yVelocity / (2 * bodyYRotationTorque);
-                if (Mathf.Abs(yDelta) < 2 * bodyYRotationTorque * Time.fixedDeltaTime && Mathf.Abs(yVelocity) < 2 * bodyYRotationTorque * Time.fixedDeltaTime)
-                {
-                    rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0, rb.angularVelocity.z);
-                    rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles.x, targetRotation.y, rb.rotation.eulerAngles.z);
-                }
-                else if (Mathf.Abs(yDelta) > breakingDistance)
-                {
-                    torqueVector.y = bodyYRotationTorque * Mathf.Sign(yDelta);
-                    //torqueVector.y *= Mathf.Clamp01(Mathf.Abs(yDelta) / bodyYRotationSpeed * Time.fixedDeltaTime * Time.fixedDeltaTime * 0.5f); //dont speed up more than necessary
-                }
-                else
-                {
-                    torqueVector.y = -Mathf.Min(Mathf.Abs(yVelocity) / Time.fixedDeltaTime, bodyYRotationTorque) * Mathf.Sign(yVelocity);
-                }
-                rb.AddTorque(torqueVector * Time.fixedDeltaTime, ForceMode.Acceleration);
-            }
+            RotateToCameraDirection();
 
         }
+    }
+
+    private void RotateToCameraDirection()
+    {
+        Vector3 torqueVector = Vector3.zero;
+        ///this vertical stabilization does not work well in conjunction with Y rotation. That sucks.
+        //var predictedUp = Quaternion.AngleAxis(
+        //     rb.angularVelocity.magnitude * Mathf.Rad2Deg * bodyStability / bodyStabilizationSpeed,
+        //     rb.angularVelocity) * transform.up;
+        //torqueVector = Vector3.Cross(predictedUp, Vector3.up);
+        //if (torqueVector.sqrMagnitude > 0.001f)
+        //{
+        //    rb.AddTorque(torqueVector * bodyStabilizationSpeed * bodyStabilizationSpeed, ForceMode.Acceleration);
+        //}
+        //else
+
+
+        {
+            var yVelocity = rb.angularVelocity.y * Mathf.Rad2Deg;
+            var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y);
+            var breakingDistance = yVelocity * yVelocity / (2 * bodyYRotationTorque);
+            if (Mathf.Abs(yDelta) < 2 * bodyYRotationTorque * Time.fixedDeltaTime && Mathf.Abs(yVelocity) < 2 * bodyYRotationTorque * Time.fixedDeltaTime)
+            {
+                rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0, rb.angularVelocity.z);
+                rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles.x, targetRotation.y, rb.rotation.eulerAngles.z);
+            }
+            else if (Mathf.Abs(yDelta) > breakingDistance)
+            {
+                torqueVector.y = bodyYRotationTorque * Mathf.Sign(yDelta);
+                //torqueVector.y *= Mathf.Clamp01(Mathf.Abs(yDelta) / bodyYRotationSpeed * Time.fixedDeltaTime * Time.fixedDeltaTime * 0.5f); //dont speed up more than necessary
+            }
+            else
+            {
+                torqueVector.y = -Mathf.Min(Mathf.Abs(yVelocity) / Time.fixedDeltaTime, bodyYRotationTorque) * Mathf.Sign(yVelocity);
+            }
+            rb.AddTorque(torqueVector * Time.fixedDeltaTime, ForceMode.Acceleration);
+        }
+    }
+
+    private void ApplyStoppingForce()
+    {
+        if (!receivedUserInput)
+        {
+            //apply counterforce
+            var moveDirection = new Vector3(-rb.velocity.x, 0, -rb.velocity.z);
+            rb.AddForce(moveDirection.normalized * moveSpeed * Time.fixedDeltaTime * footGrip, ForceMode.Acceleration);
+        }
+    }
+
+    private void AddFloatingForce()
+    {
+        var floatingForceValue = floatingForceCurve.Evaluate(minGroundDistance) * maxFloatingForce;
+        if (rb.velocity.y > 0)
+            floatingForceValue *= Mathf.Clamp01(1 - rb.velocity.y / floatingForceReductionDenominator);
+        rb.AddForce(Vector3.up * floatingForceValue * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
 
 
@@ -206,30 +231,52 @@ public class NetworkCharacterController : NetworkBehaviour
                 groundCollisionHashes.Add(collision.collider.GetInstanceID());
             }
 
-            float asymmetryCoef = 1;
-            //float averageHeight = 0;
-            //Vector3 averageContactPoint = Vector3.zero;
-            //for (int i = 0; i < collision.contacts.Length; i++)
-            //{
-            //    var lp = transform.InverseTransformPoint(collision.contacts[i].point);
-            //    averageHeight = (averageHeight * i + lp.y) / (i + 1);
-            //    averageContactPoint = (averageContactPoint * i + collision.contacts[i].point) / (i + 1);
-            //}
-            //asymmetryCoef = Mathf.Lerp(1, maxAsymmetryMultiplier, Mathf.Abs(averageHeight / height));
+            var feather = collision.gameObject.GetComponent<Feather>();
+            if (feather != null && !health.IsRofled)
+            {
+                feather.transform.SetParent(hand, false);
+                feather.transform.localPosition = Vector3.zero;
+                feather.transform.localRotation = Quaternion.identity;
+                var frb = feather.GetComponent<Rigidbody>();
+                if (frb != null)
+                {
+                    frb.velocity = Vector3.zero;
+                    frb.isKinematic = true;
+                }
+
+                var colliders = feather.GetComponentsInChildren<Collider>();
+                foreach (var collider in colliders)
+                {
+                    collider.isTrigger = true;
+                }
+            }
+            else
+            {
+                float asymmetryCoef = 1;
+                //float averageHeight = 0;
+                //Vector3 averageContactPoint = Vector3.zero;
+                //for (int i = 0; i < collision.contacts.Length; i++)
+                //{
+                //    var lp = transform.InverseTransformPoint(collision.contacts[i].point);
+                //    averageHeight = (averageHeight * i + lp.y) / (i + 1);
+                //    averageContactPoint = (averageContactPoint * i + collision.contacts[i].point) / (i + 1);
+                //}
+                //asymmetryCoef = Mathf.Lerp(1, maxAsymmetryMultiplier, Mathf.Abs(averageHeight / height));
 
 
-            var mag = Vector3.Dot(collision.contacts[0].normal.normalized, collision.relativeVelocity.normalized) * collision.relativeVelocity.magnitude;
-            var fallDamageReductionCoef = Mathf.Lerp(1, .2f, Mathf.Clamp01(Vector3.Dot(Vector3.up, collision.contacts[0].normal)));
-            var damage = (mag / maxRunningSpeed) * maxVelocityDamage * asymmetryCoef * fallDamageReductionCoef;
-            health.TakeDamage(Mathf.Clamp01(damage));
+                var mag = Vector3.Dot(collision.contacts[0].normal.normalized, collision.relativeVelocity.normalized) * collision.relativeVelocity.magnitude;
+                var fallDamageReductionCoef = Mathf.Lerp(1, .2f, Mathf.Clamp01(Vector3.Dot(Vector3.up, collision.contacts[0].normal)));
+                var roflDamageReductionCoef = health.IsRofled ? 0.1f : 1;
+                var damage = (mag / maxRunningSpeed) * maxVelocityDamage * asymmetryCoef * fallDamageReductionCoef * roflDamageReductionCoef;
+                health.TakeDamage(Mathf.Clamp01(damage));
+            }
         }
     }
     private void OnCollisionExit(Collision collision)
     {
         if (isServer)
         {
-
-            groundCollisionHashes.Remove(collision.collider.GetInstanceID()); 
+            groundCollisionHashes.Remove(collision.collider.GetInstanceID());
         }
     }
     private bool IsColisionWithGround(Collision collision)
@@ -245,6 +292,44 @@ public class NetworkCharacterController : NetworkBehaviour
             }
         return averageColinearity > 0.4f;
     }
+
+
+
+
+    private void OnRofl()
+    {
+        if (hand.childCount > 0)
+        {
+            for (int i = 0; i < hand.childCount; i++)
+            {
+                var child = hand.GetChild(i);
+                child.SetParent(null, true);
+                var crb = child.GetComponent<Rigidbody>();
+                if (crb != null)
+                {
+                    crb.isKinematic = false;
+                }
+                var colliders = child.GetComponentsInChildren<Collider>();
+                foreach (var collider in colliders)
+                {
+                    collider.isTrigger = false;
+                }
+            }
+        }
+
+        rb.constraints = RigidbodyConstraints.None;
+        rb.AddTorque(Random.onUnitSphere * roflRandomVelocityMultiplier, ForceMode.VelocityChange);
+    }
+
+    private void OnRoflOver()
+    {
+        //rb.AddTorque(-rb.angularVelocity * Mathf.Rad2Deg, ForceMode.VelocityChange);
+        rb.angularVelocity = Vector3.zero;
+        rb.constraints = RB_ROT_CONSTR;
+        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+    }
+
+
 
     private void LateUpdate()
     {
