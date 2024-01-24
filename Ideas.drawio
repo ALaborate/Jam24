@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2024-01-23T22:47:33.268Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.5.0 Chrome/112.0.5615.204 Electron/24.5.1 Safari/537.36" etag="-_6ZbU1s89bKoldD2Lr_" version="21.5.0" type="device" pages="4">
+<mxfile host="Electron" modified="2024-01-24T13:35:26.587Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.5.0 Chrome/112.0.5615.204 Electron/24.5.1 Safari/537.36" etag="83FsDV_cOwWIkaGndF_N" version="21.5.0" type="device" pages="5">
   <diagram name="Page-1" id="KfN3-ES_ZNWc4N_3WJaF">
-    <mxGraphModel dx="2571" dy="1612" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="2213" dy="1612" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -590,6 +590,59 @@
         </mxCell>
         <mxCell id="G19HYO9Jhnx9beTI-MvH-14" value="" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="1250" y="418" width="80" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="DWCfjrq2qcFoLjt0UtUO" name="Page-5">
+    <mxGraphModel dx="1044" dy="785" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-11" value="" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PnybmWNPCpdzMwYbPbqU-2" target="PnybmWNPCpdzMwYbPbqU-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-13" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="PnybmWNPCpdzMwYbPbqU-2" target="PnybmWNPCpdzMwYbPbqU-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-14" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="PnybmWNPCpdzMwYbPbqU-2" target="PnybmWNPCpdzMwYbPbqU-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-2" value="Lower health&lt;br&gt;CharacterHealth" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="370" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-3" value="Local player" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="135" y="158" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-4" value="Server" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="400" y="158" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-5" value="Enemy player" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="640" y="158" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-9" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PnybmWNPCpdzMwYbPbqU-6" target="PnybmWNPCpdzMwYbPbqU-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-6" value="Input gathering&lt;br&gt;NCC.CmdMove" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="210" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PnybmWNPCpdzMwYbPbqU-7" target="PnybmWNPCpdzMwYbPbqU-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-7" value="Character movement, rotation, attack&lt;br&gt;NCC.FixedUpdate" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="280" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-10" value="Paralize movement&lt;br&gt;NCC.FixedUpdate" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="470" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-12" value="Display health&lt;br&gt;CharacterHealth" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="550" width="620" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-15" value="Regenerate health fully" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="640" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="PnybmWNPCpdzMwYbPbqU-16" value="Restore orientation, fix rotation" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="730" width="120" height="70" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
