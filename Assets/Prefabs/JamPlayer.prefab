@@ -35,6 +35,7 @@ Transform:
   - {fileID: 1960533371027299545}
   - {fileID: 3110021154681822518}
   - {fileID: 6774556077351499527}
+  - {fileID: 4080668706872401497}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -57,8 +58,8 @@ MonoBehaviour:
   jumpForce: 1
   camRotationSpeed: 2048
   bodyYRotationTorque: 256
-  bodyStabilizationSpeed: 4
-  bodyStability: 0.3
+  bodyStabilizationSpeed: 40
+  bodyStability: 0.5
   groundCastDistance: 1.6
   groundLayer:
     serializedVersion: 2
@@ -93,6 +94,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   floatingForceReductionDenominator: 5
   maxRunningSpeed: 10
+  hand: {fileID: 4080668706872401497}
   minGroundDistance: 3.4028235e+38
   footGrip: 0
   isGrounded: 0
@@ -111,7 +113,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &3177437201413902899
 MonoBehaviour:
@@ -164,6 +166,37 @@ MonoBehaviour:
   rotationSensitivity: 0.01
   positionPrecision: 0.01
   scalePrecision: 0.01
+--- !u!1 &3452354912904019907
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4080668706872401497}
+  m_Layer: 3
+  m_Name: Hand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4080668706872401497
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3452354912904019907}
+  m_LocalRotation: {x: 0.39818123, y: -0, z: -0, w: 0.91730684}
+  m_LocalPosition: {x: 0.574, y: 0, z: 0.192}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3177437201413902896}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 46.929, y: 0, z: 0}
 --- !u!1 &4958859921430214326
 GameObject:
   m_ObjectHideFlags: 0
