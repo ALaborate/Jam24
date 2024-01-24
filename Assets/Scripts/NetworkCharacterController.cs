@@ -112,10 +112,11 @@ public class NetworkCharacterController : NetworkBehaviour
         var speed = groundVelocity.magnitude;
         var forceSpeedReduction = Mathf.Clamp01(1 - speed / maxRunningSpeed);
         forceSpeedReduction = Mathf.Lerp(1, forceSpeedReduction, Vector3.Dot(groundVelocity.normalized, moveDirection.normalized));
+        forceSpeedReduction *= health.IsRofled ? 0.34f : 1;
         rb.AddForce(moveDirection * moveSpeed * (float)dt * forceSpeedReduction * footGrip, ForceMode.Acceleration);
 
         isGrounded = minGroundDistance <= 1;
-        if (isGrounded && jump && dt > 0)
+        if (isGrounded && jump && dt > 0 && !health.IsRofled)
         {
             // Add an upward force to the rigidbody to make the character jump
             rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
@@ -166,6 +167,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private void RotateToCameraDirection()
     {
+        if (health.IsRofled) return;
         Vector3 torqueVector = Vector3.zero;
         ///this vertical stabilization does not work well in conjunction with Y rotation. That sucks.
         //var predictedUp = Quaternion.AngleAxis(
@@ -213,6 +215,8 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private void AddFloatingForce()
     {
+        if (health.IsRofled)
+            return;
         var floatingForceValue = floatingForceCurve.Evaluate(minGroundDistance) * maxFloatingForce;
         if (rb.velocity.y > 0)
             floatingForceValue *= Mathf.Clamp01(1 - rb.velocity.y / floatingForceReductionDenominator);
@@ -231,47 +235,56 @@ public class NetworkCharacterController : NetworkBehaviour
                 groundCollisionHashes.Add(collision.collider.GetInstanceID());
             }
 
-            var feather = collision.gameObject.GetComponent<Feather>();
-            if (feather != null && !health.IsRofled)
+            var pickable = collision.gameObject.GetComponent<IPickable>();
+            var pickableNetId = collision.gameObject.GetComponent<NetworkIdentity>();
+            if (pickable != null && !health.IsRofled)
             {
-                feather.transform.SetParent(hand, false);
-                feather.transform.localPosition = Vector3.zero;
-                feather.transform.localRotation = Quaternion.identity;
-                var frb = feather.GetComponent<Rigidbody>();
-                if (frb != null)
-                {
-                    frb.velocity = Vector3.zero;
-                    frb.isKinematic = true;
-                }
-
-                var colliders = feather.GetComponentsInChildren<Collider>();
-                foreach (var collider in colliders)
-                {
-                    collider.isTrigger = true;
-                }
+                pickable.PickUp(gameObject, hand);
+                if (pickableNetId != null)
+                    RpcPickObject(pickableNetId);
             }
             else
             {
-                float asymmetryCoef = 1;
-                //float averageHeight = 0;
-                //Vector3 averageContactPoint = Vector3.zero;
-                //for (int i = 0; i < collision.contacts.Length; i++)
-                //{
-                //    var lp = transform.InverseTransformPoint(collision.contacts[i].point);
-                //    averageHeight = (averageHeight * i + lp.y) / (i + 1);
-                //    averageContactPoint = (averageContactPoint * i + collision.contacts[i].point) / (i + 1);
-                //}
-                //asymmetryCoef = Mathf.Lerp(1, maxAsymmetryMultiplier, Mathf.Abs(averageHeight / height));
-
-
-                var mag = Vector3.Dot(collision.contacts[0].normal.normalized, collision.relativeVelocity.normalized) * collision.relativeVelocity.magnitude;
-                var fallDamageReductionCoef = Mathf.Lerp(1, .2f, Mathf.Clamp01(Vector3.Dot(Vector3.up, collision.contacts[0].normal)));
-                var roflDamageReductionCoef = health.IsRofled ? 0.1f : 1;
-                var damage = (mag / maxRunningSpeed) * maxVelocityDamage * asymmetryCoef * fallDamageReductionCoef * roflDamageReductionCoef;
-                health.TakeDamage(Mathf.Clamp01(damage));
+                CalculateSelfDamage(collision);
             }
         }
     }
+
+    [ClientRpc]
+    private void RpcPickObject(NetworkIdentity target)
+    {
+        var pickable = target.GetComponent<IPickable>();
+        pickable?.PickUp(gameObject, hand);
+    }
+    [ClientRpc]
+    private void RpcDropObject(NetworkIdentity target)
+    {
+        var pickable = target.GetComponent<IPickable>();
+        pickable?.Drop(gameObject);
+    }
+
+
+    private void CalculateSelfDamage(Collision collision)
+    {
+        float asymmetryCoef = 1;
+        //float averageHeight = 0;
+        //Vector3 averageContactPoint = Vector3.zero;
+        //for (int i = 0; i < collision.contacts.Length; i++)
+        //{
+        //    var lp = transform.InverseTransformPoint(collision.contacts[i].point);
+        //    averageHeight = (averageHeight * i + lp.y) / (i + 1);
+        //    averageContactPoint = (averageContactPoint * i + collision.contacts[i].point) / (i + 1);
+        //}
+        //asymmetryCoef = Mathf.Lerp(1, maxAsymmetryMultiplier, Mathf.Abs(averageHeight / height));
+
+
+        var mag = Vector3.Dot(collision.contacts[0].normal.normalized, collision.relativeVelocity.normalized) * collision.relativeVelocity.magnitude;
+        var fallDamageReductionCoef = Mathf.Lerp(1, .2f, Mathf.Clamp01(Vector3.Dot(Vector3.up, collision.contacts[0].normal)));
+        var roflDamageReductionCoef = health.IsRofled ? 0.1f : 1;
+        var damage = (mag / maxRunningSpeed) * maxVelocityDamage * asymmetryCoef * fallDamageReductionCoef * roflDamageReductionCoef;
+        health.TakeDamage(Mathf.Clamp01(damage));
+    }
+
     private void OnCollisionExit(Collision collision)
     {
         if (isServer)
@@ -304,16 +317,11 @@ public class NetworkCharacterController : NetworkBehaviour
             {
                 var child = hand.GetChild(i);
                 child.SetParent(null, true);
-                var crb = child.GetComponent<Rigidbody>();
-                if (crb != null)
-                {
-                    crb.isKinematic = false;
-                }
-                var colliders = child.GetComponentsInChildren<Collider>();
-                foreach (var collider in colliders)
-                {
-                    collider.isTrigger = false;
-                }
+                var pickable = child.GetComponent<IPickable>();
+                pickable?.Drop(gameObject);
+                var pickableNetId = child.GetComponent<NetworkIdentity>();
+                if (pickableNetId != null)
+                    RpcDropObject(pickableNetId);
             }
         }
 

@@ -65,7 +65,7 @@ MonoBehaviour:
   groundCastDistance: 1.6
   groundLayer:
     serializedVersion: 2
-    m_Bits: 4294967283
+    m_Bits: 4294967105
   minCamAngle: -30
   maxCamAngle: 60
   camOffset: {x: 0.5, y: 0, z: 0}

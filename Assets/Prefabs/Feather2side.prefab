@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1458038715771383541}
   - component: {fileID: 5522747774592746042}
   - component: {fileID: 6557836104566453399}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Feather2side
   m_TagString: Feather
   m_Icon: {fileID: 0}
@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a439fa1f134ab9e45aa675b1ddc903d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  releseVelocity: 2
 --- !u!114 &1458038715771383541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,7 +127,7 @@ GameObject:
   - component: {fileID: 8420958303085509850}
   - component: {fileID: 3311887429490792060}
   - component: {fileID: 8369228786958607375}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4946,7 +4947,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2614063779595148257}
   - component: {fileID: 4741641179562313957}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PivotOffset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5057,8 +5058,16 @@ PrefabInstance:
       value: feather1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e47239ebe4dd50842a748d1fedadf696, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e47239ebe4dd50842a748d1fedadf696, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: e47239ebe4dd50842a748d1fedadf696, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e47239ebe4dd50842a748d1fedadf696, type: 3}
@@ -5142,6 +5151,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: featheRound
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cddc2d52f5743764b8f141d87039c0aa, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: cddc2d52f5743764b8f141d87039c0aa, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cddc2d52f5743764b8f141d87039c0aa, type: 3}
 --- !u!4 &2968219576044828052 stripped
@@ -5221,8 +5238,16 @@ PrefabInstance:
       value: feather2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e47239ebe4dd50842a748d1fedadf696, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e47239ebe4dd50842a748d1fedadf696, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: e47239ebe4dd50842a748d1fedadf696, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e47239ebe4dd50842a748d1fedadf696, type: 3}
