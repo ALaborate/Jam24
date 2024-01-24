@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 3177437201413902892}
   - component: {fileID: 3177437201413902899}
   - component: {fileID: 2601685920129534026}
+  - component: {fileID: 8911985484728177753}
+  - component: {fileID: 5452528570749613845}
   m_Layer: 3
   m_Name: JamPlayer
   m_TagString: Untagged
@@ -94,6 +96,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   floatingForceReductionDenominator: 5
   maxRunningSpeed: 10
+  maxVelocityDamage: 0.8
+  maxAsymmetryMultiplier: 4
   hand: {fileID: 4080668706872401497}
   minGroundDistance: 3.4028235e+38
   footGrip: 0
@@ -166,6 +170,37 @@ MonoBehaviour:
   rotationSensitivity: 0.01
   positionPrecision: 0.01
   scalePrecision: 0.01
+--- !u!114 &8911985484728177753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3177437201413902891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3799432825ed15d4da5e5351552f9b0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  regenerationRate: 0.05
+--- !u!114 &5452528570749613845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3177437201413902891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1e423e929a228c4f9b516de39665149, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mRenderer: {fileID: 4546052274319988250}
+  healthyColor: {r: 0, g: 1, b: 0, a: 1}
+  roflColor: {r: 1, g: 0.5851495, b: 0, a: 2}
 --- !u!1 &3452354912904019907
 GameObject:
   m_ObjectHideFlags: 0
