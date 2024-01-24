@@ -30,16 +30,16 @@ public class SceneLoader : NetworkBehaviour
         if (!isInitialized)
         {
             isInitialized = true;
-            SceneManager.sceneLoaded += (scene, mode) => FinishInitialization(scene);
+            SceneManager.sceneLoaded += FinishInitialization;
             var parameters = new LoadSceneParameters(LoadSceneMode.Additive);
             var scene = SceneManager.LoadSceneAsync(sceneName, parameters);
 
         }
     }
 
-    private void FinishInitialization(UnityEngine.SceneManagement.Scene scene)
+    private void FinishInitialization(Scene scene, LoadSceneMode mode)
     {
-        if(scene.name != sceneName)
+        if (scene.name != sceneName)
         {
             return;
         }
@@ -67,5 +67,18 @@ public class SceneLoader : NetworkBehaviour
     {
         base.OnStopClient();
         SceneManager.UnloadSceneAsync(sceneName);
+        Deinit();
+    }
+    public override void OnStopServer()
+    {
+        base.OnStopServer();
+        SceneManager.UnloadSceneAsync(sceneName);
+        Deinit();
+    }
+
+    private void Deinit()
+    {
+        isInitialized = false;
+        SceneManager.sceneLoaded -= FinishInitialization;
     }
 }
