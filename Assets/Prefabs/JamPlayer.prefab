@@ -96,8 +96,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   floatingForceReductionDenominator: 5
   maxRunningSpeed: 10
-  maxVelocityDamage: 0.8
-  maxAsymmetryMultiplier: 4
+  maxVelocityDamage: 3
   hand: {fileID: 4080668706872401497}
   minGroundDistance: 3.4028235e+38
   footGrip: 0
@@ -185,7 +184,8 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  regenerationRate: 0.05
+  regenerationRate: 0.15
+  health: 1
 --- !u!114 &5452528570749613845
 MonoBehaviour:
   m_ObjectHideFlags: 0
