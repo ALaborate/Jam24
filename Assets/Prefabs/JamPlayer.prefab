@@ -56,7 +56,7 @@ MonoBehaviour:
   moveSpeed: 556
   jumpForce: 1
   camRotationSpeed: 2048
-  bodyYRotationSpeed: 10
+  bodyYRotationTorque: 256
   bodyStabilizationSpeed: 4
   bodyStability: 0.3
   groundCastDistance: 1.6
@@ -111,7 +111,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &3177437201413902899
 MonoBehaviour:
