@@ -26,12 +26,17 @@ public class NetworkCharacterController : NetworkBehaviour
 
     public float maxRunningSpeed = 10;
 
+    [Header("Self-damage")]
+    public float maxVelocityDamage = .8f;
+    public float maxAsymmetryMultiplier = 4f;
+
     public Transform hand;
 
 
     private Rigidbody rb;
     private CapsuleCollider col;
     private Camera cam;
+    private PlayerHealth health;
     private float height;
     // Start is called before the first frame update
     void Start()
@@ -45,6 +50,7 @@ public class NetworkCharacterController : NetworkBehaviour
         {
             rb = GetComponent<Rigidbody>();
             col = GetComponentInChildren<CapsuleCollider>();
+            health = GetComponent<PlayerHealth>();
             height = col.center.y + col.height / 2;
             DisableControlAndCamera();
         }
@@ -193,14 +199,38 @@ public class NetworkCharacterController : NetworkBehaviour
     private SortedSet<int> groundCollisionHashes = new();
     private void OnCollisionEnter(Collision collision)
     {
-        if (IsColisionWithGround(collision))
+        if (isServer)
         {
-            groundCollisionHashes.Add(collision.collider.GetInstanceID());
+            if (IsColisionWithGround(collision))
+            {
+                groundCollisionHashes.Add(collision.collider.GetInstanceID());
+            }
+
+            float asymmetryCoef = 1;
+            //float averageHeight = 0;
+            //Vector3 averageContactPoint = Vector3.zero;
+            //for (int i = 0; i < collision.contacts.Length; i++)
+            //{
+            //    var lp = transform.InverseTransformPoint(collision.contacts[i].point);
+            //    averageHeight = (averageHeight * i + lp.y) / (i + 1);
+            //    averageContactPoint = (averageContactPoint * i + collision.contacts[i].point) / (i + 1);
+            //}
+            //asymmetryCoef = Mathf.Lerp(1, maxAsymmetryMultiplier, Mathf.Abs(averageHeight / height));
+
+
+            var mag = Vector3.Dot(collision.contacts[0].normal.normalized, collision.relativeVelocity.normalized) * collision.relativeVelocity.magnitude;
+            var fallDamageReductionCoef = Mathf.Lerp(1, .2f, Mathf.Clamp01(Vector3.Dot(Vector3.up, collision.contacts[0].normal)));
+            var damage = (mag / maxRunningSpeed) * maxVelocityDamage * asymmetryCoef * fallDamageReductionCoef;
+            health.TakeDamage(Mathf.Clamp01(damage));
         }
     }
     private void OnCollisionExit(Collision collision)
     {
-        groundCollisionHashes.Remove(collision.collider.GetInstanceID());
+        if (isServer)
+        {
+
+            groundCollisionHashes.Remove(collision.collider.GetInstanceID()); 
+        }
     }
     private bool IsColisionWithGround(Collision collision)
     {
