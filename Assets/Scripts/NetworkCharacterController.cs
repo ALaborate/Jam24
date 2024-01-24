@@ -9,7 +9,7 @@ public class NetworkCharacterController : NetworkBehaviour
     public float moveSpeed = 10f;
     public float jumpForce = 10f;
     public float camRotationSpeed = 1f;
-    public float bodyYRotationSpeed = 1f;
+    public float bodyYRotationTorque = 1f;
     public float bodyStabilizationSpeed = 4;
     public float bodyStability = 0.3f;
 
@@ -155,21 +155,21 @@ public class NetworkCharacterController : NetworkBehaviour
             {
                 var yVelocity = rb.angularVelocity.y * Mathf.Rad2Deg;
                 var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y);
-                var breakingDistance = yVelocity * yVelocity / (2 * bodyYRotationSpeed);
-                if (Mathf.Abs(yDelta) < 2 * bodyYRotationSpeed * Time.fixedDeltaTime && Mathf.Abs(yVelocity) < 2 * bodyYRotationSpeed * Time.fixedDeltaTime)
+                var breakingDistance = yVelocity * yVelocity / (2 * bodyYRotationTorque);
+                if (Mathf.Abs(yDelta) < 2 * bodyYRotationTorque * Time.fixedDeltaTime && Mathf.Abs(yVelocity) < 2 * bodyYRotationTorque * Time.fixedDeltaTime)
                 {
                     rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0, rb.angularVelocity.z);
                     rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles.x, targetRotation.y, rb.rotation.eulerAngles.z);
                 }
                 else if (Mathf.Abs(yDelta) > breakingDistance)
                 {
-                    torqueVector.y = bodyYRotationSpeed * Mathf.Sign(yDelta);
+                    torqueVector.y = bodyYRotationTorque * Mathf.Sign(yDelta);
                     //torqueVector.y *= Mathf.Clamp01(Mathf.Abs(yDelta) / bodyYRotationSpeed * Time.fixedDeltaTime * Time.fixedDeltaTime * 0.5f); //dont speed up more than necessary
                 }
                 else
                 {
-                    torqueVector.y = -Mathf.Min(Mathf.Abs(yVelocity), bodyYRotationSpeed) * Mathf.Sign(yVelocity);
-                }
+                    torqueVector.y = -Mathf.Min(Mathf.Abs(yVelocity) / Time.fixedDeltaTime, bodyYRotationTorque) * Mathf.Sign(yVelocity);
+                 }
                 rb.AddTorque(torqueVector * Time.fixedDeltaTime, ForceMode.Acceleration);
             }
 
