@@ -220,7 +220,7 @@ public class NetworkCharacterController : NetworkBehaviour
         var floatingForceValue = floatingForceCurve.Evaluate(minGroundDistance) * maxFloatingForce;
         if (rb.velocity.y > 0)
             floatingForceValue *= Mathf.Clamp01(1 - rb.velocity.y / floatingForceReductionDenominator);
-        rb.AddForce(Vector3.up * floatingForceValue * Time.fixedDeltaTime, ForceMode.Acceleration);
+            rb.AddForce(Vector3.up * floatingForceValue * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
 
 
@@ -295,7 +295,6 @@ public class NetworkCharacterController : NetworkBehaviour
     private bool IsColisionWithGround(Collision collision)
     {
         var isGroundLayer = ((1 << collision.gameObject.layer) & groundLayer) > 0;
-        collision.GetHashCode();
         var averageColinearity = 0f;
         if (isGroundLayer)
             for (int i = 0; i < collision.contactCount; i++)
