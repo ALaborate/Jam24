@@ -22,6 +22,8 @@ public class Feather : MonoBehaviour, IPickable
         }
         else
         {
+            if (rb == null) Start();
+
             rb.isKinematic = true;
             col.enabled = false;
             transform.SetParent(place);
