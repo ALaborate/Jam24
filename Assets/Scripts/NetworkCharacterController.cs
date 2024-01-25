@@ -312,15 +312,13 @@ public class NetworkCharacterController : NetworkBehaviour
         }
         else
         {
-            yield return new WaitForEndOfFrame();
             NetworkIdentity item = null;
             const float DELAY = .5f;
             const int TRIES = 4;
-            var delay = new WaitForSeconds(DELAY);
+            YieldInstruction delay = new WaitForEndOfFrame();
             var spawned = isServerOnly ? NetworkServer.spawned : NetworkClient.spawned;
             for (int i = 0; i < TRIES; i++)
             {
-                
                 if (spawned.ContainsKey(itemNetId))
                 {
                     item = spawned[itemNetId];
@@ -329,6 +327,8 @@ public class NetworkCharacterController : NetworkBehaviour
                 else
                 {
                     yield return delay;
+                    if (i == 0)
+                        delay = new WaitForSeconds(DELAY);
                 }
             }
 
@@ -415,6 +415,13 @@ public class NetworkCharacterController : NetworkBehaviour
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
     }
 
+    private void OnDisable()
+    {
+        if (isServer)
+        {
+            OnInventoryChange(SyncSet<uint>.Operation.OP_CLEAR, 0);
+        }
+    }
 
 
     private void LateUpdate()
