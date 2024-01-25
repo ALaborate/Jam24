@@ -39,6 +39,11 @@ public class NetworkCharacterController : NetworkBehaviour
     private Camera cam;
     private PlayerHealth health;
     private float height;
+
+    private void Awake()
+    {
+        inventoryIds.Callback += OnInventoryChange;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -61,6 +66,14 @@ public class NetworkCharacterController : NetworkBehaviour
             }
 
             DisableControlAndCamera();
+
+            if (isClient) //pick up all objects picked earlier than connection
+            {
+                foreach (var item in inventoryIds)
+                {
+                    //OnInventoryChange(SyncSortedSet<NetworkIdentity>.Operation.OP_ADD, item);
+                }
+            }
         }
     }
     private void DisableControlAndCamera()
@@ -180,6 +193,12 @@ public class NetworkCharacterController : NetworkBehaviour
         //}
         //else
 
+#if UNITY_WEBGL
+
+#else
+
+#endif
+
 
         {
             var yVelocity = rb.angularVelocity.y * Mathf.Rad2Deg;
@@ -220,12 +239,13 @@ public class NetworkCharacterController : NetworkBehaviour
         var floatingForceValue = floatingForceCurve.Evaluate(minGroundDistance) * maxFloatingForce;
         if (rb.velocity.y > 0)
             floatingForceValue *= Mathf.Clamp01(1 - rb.velocity.y / floatingForceReductionDenominator);
-            rb.AddForce(Vector3.up * floatingForceValue * Time.fixedDeltaTime, ForceMode.Acceleration);
+        rb.AddForce(Vector3.up * floatingForceValue * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
 
 
 
     private SortedSet<int> groundCollisionHashes = new();
+    private readonly SyncHashSet<uint> inventoryIds = new();
     private void OnCollisionEnter(Collision collision)
     {
         if (isServer)
@@ -235,13 +255,10 @@ public class NetworkCharacterController : NetworkBehaviour
                 groundCollisionHashes.Add(collision.collider.GetInstanceID());
             }
 
-            var pickable = collision.gameObject.GetComponent<IPickable>();
-            var pickableNetId = collision.gameObject.GetComponent<NetworkIdentity>();
-            if (pickable != null && !health.IsRofled)
+
+            if (!health.IsRofled && TryPick(collision.rigidbody?.gameObject ?? collision.gameObject))
             {
-                pickable.PickUp(gameObject, hand);
-                if (pickableNetId != null)
-                    RpcPickObject(pickableNetId);
+                //do nothing
             }
             else
             {
@@ -249,19 +266,85 @@ public class NetworkCharacterController : NetworkBehaviour
             }
         }
     }
-    
-    [ClientRpc]
-    private void RpcPickObject(NetworkIdentity target)
+
+    ///<param name="rbGo">Game object on which rigidbody sits, if present. Otherwise, collision gameobject</param>
+    private bool TryPick(GameObject rbGo)
     {
-        var pickable = target.GetComponent<IPickable>();
-        pickable?.PickUp(gameObject, hand);
+        if (rbGo == null || !isServer) return false;
+
+        var pickable = rbGo.GetComponent<IPickable>();
+        var pickableNetId = rbGo.GetComponent<NetworkIdentity>();
+
+        if (pickable != null)
+        {
+            if (pickableNetId != null)
+            {
+                inventoryIds.Add(pickableNetId.netId);
+            }
+            //pickable.PickUp(gameObject, hand);
+            ////if (pickableNetId != null && isServer)
+            ////    RpcPickObject(pickableNetId);
+            return true;
+        }
+        return false;
     }
-    [ClientRpc]
-    private void RpcDropObject(NetworkIdentity target)
+
+    private void OnInventoryChange(SyncSortedSet<uint>.Operation op, uint itemNetId)
     {
-        var pickable = target.GetComponent<IPickable>();
-        pickable?.Drop(gameObject);
+        StartCoroutine(OnInventoryChangeDelayed(op, itemNetId));
+
     }
+
+    private IEnumerator OnInventoryChangeDelayed(SyncSet<uint>.Operation op, uint itemNetId)
+    {
+        if(op == SyncSet<uint>.Operation.OP_CLEAR)
+        {
+            for (int i = hand.childCount - 1; i >= 0; i--)
+            {
+                var pickable = hand.GetChild(i).GetComponent<IPickable>();
+                pickable?.Drop(gameObject);
+            }
+        }
+        else
+        {
+            yield return new WaitForEndOfFrame();
+            NetworkIdentity item = null;
+            const float DELAY = .5f;
+            const int TRIES = 4;
+            var delay = new WaitForSeconds(DELAY);
+            for (int i = 0; i < TRIES; i++)
+            {
+                if (NetworkClient.spawned.ContainsKey(itemNetId))
+                {
+                    item = NetworkClient.spawned[itemNetId];
+                    break;
+                }
+                else
+                {
+                    yield return delay;
+                }
+            }
+
+            if (item == null)
+            {
+                Debug.LogError($"Networked item with ID {itemNetId} not found for {DELAY * TRIES} seconds, {nameof(OnInventoryChangeDelayed)} fails.");
+                yield break;
+            }
+
+            if (op == SyncSortedSet<uint>.Operation.OP_ADD)
+            {
+                var pickable = item.GetComponent<IPickable>();
+                pickable?.PickUp(gameObject, hand);
+            }
+            else if (op == SyncSortedSet<uint>.Operation.OP_REMOVE)
+            {
+                var pickable = item.GetComponent<IPickable>();
+                pickable.Drop(gameObject);
+            } 
+        }
+    }
+
+
 
 
     private void CalculateSelfDamage(Collision collision)
@@ -311,19 +394,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private void OnRofl()
     {
-        if (hand.childCount > 0)
-        {
-            for (int i = 0; i < hand.childCount; i++)
-            {
-                var child = hand.GetChild(i);
-                child.SetParent(null, true);
-                var pickable = child.GetComponent<IPickable>();
-                pickable?.Drop(gameObject);
-                var pickableNetId = child.GetComponent<NetworkIdentity>();
-                if (pickableNetId != null)
-                    RpcDropObject(pickableNetId);
-            }
-        }
+        if (isServer) inventoryIds.Clear();
 
         rb.constraints = RigidbodyConstraints.None;
         rb.AddTorque(Random.onUnitSphere * roflRandomVelocityMultiplier, ForceMode.VelocityChange);
