@@ -57,7 +57,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   moveSpeed: 556
-  jumpForce: 1
+  jumpForce: 9
+  roflJumpForce: 1.5
   camRotationSpeed: 2048
   bodyYRotationTorque: 256
   bodyStabilizationSpeed: 40
