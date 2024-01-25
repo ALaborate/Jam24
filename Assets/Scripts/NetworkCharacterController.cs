@@ -9,6 +9,7 @@ public class NetworkCharacterController : NetworkBehaviour
     private const RigidbodyConstraints RB_ROT_CONSTR = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     public float moveSpeed = 10f;
     public float jumpForce = 10f;
+    public float roflJumpForce = 1;
     public float camRotationSpeed = 1f;
     public float bodyYRotationTorque = 1f;
     public float bodyStabilizationSpeed = 4;
@@ -138,7 +139,7 @@ public class NetworkCharacterController : NetworkBehaviour
         if ((isGrounded || health.IsRofled) && rb.velocity.y < 0.1f && jump && dt > 0 && rb.velocity.sqrMagnitude < maxRunningSpeed * maxRunningSpeed * 10)
         {
             // Add an upward force to the rigidbody to make the character jump
-            rb.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
+            rb.AddForce(transform.up * (health.IsRofled ? roflJumpForce : jumpForce) , ForceMode.VelocityChange);
             //rb.AddTorque(Vector3.one * jumpForce, ForceMode.VelocityChange);
         }
 
