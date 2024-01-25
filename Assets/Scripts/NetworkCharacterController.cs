@@ -135,7 +135,7 @@ public class NetworkCharacterController : NetworkBehaviour
         rb.AddForce(moveDirection * moveSpeed * (float)dt * forceSpeedReduction * footGrip, ForceMode.Acceleration);
 
         isGrounded = minGroundDistance <= 1;
-        if ((isGrounded || health.IsRofled) && jump && dt > 0)
+        if ((isGrounded || health.IsRofled) && rb.velocity.y < 0.1f && jump && dt > 0 && rb.velocity.sqrMagnitude < maxRunningSpeed * maxRunningSpeed * 10)
         {
             // Add an upward force to the rigidbody to make the character jump
             rb.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
@@ -181,6 +181,11 @@ public class NetworkCharacterController : NetworkBehaviour
 
             RotateToCameraDirection();
 
+
+            if(transform.position.y < -100)
+            {
+                transform.position = Vector3.up * 10;
+            }
         }
     }
 
