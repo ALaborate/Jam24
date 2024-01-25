@@ -110,6 +110,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
         }
     }
+    public bool HasFeather => inventoryIds.Count > 0;
 
     private double lastCmdMoveTime = 0;
     private RaycastHit[] groundHits;
@@ -134,10 +135,10 @@ public class NetworkCharacterController : NetworkBehaviour
         rb.AddForce(moveDirection * moveSpeed * (float)dt * forceSpeedReduction * footGrip, ForceMode.Acceleration);
 
         isGrounded = minGroundDistance <= 1;
-        if (isGrounded && jump && dt > 0 && !health.IsRofled)
+        if ((isGrounded || health.IsRofled) && jump && dt > 0)
         {
             // Add an upward force to the rigidbody to make the character jump
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+            rb.AddForce(transform.up * jumpForce, ForceMode.VelocityChange);
             //rb.AddTorque(Vector3.one * jumpForce, ForceMode.VelocityChange);
         }
 
@@ -229,7 +230,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private void ApplyStoppingForce()
     {
-        if (!receivedUserInput)
+        if (!receivedUserInput && !health.IsRofled)
         {
             //apply counterforce
             var moveDirection = new Vector3(-rb.velocity.x, 0, -rb.velocity.z);
@@ -369,10 +370,26 @@ public class NetworkCharacterController : NetworkBehaviour
 
 
         var mag = Vector3.Dot(collision.contacts[0].normal.normalized, collision.relativeVelocity.normalized) * collision.relativeVelocity.magnitude;
-        var fallDamageReductionCoef = Mathf.Lerp(1, .2f, Mathf.Clamp01(Vector3.Dot(Vector3.up, collision.contacts[0].normal)));
-        var roflDamageReductionCoef = health.IsRofled ? 0.1f : 1;
-        roflDamageReductionCoef *= hand.childCount > 0 && collision.rigidbody?.GetComponent<NetworkCharacterController>() != null ? 0.1f : 1;
-        var damage = (mag / maxRunningSpeed) * maxVelocityDamage * asymmetryCoef * fallDamageReductionCoef * roflDamageReductionCoef;
+        var fallDamageReductionCoef = Mathf.Lerp(1, .05f, Mathf.Clamp01(Vector3.Dot(Vector3.up, collision.contacts[0].normal)));
+        var damageReduction = health.IsRofled ? 0.1f : 1;
+        //roflDamageReductionCoef *= hand.childCount > 0 && collision.rigidbody?.GetComponent<NetworkCharacterController>() != null ? 0.3f : 1;
+        var otherPlayer = (collision.rigidbody?.gameObject ?? collision.gameObject).GetComponent<NetworkCharacterController>();
+        if (otherPlayer != null)
+        {
+            if(otherPlayer.HasFeather)
+            {
+                damageReduction *= 1f;
+            }
+            else
+            {
+                damageReduction *= 0f; //no damage if no feather
+            }
+        }
+        else
+        {
+            damageReduction *= 1f; //full damage if wall
+        }
+        var damage = (mag / maxRunningSpeed) * maxVelocityDamage * asymmetryCoef * fallDamageReductionCoef * damageReduction;
         health.TakeDamage(Mathf.Clamp01(damage));
     }
 
