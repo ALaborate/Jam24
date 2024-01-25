@@ -42,12 +42,17 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private void Awake()
     {
-        inventoryIds.Callback += OnInventoryChange;
+        
     }
     // Start is called before the first frame update
     void Start()
     {
         Initialize();
+        foreach (var item in inventoryIds)
+        {
+            OnInventoryChange(SyncSet<uint>.Operation.OP_ADD, item);
+        }
+        inventoryIds.Callback += OnInventoryChange;
     }
 
     private void Initialize()
@@ -312,11 +317,13 @@ public class NetworkCharacterController : NetworkBehaviour
             const float DELAY = .5f;
             const int TRIES = 4;
             var delay = new WaitForSeconds(DELAY);
+            var spawned = isServerOnly ? NetworkServer.spawned : NetworkClient.spawned;
             for (int i = 0; i < TRIES; i++)
             {
-                if (NetworkClient.spawned.ContainsKey(itemNetId))
+                
+                if (spawned.ContainsKey(itemNetId))
                 {
-                    item = NetworkClient.spawned[itemNetId];
+                    item = spawned[itemNetId];
                     break;
                 }
                 else
