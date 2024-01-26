@@ -43,7 +43,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private void Awake()
     {
-        
+
     }
     // Start is called before the first frame update
     void Start()
@@ -136,18 +136,28 @@ public class NetworkCharacterController : NetworkBehaviour
         rb.AddForce(moveDirection * moveSpeed * (float)dt * forceSpeedReduction * footGrip, ForceMode.Acceleration);
 
         isGrounded = minGroundDistance <= 1;
-        this.jump = this.jump || jump;
+        if (jump)
+            userInput = userInput | UserInput.Jump;
 
         targetRotation = new Vector3(0, targetRotationY);
 
-        receivedUserInput = strafe != 0 || run != 0;
+        if (strafe != 0 || run != 0)
+            userInput = userInput | UserInput.ReceivedUserInput;
+        else
+            userInput = userInput & ~UserInput.ReceivedUserInput;
     }
 
+    [System.Flags]
+    private enum UserInput
+    {
+        None = 0,
+        ReceivedUserInput = 1 << 0,
+        Jump = 1 << 1,
+        Push = 1 << 2,
+    }
 
-
-    private bool receivedUserInput = false;
+    UserInput userInput = UserInput.None;
     private Vector3 targetRotation;
-    private bool jump = false;
     private void FixedUpdate()
     {
         if (rb != null)
@@ -172,11 +182,12 @@ public class NetworkCharacterController : NetworkBehaviour
                     footGrip = (footGrip * i + groundHits[i].collider.material.dynamicFriction) / (i + 1);
             }
 
+            var jump = userInput.HasFlag(UserInput.Jump);
             if ((isGrounded || health.IsRofled) && rb.velocity.y < 0.1f && jump && rb.velocity.sqrMagnitude < maxRunningSpeed * maxRunningSpeed * 10)
             {
                 // Add an upward force to the rigidbody to make the character jump
                 rb.AddForce(transform.up * (health.IsRofled ? roflJumpForce : jumpForce), ForceMode.VelocityChange);
-                jump = false;
+                userInput = userInput & ~UserInput.Jump;
                 //rb.AddTorque(Vector3.one * jumpForce, ForceMode.VelocityChange);
             }
 
@@ -187,7 +198,7 @@ public class NetworkCharacterController : NetworkBehaviour
             RotateToCameraDirection();
 
 
-            if(transform.position.y < -100)
+            if (transform.position.y < -100)
             {
                 transform.position = Vector3.up * 10;
             }
@@ -240,6 +251,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private void ApplyStoppingForce()
     {
+        var receivedUserInput = userInput.HasFlag(UserInput.ReceivedUserInput);
         if (!receivedUserInput && !health.IsRofled)
         {
             //apply counterforce
@@ -313,7 +325,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private IEnumerator OnInventoryChangeDelayed(SyncSet<uint>.Operation op, uint itemNetId)
     {
-        if(op == SyncSet<uint>.Operation.OP_CLEAR)
+        if (op == SyncSet<uint>.Operation.OP_CLEAR)
         {
             for (int i = hand.childCount - 1; i >= 0; i--)
             {
@@ -358,7 +370,7 @@ public class NetworkCharacterController : NetworkBehaviour
             {
                 var pickable = item.GetComponent<IPickable>();
                 pickable.Drop(gameObject);
-            } 
+            }
         }
     }
 
@@ -386,7 +398,7 @@ public class NetworkCharacterController : NetworkBehaviour
         var otherPlayer = (collision.rigidbody?.gameObject ?? collision.gameObject).GetComponent<NetworkCharacterController>();
         if (otherPlayer != null)
         {
-            if(otherPlayer.HasFeather)
+            if (otherPlayer.HasFeather)
             {
                 damageReduction *= 1f;
             }
