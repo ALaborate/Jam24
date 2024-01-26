@@ -136,12 +136,7 @@ public class NetworkCharacterController : NetworkBehaviour
         rb.AddForce(moveDirection * moveSpeed * (float)dt * forceSpeedReduction * footGrip, ForceMode.Acceleration);
 
         isGrounded = minGroundDistance <= 1;
-        if ((isGrounded || health.IsRofled) && rb.velocity.y < 0.1f && jump && dt > 0 && rb.velocity.sqrMagnitude < maxRunningSpeed * maxRunningSpeed * 10)
-        {
-            // Add an upward force to the rigidbody to make the character jump
-            rb.AddForce(transform.up * (health.IsRofled ? roflJumpForce : jumpForce) , ForceMode.VelocityChange);
-            //rb.AddTorque(Vector3.one * jumpForce, ForceMode.VelocityChange);
-        }
+        this.jump = this.jump || jump;
 
         targetRotation = new Vector3(0, targetRotationY);
 
@@ -151,7 +146,8 @@ public class NetworkCharacterController : NetworkBehaviour
 
 
     private bool receivedUserInput = false;
-    [SerializeField][ReadOnly] private Vector3 targetRotation;
+    private Vector3 targetRotation;
+    private bool jump = false;
     private void FixedUpdate()
     {
         if (rb != null)
@@ -174,6 +170,14 @@ public class NetworkCharacterController : NetworkBehaviour
                     minGroundDistance = groundHits[i].distance;
                 if (hit)
                     footGrip = (footGrip * i + groundHits[i].collider.material.dynamicFriction) / (i + 1);
+            }
+
+            if ((isGrounded || health.IsRofled) && rb.velocity.y < 0.1f && jump && rb.velocity.sqrMagnitude < maxRunningSpeed * maxRunningSpeed * 10)
+            {
+                // Add an upward force to the rigidbody to make the character jump
+                rb.AddForce(transform.up * (health.IsRofled ? roflJumpForce : jumpForce), ForceMode.VelocityChange);
+                jump = false;
+                //rb.AddTorque(Vector3.one * jumpForce, ForceMode.VelocityChange);
             }
 
             AddFloatingForce();
