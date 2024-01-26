@@ -33,6 +33,11 @@ public class NetworkCharacterController : NetworkBehaviour
     public float pushMaxForce = 600f;
     public float pushRadius = 2f;
     public float pushCooldown = 1f;
+    [Space]
+    public float ticklingGainCoef = 2f;
+    public float ticklingCooling = 1.5f;
+    public float ticklingRadius = 1.7f;
+    public float ticklingDamage = 0.6f;
 
 
 
@@ -102,6 +107,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
 
     private float targetLookAngleY = 0f;
+    [SerializeField][ReadOnly] private float ticklingIntensity = 0f;
     private void Update()
     {
         if (isLocalPlayer)
@@ -109,7 +115,24 @@ public class NetworkCharacterController : NetworkBehaviour
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
 
-            CmdMove(vertical, horizontal, Input.GetKey(KeyCode.Space), targetLookAngleY, Input.GetAxisRaw("Fire1") > 0);
+            var mouseSpeed = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")).magnitude;
+            ticklingIntensity -= Time.deltaTime * ticklingCooling;
+            ticklingIntensity += mouseSpeed * ticklingGainCoef;
+            ticklingIntensity = Mathf.Clamp01(ticklingIntensity);
+
+            if (Input.GetKey(KeyCode.Space))
+                userInput = userInput | UserInput.Jump;
+            else
+                userInput = userInput & ~UserInput.Jump;
+
+            if (Input.GetAxisRaw("Fire1") > 0)
+                userInput = userInput | UserInput.Push;
+            else
+                userInput = userInput & ~UserInput.Push;
+
+
+
+            CmdMove(vertical, horizontal, targetLookAngleY, ticklingIntensity, userInput);
         }
     }
     public bool HasFeather => inventoryIds.Count > 0;
@@ -123,7 +146,7 @@ public class NetworkCharacterController : NetworkBehaviour
     [SerializeField][ReadOnly] private float footGrip = 0f;
     [SerializeField][ReadOnly] private bool isGrounded;
     [Command]
-    private void CmdMove(float run, float strafe, bool jump, float targetRotationY, bool push)
+    private void CmdMove(float run, float strafe, float targetRotationY, float ticklingIntensity, UserInput incoming)
     {
         var dt = NetworkTime.time - lastCmdMoveTime;
         lastCmdMoveTime = NetworkTime.time;
@@ -136,17 +159,19 @@ public class NetworkCharacterController : NetworkBehaviour
         forceSpeedReduction *= health.IsRofled ? 0.34f : 1;
         rb.AddForce(moveDirection * moveAcceleration * (float)dt * forceSpeedReduction * footGrip, ForceMode.Acceleration);
 
-        if (jump)
+        if (incoming.HasFlag(UserInput.Jump))
             userInput = userInput | UserInput.Jump;
 
         targetRotation = new Vector3(0, targetRotationY);
+
+        this.ticklingIntensity = ticklingIntensity;
 
         if (strafe != 0 || run != 0)
             userInput = userInput | UserInput.ReceivedUserInput;
         else
             userInput = userInput & ~UserInput.ReceivedUserInput;
 
-        if (push)
+        if (incoming.HasFlag(UserInput.Push))
             userInput = userInput | UserInput.Push;
         else
             userInput = userInput & ~UserInput.Push;
@@ -207,6 +232,8 @@ public class NetworkCharacterController : NetworkBehaviour
             RotateToCameraDirection();
 
             PushOpponents();
+
+            TickleOpponents();
 
             float roflVelocitySqrThreshold = 4;
             if (health.IsRofled && rb.angularVelocity.sqrMagnitude < roflVelocitySqrThreshold * roflRandomTorqueMultiplier)
@@ -293,6 +320,22 @@ public class NetworkCharacterController : NetworkBehaviour
                 var direction = (rhi.transform.position - transform.position).normalized;
                 var force = direction * pushMaxForce;
                 rhi.rigidbody.AddForce(force, ForceMode.Impulse);
+            }
+        }
+    }
+
+    private void TickleOpponents()
+    {
+        var distance = Mathf.Lerp(ticklingRadius * .5f, ticklingRadius, ticklingIntensity);
+        if (ticklingIntensity == 0 || !HasFeather) return;
+
+        var hits = Physics.OverlapSphere(transform.position + transform.forward * 0.5f * distance, distance * 0.5f);
+        foreach (var hit in hits)
+        {
+            var other = hit.attachedRigidbody?.GetComponent<PlayerHealth>();
+            if (other != null && other.gameObject.GetInstanceID() != this.gameObject.GetInstanceID())
+            {
+                other.TakeDamage(ticklingIntensity * ticklingDamage * Time.fixedDeltaTime);
             }
         }
     }
@@ -425,14 +468,7 @@ public class NetworkCharacterController : NetworkBehaviour
         var otherPlayer = (collision.rigidbody?.gameObject ?? collision.gameObject).GetComponent<NetworkCharacterController>();
         if (otherPlayer != null)
         {
-            if (otherPlayer.HasFeather)
-            {
-                damageReduction *= 1f;
-            }
-            else
-            {
-                damageReduction *= 0f; //no damage if no feather
-            }
+            damageReduction *= 0f; //no damage if no feather
         }
         else
         {

@@ -56,17 +56,14 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  moveSpeed: 556
+  hand: {fileID: 4080668706872401497}
+  moveAcceleration: 556
+  maxRunningSpeed: 10
   jumpForce: 9
   roflJumpForce: 1.5
+  roflRandomTorqueMultiplier: 3.14
   camRotationSpeed: 2048
   bodyYRotationTorque: 256
-  bodyStabilizationSpeed: 40
-  bodyStability: 0.5
-  groundCastDistance: 1.6
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 4294967105
   minCamAngle: -30
   maxCamAngle: 60
   camOffset: {x: 0.5, y: 0, z: 0}
@@ -96,13 +93,22 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   floatingForceReductionDenominator: 5
-  maxRunningSpeed: 10
+  groundCastDistance: 1.6
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 4294967105
   maxVelocityDamage: 3
-  hand: {fileID: 4080668706872401497}
+  pushMaxForce: 600
+  pushRadius: 2
+  pushCooldown: 1
+  ticklingGainCoef: 0.084
+  ticklingCooling: 1.5
+  ticklingRadius: 1.7
+  ticklingDamage: 0.6
+  ticklingIntensity: 0
   minGroundDistance: 3.4028235e+38
   footGrip: 0
   isGrounded: 0
-  targetRotation: {x: 0, y: 0, z: 0}
 --- !u!54 &3177437201413902892
 Rigidbody:
   m_ObjectHideFlags: 0
