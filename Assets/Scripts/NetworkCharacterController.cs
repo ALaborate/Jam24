@@ -6,33 +6,32 @@ using Mirror;
 
 public class NetworkCharacterController : NetworkBehaviour
 {
+
     private const RigidbodyConstraints RB_ROT_CONSTR = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-    public float moveSpeed = 10f;
+
+    public Transform hand;
+    [Space]
+    public float moveAcceleration = 556;
+    public float maxRunningSpeed = 10;
     public float jumpForce = 10f;
     public float roflJumpForce = 1;
+    public float roflRandomTorqueMultiplier = 3.14f;
+    public float maxVelocityDamage = .8f;
+    [Space]
     public float camRotationSpeed = 1f;
     public float bodyYRotationTorque = 1f;
-    public float bodyStabilizationSpeed = 4;
-    public float bodyStability = 0.3f;
-    float roflRandomVelocityMultiplier = 3.14f;
-
-    public float groundCastDistance = 1.1f;
-    public LayerMask groundLayer = Physics.DefaultRaycastLayers;
-
     public float minCamAngle = -30;
     public float maxCamAngle = 60;
     public Vector3 camOffset = new Vector3(1, 0, 0);
-
+    [Space]
     public float maxFloatingForce = 500;
     public AnimationCurve floatingForceCurve = AnimationCurve.Linear(0.5f, 1, 1.5f, 0);
     public float floatingForceReductionDenominator = 10;
+    public float groundCastDistance = 1.1f;
+    public LayerMask groundLayer = Physics.DefaultRaycastLayers;
 
-    public float maxRunningSpeed = 10;
 
-    [Header("Self-damage")]
-    public float maxVelocityDamage = .8f;
 
-    public Transform hand;
 
 
     private Rigidbody rb;
@@ -133,9 +132,8 @@ public class NetworkCharacterController : NetworkBehaviour
         var forceSpeedReduction = Mathf.Clamp01(1 - speed / maxRunningSpeed);
         forceSpeedReduction = Mathf.Lerp(1, forceSpeedReduction, Vector3.Dot(groundVelocity.normalized, moveDirection.normalized));
         forceSpeedReduction *= health.IsRofled ? 0.34f : 1;
-        rb.AddForce(moveDirection * moveSpeed * (float)dt * forceSpeedReduction * footGrip, ForceMode.Acceleration);
+        rb.AddForce(moveDirection * moveAcceleration * (float)dt * forceSpeedReduction * footGrip, ForceMode.Acceleration);
 
-        isGrounded = minGroundDistance <= 1;
         if (jump)
             userInput = userInput | UserInput.Jump;
 
@@ -181,13 +179,14 @@ public class NetworkCharacterController : NetworkBehaviour
                 if (hit)
                     footGrip = (footGrip * i + groundHits[i].collider.material.dynamicFriction) / (i + 1);
             }
+            isGrounded = minGroundDistance <= 1;
 
             var jump = userInput.HasFlag(UserInput.Jump);
+            userInput = userInput & ~UserInput.Jump;
             if ((isGrounded || health.IsRofled) && rb.velocity.y < 0.1f && jump && rb.velocity.sqrMagnitude < maxRunningSpeed * maxRunningSpeed * 10)
             {
                 // Add an upward force to the rigidbody to make the character jump
                 rb.AddForce(transform.up * (health.IsRofled ? roflJumpForce : jumpForce), ForceMode.VelocityChange);
-                userInput = userInput & ~UserInput.Jump;
                 //rb.AddTorque(Vector3.one * jumpForce, ForceMode.VelocityChange);
             }
 
@@ -197,8 +196,12 @@ public class NetworkCharacterController : NetworkBehaviour
 
             RotateToCameraDirection();
 
+            float roflVelocitySqrThreshold = 4;
+            if (health.IsRofled && rb.angularVelocity.sqrMagnitude < roflVelocitySqrThreshold * roflRandomTorqueMultiplier)
+                rb.AddTorque(Random.onUnitSphere * roflRandomTorqueMultiplier, ForceMode.VelocityChange);
 
-            if (transform.position.y < -100)
+
+            if (transform.position.y < -100) // respawn
             {
                 transform.position = Vector3.up * 10;
             }
@@ -256,7 +259,7 @@ public class NetworkCharacterController : NetworkBehaviour
         {
             //apply counterforce
             var moveDirection = new Vector3(-rb.velocity.x, 0, -rb.velocity.z);
-            rb.AddForce(moveDirection.normalized * moveSpeed * Time.fixedDeltaTime * footGrip, ForceMode.Acceleration);
+            rb.AddForce(moveDirection.normalized * moveAcceleration * Time.fixedDeltaTime * footGrip, ForceMode.Acceleration);
         }
     }
 
@@ -443,7 +446,6 @@ public class NetworkCharacterController : NetworkBehaviour
         if (isServer) inventoryIds.Clear();
 
         rb.constraints = RigidbodyConstraints.None;
-        rb.AddTorque(Random.onUnitSphere * roflRandomVelocityMultiplier, ForceMode.VelocityChange);
     }
 
     private void OnRoflOver()
