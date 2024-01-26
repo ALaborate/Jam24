@@ -16,7 +16,6 @@ public class NetworkCharacterController : NetworkBehaviour
     public float jumpForce = 10f;
     public float roflJumpForce = 1;
     public float roflRandomTorqueMultiplier = 3.14f;
-    public float maxVelocityDamage = .8f;
     [Space]
     public float camRotationSpeed = 1f;
     public float bodyYRotationTorque = 1f;
@@ -29,7 +28,11 @@ public class NetworkCharacterController : NetworkBehaviour
     public float floatingForceReductionDenominator = 10;
     public float groundCastDistance = 1.1f;
     public LayerMask groundLayer = Physics.DefaultRaycastLayers;
-
+    [Header("Interactions")]
+    public float maxVelocityDamage = .8f;
+    public float pushMaxForce = 600f;
+    public float pushRadius = 2f;
+    public float pushCooldown = 1f;
 
 
 
@@ -106,8 +109,7 @@ public class NetworkCharacterController : NetworkBehaviour
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
 
-            CmdMove(vertical, horizontal, Input.GetKey(KeyCode.Space), targetLookAngleY);
-
+            CmdMove(vertical, horizontal, Input.GetKey(KeyCode.Space), targetLookAngleY, Input.GetAxisRaw("Fire1") > 0);
         }
     }
     public bool HasFeather => inventoryIds.Count > 0;
@@ -121,7 +123,7 @@ public class NetworkCharacterController : NetworkBehaviour
     [SerializeField][ReadOnly] private float footGrip = 0f;
     [SerializeField][ReadOnly] private bool isGrounded;
     [Command]
-    private void CmdMove(float run, float strafe, bool jump, float targetRotationY)
+    private void CmdMove(float run, float strafe, bool jump, float targetRotationY, bool push)
     {
         var dt = NetworkTime.time - lastCmdMoveTime;
         lastCmdMoveTime = NetworkTime.time;
@@ -143,6 +145,11 @@ public class NetworkCharacterController : NetworkBehaviour
             userInput = userInput | UserInput.ReceivedUserInput;
         else
             userInput = userInput & ~UserInput.ReceivedUserInput;
+
+        if (push)
+            userInput = userInput | UserInput.Push;
+        else
+            userInput = userInput & ~UserInput.Push;
     }
 
     [System.Flags]
@@ -154,8 +161,11 @@ public class NetworkCharacterController : NetworkBehaviour
         Push = 1 << 2,
     }
 
+
+
     UserInput userInput = UserInput.None;
     private Vector3 targetRotation;
+    private float nextTimeToPush = 0;
     private void FixedUpdate()
     {
         if (rb != null)
@@ -196,6 +206,8 @@ public class NetworkCharacterController : NetworkBehaviour
 
             RotateToCameraDirection();
 
+            PushOpponents();
+
             float roflVelocitySqrThreshold = 4;
             if (health.IsRofled && rb.angularVelocity.sqrMagnitude < roflVelocitySqrThreshold * roflRandomTorqueMultiplier)
                 rb.AddTorque(Random.onUnitSphere * roflRandomTorqueMultiplier, ForceMode.VelocityChange);
@@ -222,13 +234,6 @@ public class NetworkCharacterController : NetworkBehaviour
         //    rb.AddTorque(torqueVector * bodyStabilizationSpeed * bodyStabilizationSpeed, ForceMode.Acceleration);
         //}
         //else
-
-#if UNITY_WEBGL
-
-#else
-
-#endif
-
 
         {
             var yVelocity = rb.angularVelocity.y * Mathf.Rad2Deg;
@@ -271,6 +276,25 @@ public class NetworkCharacterController : NetworkBehaviour
         if (rb.velocity.y > 0)
             floatingForceValue *= Mathf.Clamp01(1 - rb.velocity.y / floatingForceReductionDenominator);
         rb.AddForce(Vector3.up * floatingForceValue * Time.fixedDeltaTime, ForceMode.Acceleration);
+    }
+
+    private void PushOpponents()
+    {
+        var push = userInput.HasFlag(UserInput.Push);
+        userInput = userInput & ~UserInput.Push;
+
+        if (isServer && push && Time.fixedTime >= nextTimeToPush)
+        {
+            nextTimeToPush = Time.fixedTime + pushCooldown;
+            var ray = new Ray(transform.position, transform.forward);
+            var hit = Physics.Raycast(ray, out var rhi, pushRadius);
+            if (hit && rhi.rigidbody != null)
+            {
+                var direction = (rhi.transform.position - transform.position).normalized;
+                var force = direction * pushMaxForce;
+                rhi.rigidbody.AddForce(force, ForceMode.Impulse);
+            }
+        }
     }
 
 
