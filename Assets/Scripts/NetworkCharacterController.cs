@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.Android;
 
 
 public class NetworkCharacterController : NetworkBehaviour
@@ -10,6 +11,7 @@ public class NetworkCharacterController : NetworkBehaviour
     private const RigidbodyConstraints RB_ROT_CONSTR = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
     public Transform hand;
+    public ParticleSystem ticklingParticles;
     [Space]
     public float moveAcceleration = 556;
     public float maxRunningSpeed = 10;
@@ -36,9 +38,12 @@ public class NetworkCharacterController : NetworkBehaviour
     [Space]
     public float ticklingGainCoef = 2f;
     public float ticklingCooling = 1.5f;
-    public float ticklingRadius = 1.7f;
-    public float ticklingDamage = 0.6f;
-
+    public float ticklingRadius = 3.3f;
+    public float ticklingDamage = 0.7f;
+    [Header("Visual")]
+    public float tpMinEmision = 3;
+    public float tpMaxEmision = 11;
+    public float tpVisualThreshold = 0.4f;
 
 
 
@@ -47,6 +52,10 @@ public class NetworkCharacterController : NetworkBehaviour
     private Camera cam;
     private PlayerHealth health;
     private float height;
+
+
+    public bool HasFeather => inventoryIds.Count > 0;
+
 
     private void Awake()
     {
@@ -107,7 +116,10 @@ public class NetworkCharacterController : NetworkBehaviour
 
 
     private float targetLookAngleY = 0f;
-    [SerializeField][ReadOnly] private float ticklingIntensity = 0f;
+    private float ticklingIntensity = 0f;
+
+    [SyncVar]
+    private float ticklingIntensityVisual = 0f;
     private void Update()
     {
         if (isLocalPlayer)
@@ -130,12 +142,27 @@ public class NetworkCharacterController : NetworkBehaviour
             else
                 userInput = userInput & ~UserInput.Push;
 
-
-
             CmdMove(vertical, horizontal, targetLookAngleY, ticklingIntensity, userInput);
         }
+
+
+        if (isClient)
+        {
+            ShowTicklingParticles();
+        }
     }
-    public bool HasFeather => inventoryIds.Count > 0;
+
+    private void ShowTicklingParticles()
+    {
+        var em = ticklingParticles.emission;
+        em.rateOverTime = Mathf.Lerp(tpMinEmision, tpMaxEmision, ticklingIntensityVisual);
+
+        if(!ticklingParticles.isPlaying && ticklingIntensityVisual > tpVisualThreshold)
+            ticklingParticles.Play();
+        if (ticklingParticles.isPlaying && ticklingIntensityVisual == 0)
+            ticklingParticles.Stop();
+    }
+
 
     private double lastCmdMoveTime = 0;
     private RaycastHit[] groundHits;
@@ -164,7 +191,10 @@ public class NetworkCharacterController : NetworkBehaviour
 
         targetRotation = new Vector3(0, targetRotationY);
 
-        this.ticklingIntensity = ticklingIntensity;
+        if (HasFeather)
+            this.ticklingIntensity = ticklingIntensity;
+        else
+            this.ticklingIntensity = 0;
 
         if (strafe != 0 || run != 0)
             userInput = userInput | UserInput.ReceivedUserInput;
@@ -326,6 +356,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private void TickleOpponents()
     {
+        ticklingIntensityVisual = ticklingIntensity;
         var distance = Mathf.Lerp(ticklingRadius * .5f, ticklingRadius, ticklingIntensity);
         if (ticklingIntensity == 0 || !HasFeather) return;
 
