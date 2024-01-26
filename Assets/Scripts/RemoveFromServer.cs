@@ -7,7 +7,7 @@ public class RemoveFromServer : NetworkBehaviour
 {
     public GameObject target;
 
-    private new GameObject actualTarget { get { return target ?? base.gameObject; } }
+    private GameObject actualTarget { get { return target ?? base.gameObject; } }
 
     public override void OnStartServer()
     {
