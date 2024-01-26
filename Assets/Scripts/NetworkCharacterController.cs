@@ -235,7 +235,7 @@ public class NetworkCharacterController : NetworkBehaviour
             }
             for (int i = 0; i < groundHits.Length; i++)
             {
-                var ray = new Ray(transform.position + Quaternion.Euler(0, i * (360 / groundHits.Length), 0) * (Vector3.forward * col.radius * .5f), Vector3.down);
+                var ray = new Ray(transform.position + Quaternion.Euler(0, i * (360 / groundHits.Length), 0) * (Vector3.forward * col.radius), Vector3.down);
                 Debug.DrawLine(ray.origin, ray.origin + ray.direction * groundCastDistance, Color.green, 0f, true);
                 var hit = Physics.Raycast(ray, out groundHits[i], groundCastDistance, groundLayer);
                 if (!hit) groundHits[i].distance = float.PositiveInfinity;

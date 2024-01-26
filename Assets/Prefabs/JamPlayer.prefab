@@ -4883,27 +4883,27 @@ MonoBehaviour:
   minCamAngle: -30
   maxCamAngle: 60
   camOffset: {x: 0.5, y: 0, z: 0}
-  maxFloatingForce: 2400
+  maxFloatingForce: 3200
   floatingForceCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0.5
       value: 1
-      inSlope: -3.6519947
-      outSlope: -3.6519947
+      inSlope: -3.8184104
+      outSlope: -3.8184104
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.04077667
+      outWeight: 0.029126227
     - serializedVersion: 3
-      time: 1.5
+      time: 1.6
       value: 0
-      inSlope: -1
-      outSlope: -1
+      inSlope: -0.74744713
+      outSlope: -0.74744713
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.09514581
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
