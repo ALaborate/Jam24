@@ -347,15 +347,23 @@ public class NetworkCharacterController : NetworkBehaviour
         {
             nextTimeToPush = Time.fixedTime + pushCooldown;
             var ray = new Ray(transform.position, transform.forward);
-            var hit = Physics.Raycast(ray, out var rhi, pushRadius);
-            if (hit && rhi.rigidbody != null)
+            RaycastHit[] hits = null;
+            if (!health.IsRofled)
+                hits = Physics.RaycastAll(ray, pushRadius);
+            else
+                hits = Physics.SphereCastAll(ray, pushRadius, pushRadius * 0.3f);
+            foreach (var rhi in hits)
             {
-                var direction = (rhi.transform.position - transform.position).normalized;
-                var force = direction * pushMaxForce;
-                rhi.rigidbody.AddForce(force, ForceMode.Impulse);
-                var ph = rhi.rigidbody.GetComponent<PlayerHealth>();
-                ph?.SetSourceOfDamage(netId);
+                if (rhi.rigidbody != null)
+                {
+                    var direction = (rhi.transform.position - transform.position).normalized;
+                    var force = direction * pushMaxForce;
+                    rhi.rigidbody.AddForce(force, ForceMode.Impulse);
+                    var ph = rhi.rigidbody.GetComponent<PlayerHealth>();
+                    ph?.SetSourceOfDamage(netId);
+                }
             }
+
         }
     }
 
@@ -550,7 +558,7 @@ public class NetworkCharacterController : NetworkBehaviour
             if (scoreLabelGuiStyle == null)
             {
                 scoreLabelGuiStyle = new GUIStyle();
-                scoreLabelGuiStyle.fontSize = 24; 
+                scoreLabelGuiStyle.fontSize = 24;
                 //scoreLabelGuiStyle.font = Resources.Load<Font>("Fonts/Roboto-Regular");
                 scoreLabelRect = new Rect(cam.pixelWidth - 100, 20, 80, 20);
             }
