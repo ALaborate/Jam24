@@ -8,6 +8,7 @@ public class PlayerHealth : NetworkBehaviour
 {
     [SerializeField] float regenerationRate = 0.05f;
     [SerializeField] float delayBeforeUntickle = .5f;
+    [SerializeField] float damageCausalityTime = 6f;
 
     // Start is called before the first frame update
 
@@ -38,15 +39,29 @@ public class PlayerHealth : NetworkBehaviour
     public UnityEvent OnBeingTickled;
     public UnityEvent OnStopTickled;
 
-    public void TakeDamage(float damage)
+    public const uint INVALID_SRC = uint.MaxValue;
+    private float nextTimeToResetDamageSource = float.MaxValue;
+    uint lastDamageSourceNetID = uint.MaxValue;
+    [Server]
+    public void SetSourceOfDamage(uint sourceNetID)
+    {
+        if (sourceNetID != INVALID_SRC)
+        {
+            lastDamageSourceNetID = sourceNetID;
+            nextTimeToResetDamageSource = Time.time + damageCausalityTime;
+        }
+    }
+    public void TakeDamage(float damage, uint sourceNetID = INVALID_SRC)
     {
         if (isServer)
         {
             health = health - damage;
             health = Mathf.Clamp01(health);
-            if (health == 0)
+            SetSourceOfDamage(sourceNetID);
+            if (health == 0 && isRofled == false)
             {
                 isRofled = true;
+                EventManager.Instance.ReportBeingRofledBy(lastDamageSourceNetID);
                 OnRofl?.Invoke();
                 RpcRpfl();
             }
@@ -70,6 +85,11 @@ public class PlayerHealth : NetworkBehaviour
         {
             health = health + regenerationRate * Time.deltaTime;
             health = Mathf.Clamp01(health);
+
+            if (Time.time > nextTimeToResetDamageSource)
+            {
+                lastDamageSourceNetID = INVALID_SRC;
+            }
         }
 
         if ((health > prevHealth || prevHealth == 1) && isTickledRaw)
