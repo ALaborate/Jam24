@@ -7,6 +7,7 @@ public class PlayerAudio : NetworkBehaviour
 {
     public AudioSource roflSound;
     public AudioSource collisionSound;
+    public AudioSource tickledSound;
 
     private PlayerHealth playerHealth;
     private NetworkCharacterController networkCharacterController;
@@ -34,22 +35,27 @@ public class PlayerAudio : NetworkBehaviour
 
     private void OnRofl()
     {
+        roflSound.Play();
         Debug.Log($"Play rofl on {playerHealth.gameObject.name}");
 
     }
 
     private void OnRoflOver()
     {
+        roflSound.Stop();
         Debug.Log($"Stop playing rofl on {playerHealth.gameObject.name}");
     }
 
     private void OnBeingTickled()
     {
+
+        tickledSound.Play();
         Debug.Log($"Play tickle on {playerHealth.gameObject.name}");
     }
 
     private void OnStopTickled()
     {
+        tickledSound.Stop();
         Debug.Log($"Stop playing tickle on {playerHealth.gameObject.name}");
     }
 
