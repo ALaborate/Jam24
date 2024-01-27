@@ -10047,7 +10047,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  sceneName: MapTest1
+  sceneName: MapTest2
   numberOfFeathers: 1
   featherPrefab: {fileID: 1521906417817054294, guid: 4c9f75cdcc79fc34581c6a5f3110a98f, type: 3}
 --- !u!4 &1147598161
