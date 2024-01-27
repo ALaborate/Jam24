@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Feather : MonoBehaviour, IPickable
+public class Feather : Mirror.NetworkBehaviour, IPickable
 {
     public float releseVelocity = 2f;
+    public float respawnTimout = 64f;
 
     Collider col;
     Rigidbody rb;
@@ -40,6 +41,32 @@ public class Feather : MonoBehaviour, IPickable
         transform.SetParent(null);
         transform.position = formerPlayer.transform.position + Vector3.up * 1.2f;
         rb.AddForce(Vector3.up * releseVelocity, ForceMode.VelocityChange);
+
+        nextTimeToRespawn = Time.time + respawnTimout;
+    }
+
+    public override void OnStartServer()
+    {
+        nextTimeToRespawn = Time.time + respawnTimout;
+    }
+
+    private float nextTimeToRespawn;
+    private void Update()
+    {
+        if (Time.time >= nextTimeToRespawn || transform.position.y < -30)
+        {
+            gameObject.SetActive(true);
+            nextTimeToRespawn = Time.time + respawnTimout;
+            var spawns = GameObject.FindGameObjectsWithTag("FeatherSpawn");
+
+            Vector3 spawnPos = Vector3.up * 30;
+            if (spawns.Length > 0)
+            {
+                var spawnInx = Random.Range(0, spawns.Length);
+                spawnPos = spawns[spawnInx].transform.position;
+            }
+            transform.position = spawnPos + Random.onUnitSphere;
+        }
     }
 }
 
