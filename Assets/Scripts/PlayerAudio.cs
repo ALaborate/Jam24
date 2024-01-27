@@ -36,27 +36,27 @@ public class PlayerAudio : NetworkBehaviour
     private void OnRofl()
     {
         roflSound.Play();
-        Debug.Log($"Play rofl on {playerHealth.gameObject.name}");
+
 
     }
 
     private void OnRoflOver()
     {
         roflSound.Stop();
-        Debug.Log($"Stop playing rofl on {playerHealth.gameObject.name}");
+
     }
 
     private void OnBeingTickled()
     {
 
         tickledSound.Play();
-        Debug.Log($"Play tickle on {playerHealth.gameObject.name}");
+
     }
 
     private void OnStopTickled()
     {
         tickledSound.Stop();
-        Debug.Log($"Stop playing tickle on {playerHealth.gameObject.name}");
+
     }
 
     /// <param name="severity">0 - contact at zero speed, 1 - deadly collision on max velocity, >1 collision velocity is more than max player velocity</param>
@@ -64,6 +64,6 @@ public class PlayerAudio : NetworkBehaviour
     {
         collisionSound.volume = severity;
         collisionSound.Play();
-        Debug.Log("Play collision of severity " + severity.ToString("0.00") + $" on {playerHealth.gameObject.name}");
+
     }
 }
