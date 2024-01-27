@@ -17,7 +17,7 @@ public class Feather : Mirror.NetworkBehaviour, IPickable
     }
     public void PickUp(GameObject player, Transform place)
     {
-        if(place == null)
+        if (place == null)
         {
             gameObject.SetActive(false);
         }
@@ -29,8 +29,9 @@ public class Feather : Mirror.NetworkBehaviour, IPickable
             col.enabled = false;
             transform.SetParent(place);
             transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity; 
+            transform.localRotation = Quaternion.identity;
         }
+        nextTimeToRespawn = Time.time + respawnTimout;
     }
 
     public void Drop(GameObject formerPlayer)
@@ -53,20 +54,21 @@ public class Feather : Mirror.NetworkBehaviour, IPickable
     private float nextTimeToRespawn;
     private void Update()
     {
-        if (Time.time >= nextTimeToRespawn || transform.position.y < -30)
-        {
-            gameObject.SetActive(true);
-            nextTimeToRespawn = Time.time + respawnTimout;
-            var spawns = GameObject.FindGameObjectsWithTag("FeatherSpawn");
-
-            Vector3 spawnPos = Vector3.up * 30;
-            if (spawns.Length > 0)
+        if (isServer && transform.parent == null)
+            if (Time.time >= nextTimeToRespawn || transform.position.y < -30)
             {
-                var spawnInx = Random.Range(0, spawns.Length);
-                spawnPos = spawns[spawnInx].transform.position;
+                gameObject.SetActive(true);
+                nextTimeToRespawn = Time.time + respawnTimout;
+                var spawns = GameObject.FindGameObjectsWithTag("FeatherSpawn");
+
+                Vector3 spawnPos = Vector3.up * 30;
+                if (spawns.Length > 0)
+                {
+                    var spawnInx = Random.Range(0, spawns.Length);
+                    spawnPos = spawns[spawnInx].transform.position;
+                }
+                transform.position = spawnPos + Random.onUnitSphere;
             }
-            transform.position = spawnPos + Random.onUnitSphere;
-        }
     }
 }
 
