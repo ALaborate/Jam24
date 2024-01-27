@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
@@ -97,6 +97,8 @@ public class NetworkCharacterController : NetworkBehaviour
                     //OnInventoryChange(SyncSortedSet<NetworkIdentity>.Operation.OP_ADD, item);
                 }
             }
+
+            EventManager.Instance.AddPlayer(this);
         }
     }
     private void DisableControlAndCamera()
@@ -351,6 +353,8 @@ public class NetworkCharacterController : NetworkBehaviour
                 var direction = (rhi.transform.position - transform.position).normalized;
                 var force = direction * pushMaxForce;
                 rhi.rigidbody.AddForce(force, ForceMode.Impulse);
+                var ph = rhi.rigidbody.GetComponent<PlayerHealth>();
+                ph?.SetSourceOfDamage(netId);
             }
         }
     }
@@ -367,7 +371,7 @@ public class NetworkCharacterController : NetworkBehaviour
             var other = hit.attachedRigidbody?.GetComponent<PlayerHealth>();
             if (other != null && other.gameObject.GetInstanceID() != this.gameObject.GetInstanceID())
             {
-                other.TakeDamage(ticklingIntensity * ticklingDamage * Time.fixedDeltaTime);
+                other.TakeDamage(ticklingIntensity * ticklingDamage * Time.fixedDeltaTime, netId);
             }
         }
     }
@@ -476,9 +480,6 @@ public class NetworkCharacterController : NetworkBehaviour
         }
     }
 
-
-
-
     private void CalculateSelfDamage(Collision collision)
     {
         float asymmetryCoef = 1;
@@ -507,8 +508,8 @@ public class NetworkCharacterController : NetworkBehaviour
             damageReduction *= 1f; //full damage if wall
         }
         var damage = (mag / maxRunningSpeed) * maxVelocityDamage * asymmetryCoef * fallDamageReductionCoef * damageReduction;
-        health.TakeDamage(Mathf.Clamp01(damage));
-        RpcOnCollision(mag/maxRunningSpeed);
+        health.TakeDamage(Mathf.Clamp01(damage), otherPlayer == null ? PlayerHealth.INVALID_SRC : otherPlayer.netId);
+        RpcOnCollision(mag / maxRunningSpeed);
     }
     [ClientRpc]
     ///<param name="severity">0 - no damage, 1 - collision on maximum speed, >1 - collision with more relative velocity than max speed</param>
@@ -516,6 +517,8 @@ public class NetworkCharacterController : NetworkBehaviour
     {
         OnCollision?.Invoke(severity);
     }
+
+
 
     private void OnCollisionExit(Collision collision)
     {
@@ -538,7 +541,23 @@ public class NetworkCharacterController : NetworkBehaviour
     }
 
 
+    GUIStyle scoreLabelGuiStyle;
+    Rect scoreLabelRect;
+    private void OnGUI()
+    {
+        if (cam != null)
+        {
+            if (scoreLabelGuiStyle == null)
+            {
+                scoreLabelGuiStyle = new GUIStyle();
+                scoreLabelGuiStyle.fontSize = 24; 
+                //scoreLabelGuiStyle.font = Resources.Load<Font>("Fonts/Roboto-Regular");
+                scoreLabelRect = new Rect(cam.pixelWidth - 100, 20, 80, 20);
+            }
+            GUI.Label(scoreLabelRect, $"Score : {EventManager.GetScore(netId)}", scoreLabelGuiStyle);
 
+        }
+    }
 
     private void OnRofl()
     {
@@ -565,6 +584,7 @@ public class NetworkCharacterController : NetworkBehaviour
         {
             OnInventoryChange(SyncSet<uint>.Operation.OP_CLEAR, 0);
         }
+        EventManager.Instance.RemovePlayer(this);
     }
 
 
