@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.Events;
 
 public class PlayerHealth : NetworkBehaviour
 {
     [SerializeField] float regenerationRate = 0.05f;
+    [SerializeField] float delayBeforeUntickle = .5f;
+
     // Start is called before the first frame update
 
     [SyncVar]
@@ -30,8 +33,10 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
-    public event System.Action OnRofl;
-    public event System.Action OnRoflOver;
+    public UnityEvent OnRofl;
+    public UnityEvent OnRoflOver;
+    public UnityEvent OnBeingTickled;
+    public UnityEvent OnStopTickled;
 
     public void TakeDamage(float damage)
     {
@@ -39,26 +44,67 @@ public class PlayerHealth : NetworkBehaviour
         {
             health = health - damage;
             health = Mathf.Clamp01(health);
-            if(health == 0)
+            if (health == 0)
             {
                 isRofled = true;
                 OnRofl?.Invoke();
-            } 
+                RpcRpfl();
+            }
         }
     }
+    [ClientRpc]
+    private void RpcRpfl()
+    {
+        if (isClientOnly)
+            OnRofl?.Invoke();
+    }
+
 
     // Update is called once per frame
+    private float prevHealth = 1f;
+    private bool isTickledRaw = false;
+    private Coroutine untickleCoroutine = null;
     void Update()
     {
         if (isServer)
         {
             health = health + regenerationRate * Time.deltaTime;
-            health = Mathf.Clamp01(health); 
-            if(health == 1 && isRofled)
+            health = Mathf.Clamp01(health);
+        }
+
+        if ((health > prevHealth || prevHealth == 1) && isTickledRaw)
+        {
+            isTickledRaw = false;
+            if (untickleCoroutine == null)
+                untickleCoroutine = StartCoroutine(UnTickle());
+        }
+
+        if (health < prevHealth && !isTickledRaw)
+        {
+            isTickledRaw = true;
+
+            if (untickleCoroutine == null)
+                OnBeingTickled?.Invoke();
+            else
             {
-                isRofled = false;
-                OnRoflOver?.Invoke();
+                StopCoroutine(untickleCoroutine);
+                untickleCoroutine = null;
             }
         }
+
+        prevHealth = health;
+
+        if (health == 1 && isRofled)
+        {
+            isRofled = false;
+            OnRoflOver?.Invoke();
+        }
+    }
+
+    private IEnumerator UnTickle()
+    {
+        yield return new WaitForSeconds(delayBeforeUntickle);
+        OnStopTickled?.Invoke();
+        untickleCoroutine = null;
     }
 }

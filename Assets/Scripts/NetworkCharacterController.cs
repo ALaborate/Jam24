@@ -56,6 +56,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
     public bool HasFeather => inventoryIds.Count > 0;
 
+    public UnityEngine.Events.UnityEvent<float> OnCollision = new();
 
     private void Awake()
     {
@@ -83,8 +84,8 @@ public class NetworkCharacterController : NetworkBehaviour
 
             if (isServer)
             {
-                health.OnRofl += OnRofl;
-                health.OnRoflOver += OnRoflOver;
+                health.OnRofl.AddListener(OnRofl);
+                health.OnRoflOver.AddListener(OnRoflOver);
             }
 
             DisableControlAndCamera();
@@ -157,7 +158,7 @@ public class NetworkCharacterController : NetworkBehaviour
         var em = ticklingParticles.emission;
         em.rateOverTime = Mathf.Lerp(tpMinEmision, tpMaxEmision, ticklingIntensityVisual);
 
-        if(!ticklingParticles.isPlaying && ticklingIntensityVisual > tpVisualThreshold)
+        if (!ticklingParticles.isPlaying && ticklingIntensityVisual > tpVisualThreshold)
             ticklingParticles.Play();
         if (ticklingParticles.isPlaying && ticklingIntensityVisual == 0)
             ticklingParticles.Stop();
@@ -507,6 +508,13 @@ public class NetworkCharacterController : NetworkBehaviour
         }
         var damage = (mag / maxRunningSpeed) * maxVelocityDamage * asymmetryCoef * fallDamageReductionCoef * damageReduction;
         health.TakeDamage(Mathf.Clamp01(damage));
+        RpcOnCollision(mag/maxRunningSpeed);
+    }
+    [ClientRpc]
+    ///<param name="severity">0 - no damage, 1 - collision on maximum speed, >1 - collision with more relative velocity than max speed</param>
+    private void RpcOnCollision(float severity)
+    {
+        OnCollision?.Invoke(severity);
     }
 
     private void OnCollisionExit(Collision collision)
@@ -534,13 +542,17 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private void OnRofl()
     {
-        if (isServer) inventoryIds.Clear();
+        if (!isServer) return;
+
+        inventoryIds.Clear();
 
         rb.constraints = RigidbodyConstraints.None;
     }
 
     private void OnRoflOver()
     {
+        if (!isServer) return;
+
         //rb.AddTorque(-rb.angularVelocity * Mathf.Rad2Deg, ForceMode.VelocityChange);
         rb.angularVelocity = Vector3.zero;
         rb.constraints = RB_ROT_CONSTR;
