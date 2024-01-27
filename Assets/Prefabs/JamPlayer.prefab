@@ -5255,14 +5255,14 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 4294967105
-  maxVelocityDamage: 3
-  pushMaxForce: 600
-  pushRadius: 2
+  maxVelocityDamage: 1.1
+  pushMaxForce: 1500
+  pushRadius: 2.8
   pushCooldown: 1
   ticklingGainCoef: 0.084
   ticklingCooling: 1.5
-  ticklingRadius: 3.3
-  ticklingDamage: 0.7
+  ticklingRadius: 4.5
+  ticklingDamage: 0.44
   tpMinEmision: 3
   tpMaxEmision: 11
   tpVisualThreshold: 0.4
