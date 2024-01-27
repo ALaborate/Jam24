@@ -3,29 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class RoflBomb : NetworkBehaviour, IPickable
+public class RoflBomb : NetworkBehaviour, ICollectable
 {
+    [SerializeField] float spriteRotation = 60f;
+    [SerializeField] EventHandler.EvtKind kind;
 
+    SpriteRenderer spriteSymbol;
+    EventHandler.Data data;
+    [Server]
+    public void Collect(uint coolectorNetID)
+    {
+        EventManager.Instance.ReportBonusCollected(coolectorNetID, kind);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        spriteSymbol = GetComponentInChildren<SpriteRenderer>();
+        data = EventManager.Instance.GetEventData(kind);
+        spriteSymbol.sprite = data.picture;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        spriteSymbol.transform.rotation *= Quaternion.Euler(0, spriteRotation * Time.deltaTime, 0);
     }
+}
 
-    public void Drop(GameObject formerPlayer)
-    {
-        throw new System.NotImplementedException();
-    }
 
-    public void PickUp(GameObject player, Transform place)
-    {
-        throw new System.NotImplementedException();
-    }
+public interface ICollectable
+{
+    void Collect(uint collectorNetID);
 }

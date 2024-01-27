@@ -6,6 +6,8 @@ using Mirror;
 [RequireComponent(typeof(NetworkIdentity))]
 public class EventManager : NetworkBehaviour
 {
+    [SerializeField] EventHandler handler;
+
     [SerializeField] float scoreForRofling = 1f;
 
     private void Awake()
@@ -35,12 +37,46 @@ public class EventManager : NetworkBehaviour
     {
         if (cause != PlayerHealth.INVALID_SRC)
         {
-            if (!scores.ContainsKey(cause))
-            {
-                scores.Add(cause, 0);
-            }
-            scores[cause] += scoreForRofling; 
+            if (!scores.ContainsKey(cause)) scores.Add(cause, 0);
+            scores[cause] += scoreForRofling;
         }
+    }
+    [Server]
+    public void ReportBonusCollected(uint collector, EventHandler.EvtKind kind)
+    {
+        RpcBonusCollected(kind);
+        var data = GetEventData(kind);
+        StartCoroutine(TriggerEventEnding(collector, data));
+        //todo: use collector to add score
+    }
+    private IEnumerator TriggerEventEnding(uint eventSource, EventHandler.Data data)
+    {
+        yield return new WaitForSeconds(data.EndingDelay);
+        if (eventSource != PlayerHealth.INVALID_SRC)
+        {
+            if (!scores.ContainsKey(eventSource)) scores.Add(eventSource, 0);
+            scores[eventSource] += players.Count * data.scoreMultiplier;
+        }
+
+    }
+    [ClientRpc]
+    private void RpcBonusCollected(EventHandler.EvtKind kind)
+    {
+        handler.TriggerEvent(kind);
+    }
+
+    public EventHandler.Data GetEventData(EventHandler.EvtKind kind)
+    {
+        EventHandler.Data ret = null;
+        foreach (var evt in handler.Events)
+        {
+            if (evt.kind == kind)
+            {
+                ret = evt;
+                break;
+            }
+        }
+        return ret;
     }
 
 
@@ -55,9 +91,9 @@ public class EventManager : NetworkBehaviour
     public static float GetScore(uint netID)
     {
         var ret = 0f;
-        if(instance != null)
+        if (instance != null)
         {
-            if(instance.scores.ContainsKey(netID))
+            if (instance.scores.ContainsKey(netID))
             {
                 ret = instance.scores[netID];
             }
