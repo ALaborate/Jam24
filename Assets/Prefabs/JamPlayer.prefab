@@ -1,5 +1,52 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &805221013239749201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2670286445967308238}
+  - component: {fileID: 4638245359696082555}
+  m_Layer: 0
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2670286445967308238
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805221013239749201}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.3504629, y: -0.8244171, z: -7.629156}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3177437201413902896}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4638245359696082555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805221013239749201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b959109ae76f2e2428112098be3d16c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!1 &2910625289015977250
 GameObject:
   m_ObjectHideFlags: 0
@@ -4853,6 +4900,7 @@ Transform:
   - {fileID: 6774556077351499527}
   - {fileID: 4080668706872401497}
   - {fileID: 3747750246885463531}
+  - {fileID: 2670286445967308238}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4924,6 +4972,9 @@ MonoBehaviour:
   tpMinEmision: 3
   tpMaxEmision: 11
   tpVisualThreshold: 0.4
+  OnCollision:
+    m_PersistentCalls:
+      m_Calls: []
   minGroundDistance: 3.4028235e+38
   footGrip: 0
   isGrounded: 0
@@ -5010,7 +5061,20 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   regenerationRate: 0.15
+  delayBeforeUntickle: 0.32
   health: 1
+  OnRofl:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRoflOver:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBeingTickled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStopTickled:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &5452528570749613845
 MonoBehaviour:
   m_ObjectHideFlags: 0
