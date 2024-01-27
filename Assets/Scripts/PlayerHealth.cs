@@ -70,7 +70,7 @@ public class PlayerHealth : NetworkBehaviour
     [ClientRpc]
     private void RpcRpfl()
     {
-        if (isClientOnly)
+        if (isClientOnly) //prevent double-call on host
             OnRofl?.Invoke();
     }
 

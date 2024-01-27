@@ -416,16 +416,18 @@ public class NetworkCharacterController : NetworkBehaviour
 
         var pickable = rbGo.GetComponent<IPickable>();
         var pickableNetId = rbGo.GetComponent<NetworkIdentity>();
+        var collectable = rbGo.GetComponent<ICollectable>();
 
-        if (pickable != null)
+        if (pickable != null || collectable != null)
         {
-            if (pickableNetId != null)
+            if (pickable != null && pickableNetId != null)
             {
-                inventoryIds.Add(pickableNetId.netId);
+                inventoryIds.Add(pickableNetId.netId); ///for actual picking code <see cref="OnInventoryChange(SyncSet{uint}.Operation, uint)"/>
             }
-            //pickable.PickUp(gameObject, hand);
-            ////if (pickableNetId != null && isServer)
-            ////    RpcPickObject(pickableNetId);
+            else if (collectable != null)
+            {
+                collectable.Collect(netId);
+            }
             return true;
         }
         return false;
@@ -562,7 +564,7 @@ public class NetworkCharacterController : NetworkBehaviour
                 //scoreLabelGuiStyle.font = Resources.Load<Font>("Fonts/Roboto-Regular");
                 scoreLabelRect = new Rect(cam.pixelWidth - 100, 20, 80, 20);
             }
-            GUI.Label(scoreLabelRect, $"Score : {EventManager.GetScore(netId)}", scoreLabelGuiStyle);
+            GUI.Label(scoreLabelRect, $"Score : {EventManager.GetScore(netId):f1}", scoreLabelGuiStyle);
 
         }
     }
