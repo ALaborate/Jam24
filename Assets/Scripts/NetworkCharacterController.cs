@@ -232,6 +232,16 @@ public class NetworkCharacterController : NetworkBehaviour
             if (groundHits == null) groundHits = new RaycastHit[GROUND_RAY_COUNT];
 
             minGroundDistance = float.MaxValue;
+            List<Collider> toRemove = null;
+            foreach (var item in groundCollisionHashes)
+            {
+                if (item == null || item.gameObject == null)
+                {
+                    if (toRemove == null) toRemove = new List<Collider>();
+                    toRemove.Add(item);
+                }
+            }
+            if (toRemove != null) foreach (var item in toRemove) groundCollisionHashes.Remove(item);
             if (groundCollisionHashes.Count > 0)
             {
                 minGroundDistance = col.height / 2 - col.center.y;
@@ -386,7 +396,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
 
 
-    private SortedSet<int> groundCollisionHashes = new();
+    private SortedSet<Collider> groundCollisionHashes = new();
     private readonly SyncHashSet<uint> inventoryIds = new();
     private void OnCollisionEnter(Collision collision)
     {
@@ -394,7 +404,7 @@ public class NetworkCharacterController : NetworkBehaviour
         {
             if (IsColisionWithGround(collision))
             {
-                groundCollisionHashes.Add(collision.collider.GetInstanceID());
+                groundCollisionHashes.Add(collision.collider);
             }
 
 
@@ -534,7 +544,7 @@ public class NetworkCharacterController : NetworkBehaviour
     {
         if (isServer)
         {
-            groundCollisionHashes.Remove(collision.collider.GetInstanceID());
+            groundCollisionHashes.Remove(collision.collider);
         }
     }
     private bool IsColisionWithGround(Collision collision)
