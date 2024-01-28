@@ -50,19 +50,19 @@ MonoBehaviour:
   syncInterval: 0
   prefab: {fileID: 2408603128889158503, guid: 7e4685cf96f2c3c44ac4f39639a61025, type: 3}
   minSpawnTime: 4
-  varSpawnTime: 8
+  varSpawnTime: 32
   timeMultiplierWrtPlayerQuantity:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 4
-      inSlope: 0
-      outSlope: 0
+      time: 0.031066895
+      value: 2.0009422
+      inSlope: 1.8687497
+      outSlope: 1.8687497
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.03898649
     - serializedVersion: 3
       time: 8
       value: 0.5
