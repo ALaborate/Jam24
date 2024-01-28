@@ -76,5 +76,8 @@ public class EventHandler : MonoBehaviour
         BuloVze,
         DekanuFacultetu,
         Krivosisi,
+        Zastupniki,
+        HtoYa,
+        Zavtra,
     }
 }
