@@ -62,8 +62,8 @@ public class PlayerHealth : NetworkBehaviour
             {
                 isRofled = true;
                 EventManager.Instance.ReportBeingRofledBy(lastDamageSourceNetID);
-                OnRofl?.Invoke();
-                RpcRpfl();
+                OnRofl?.Invoke(); //for server
+                RpcRpfl(); //for clients
             }
         }
     }
@@ -72,6 +72,12 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (isClientOnly) //prevent double-call on host
             OnRofl?.Invoke();
+    }
+    [ClientRpc]
+    private void RpcRpflOver()
+    {
+        if (isClientOnly) //prevent double-call on host
+            OnRoflOver?.Invoke();
     }
 
 
@@ -89,6 +95,13 @@ public class PlayerHealth : NetworkBehaviour
             if (Time.time > nextTimeToResetDamageSource)
             {
                 lastDamageSourceNetID = INVALID_SRC;
+            }
+
+            if (health == 1 && isRofled)
+            {
+                isRofled = false;
+                OnRoflOver?.Invoke(); //for server
+                RpcRpflOver(); //for clients
             }
         }
 
@@ -114,11 +127,7 @@ public class PlayerHealth : NetworkBehaviour
 
         prevHealth = health;
 
-        if (health == 1 && isRofled)
-        {
-            isRofled = false;
-            OnRoflOver?.Invoke();
-        }
+
     }
 
     private IEnumerator UnTickle()
