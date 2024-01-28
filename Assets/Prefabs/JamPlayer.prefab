@@ -5095,8 +5095,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mRenderer: {fileID: 4546052274319988250}
-  healthyColor: {r: 0, g: 1, b: 0, a: 1}
-  roflColor: {r: 1, g: 0.5851495, b: 0, a: 2}
+  healthyColor: {r: 0, g: 0.9573741, b: 1, a: 1}
+  roflColor: {r: 1, g: 0.80833685, b: 0, a: 2}
 --- !u!1 &3452354912904019907
 GameObject:
   m_ObjectHideFlags: 0
