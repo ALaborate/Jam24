@@ -79,5 +79,6 @@ public class EventHandler : MonoBehaviour
         Zastupniki,
         HtoYa,
         Zavtra,
+        Menshego,
     }
 }
