@@ -6,6 +6,7 @@ TagManager:
   tags:
   - FeatherSpawn
   - Feather
+  - BonusSpawn
   layers:
   - Default
   - TransparentFX

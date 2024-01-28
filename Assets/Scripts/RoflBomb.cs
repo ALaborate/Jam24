@@ -6,7 +6,8 @@ using Mirror;
 public class RoflBomb : NetworkBehaviour, ICollectable
 {
     [SerializeField] float spriteRotation = 60f;
-    [SerializeField] EventHandler.EvtKind kind;
+    [SyncVar]
+    public EventHandler.EvtKind kind;
 
     SpriteRenderer spriteSymbol;
     EventHandler.Data data;
@@ -14,6 +15,7 @@ public class RoflBomb : NetworkBehaviour, ICollectable
     public void Collect(uint coolectorNetID)
     {
         EventManager.Instance.ReportBonusCollected(coolectorNetID, kind);
+        Destroy(gameObject);
     }
 
     // Start is called before the first frame update

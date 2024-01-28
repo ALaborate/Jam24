@@ -5507,6 +5507,8 @@ MonoBehaviour:
   playerSpawnMethod: 0
   spawnPrefabs:
   - {fileID: 1521906417817054294, guid: 4c9f75cdcc79fc34581c6a5f3110a98f, type: 3}
+  - {fileID: 2408603128889158503, guid: 7e4685cf96f2c3c44ac4f39639a61025, type: 3}
+  - {fileID: 561372296323130859, guid: 06fa794f5707b344aaee38181fbae576, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -5611,8 +5613,11 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   sceneName: MapTest2
-  numberOfFeathers: 2
   featherPrefab: {fileID: 1521906417817054294, guid: 4c9f75cdcc79fc34581c6a5f3110a98f, type: 3}
+  numberOfFeathers: 2
+  bonusSpawnPrefab: {fileID: 561372296323130859, guid: 06fa794f5707b344aaee38181fbae576, type: 3}
+  bsMinHeight: 1
+  bsMaxHeight: 3
 --- !u!4 &1147598161
 Transform:
   m_ObjectHideFlags: 0

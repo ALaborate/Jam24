@@ -4932,7 +4932,7 @@ MonoBehaviour:
   jumpForce: 9
   roflJumpForce: 1.5
   roflRandomTorqueMultiplier: 3.14
-  camRotationSpeed: 2048
+  camRotationSpeed: 16
   bodyYRotationTorque: 256
   minCamAngle: -30
   maxCamAngle: 60

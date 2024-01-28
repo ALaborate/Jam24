@@ -562,7 +562,7 @@ public class NetworkCharacterController : NetworkBehaviour
                 scoreLabelGuiStyle = new GUIStyle();
                 scoreLabelGuiStyle.fontSize = 24;
                 //scoreLabelGuiStyle.font = Resources.Load<Font>("Fonts/Roboto-Regular");
-                scoreLabelRect = new Rect(cam.pixelWidth - 100, 20, 80, 20);
+                scoreLabelRect = new Rect(cam.pixelWidth - 160, 20, 120, 20);
             }
             GUI.Label(scoreLabelRect, $"Score : {EventManager.GetScore(netId):f1}", scoreLabelGuiStyle);
 
@@ -610,7 +610,7 @@ public class NetworkCharacterController : NetworkBehaviour
             return;
         var container = cam.transform.parent;
         container.position = transform.position + container.TransformDirection(camOffset);
-        var rot = new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X")) * (camRotationSpeed * Time.deltaTime);
+        var rot = new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X")) * (camRotationSpeed);
         var newEuler = container.rotation.eulerAngles + rot;
         newEuler.z = 0;
         while (newEuler.x > 180)
