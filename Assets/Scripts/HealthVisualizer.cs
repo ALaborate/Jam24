@@ -22,4 +22,6 @@ public class HealthVisualizer : MonoBehaviour
     {
         materialInstance.color = Color.Lerp(roflColor, healthyColor, playerHealth.Health);
     }
+
+    public Color CurrentColor => materialInstance.color;
 }

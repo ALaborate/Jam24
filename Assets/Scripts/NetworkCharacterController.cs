@@ -12,6 +12,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
     public Transform hand;
     public ParticleSystem ticklingParticles;
+    public TrailRenderer pushingTrail;
     [Space]
     public float moveAcceleration = 556;
     public float maxRunningSpeed = 10;
@@ -44,6 +45,7 @@ public class NetworkCharacterController : NetworkBehaviour
     public float tpMinEmision = 3;
     public float tpMaxEmision = 11;
     public float tpVisualThreshold = 0.4f;
+    public float pushVisualizationMvtDuration = .5f;
 
 
 
@@ -51,6 +53,7 @@ public class NetworkCharacterController : NetworkBehaviour
     private CapsuleCollider col;
     private Camera cam;
     private PlayerHealth health;
+    private HealthVisualizer healthVisualizer;
     private float height;
 
 
@@ -86,6 +89,7 @@ public class NetworkCharacterController : NetworkBehaviour
             col = GetComponentInChildren<CapsuleCollider>();
             health = GetComponent<PlayerHealth>();
             height = col.center.y + col.height / 2;
+            healthVisualizer = GetComponent<HealthVisualizer>();
 
             if (isServer)
             {
@@ -94,6 +98,7 @@ public class NetworkCharacterController : NetworkBehaviour
             }
 
             DisableControlAndCamera();
+            pushingTrail.gameObject.SetActive(false);
 
             if (isClient) //pick up all objects picked earlier than connectioxn
             {
@@ -362,7 +367,8 @@ public class NetworkCharacterController : NetworkBehaviour
         {
             nextTimeToPush = Time.fixedTime + pushCooldown;
             var ray = new Ray(transform.position, transform.forward);
-            RaycastHit[] hits = null;
+            RaycastHit[] hits;
+            RpcVisualizePush();
             if (!health.IsRofled)
                 hits = Physics.RaycastAll(ray, pushRadius);
             else
@@ -380,6 +386,37 @@ public class NetworkCharacterController : NetworkBehaviour
             }
 
         }
+    }
+    [ClientRpc]
+    private void RpcVisualizePush()
+    {
+        StartCoroutine(VisualizePush());
+    }
+    [Client]
+    private IEnumerator VisualizePush()
+    {
+        pushingTrail.transform.SetParent(null);
+        pushingTrail.transform.position = transform.position + Vector3.left * col.radius * .8f;
+        pushingTrail.startColor = healthVisualizer.CurrentColor;
+        pushingTrail.Clear();
+        pushingTrail.gameObject.SetActive(true);
+        var t0 = Time.time;
+        while (Time.time - t0 < pushVisualizationMvtDuration)
+        {
+            yield return null;
+            var distance = Mathf.Lerp(0, pushRadius, (Time.time - t0) / pushVisualizationMvtDuration);
+            if (health.IsRofled)
+            {
+                var angle = Mathf.Lerp(0, 360 * 3, (Time.time - t0) / pushVisualizationMvtDuration);
+                pushingTrail.transform.position = transform.position + Quaternion.Euler(0, angle % 360, 0) * Vector3.forward * distance;
+            }
+            else
+            {
+                pushingTrail.transform.position = transform.position + transform.forward * distance;
+            }
+        }
+        yield return new WaitForSeconds(pushCooldown - pushVisualizationMvtDuration);
+        pushingTrail.gameObject.SetActive(false);
     }
 
     private void TickleOpponents()
