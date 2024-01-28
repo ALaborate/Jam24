@@ -32,6 +32,7 @@ public class EventManager : NetworkBehaviour
     {
         players.Remove(player.netId);
     }
+    public int PlayerCount => players.Count;
     [Server]
     public void ReportBeingRofledBy(uint cause)
     {
@@ -68,6 +69,7 @@ public class EventManager : NetworkBehaviour
     public EventHandler.Data GetEventData(EventHandler.EvtKind kind)
     {
         EventHandler.Data ret = null;
+        Debug.Assert(kind != EventHandler.EvtKind.None);
         foreach (var evt in handler.Events)
         {
             if (evt.kind == kind)

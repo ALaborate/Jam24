@@ -7,8 +7,13 @@ using Mirror;
 public class SceneLoader : NetworkBehaviour
 {
     public string sceneName;
-    public int numberOfFeathers = 1;
+    [Space]
     public GameObject featherPrefab;
+    public int numberOfFeathers = 1;
+    [Space]
+    public GameObject bonusSpawnPrefab;
+    public float bsMinHeight = 1f;
+    public float bsMaxHeight = 3f;
 
 
     public override void OnStartServer()
@@ -59,6 +64,22 @@ public class SceneLoader : NetworkBehaviour
                 var feather = Instantiate(featherPrefab, spawnPos + Random.onUnitSphere, Quaternion.identity);
                 SceneManager.MoveGameObjectToScene(feather, scene);
                 NetworkServer.Spawn(feather);
+            }
+
+            var bonusSpawns = GameObject.FindGameObjectsWithTag("BonusSpawn");
+            foreach (var spawn in bonusSpawns)
+            {
+                var spawnPos = spawn.transform.position;
+                if(Physics.Raycast(spawnPos, Vector3.down, out RaycastHit hit))
+                {
+                    if(hit.point != Vector3.zero)
+                    {
+                        spawnPos = hit.point + Vector3.up * Random.Range(bsMinHeight, bsMaxHeight);
+                    }
+                }
+                var bonusSpawn = Instantiate(bonusSpawnPrefab, spawnPos, Quaternion.identity);
+                SceneManager.MoveGameObjectToScene(bonusSpawn, scene);
+                NetworkServer.Spawn(bonusSpawn);
             }
         }
     }
