@@ -58,6 +58,11 @@ public class NetworkCharacterController : NetworkBehaviour
 
     public UnityEngine.Events.UnityEvent<float> OnCollision = new();
 
+    public void TakeRandomDamage(float ammount, uint srcNetId)
+    {
+        health.TakeDamage(ammount, srcNetId);
+    }
+
     private void Awake()
     {
 
@@ -90,7 +95,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
             DisableControlAndCamera();
 
-            if (isClient) //pick up all objects picked earlier than connection
+            if (isClient) //pick up all objects picked earlier than connectioxn
             {
                 foreach (var item in inventoryIds)
                 {
@@ -232,12 +237,12 @@ public class NetworkCharacterController : NetworkBehaviour
             if (groundHits == null) groundHits = new RaycastHit[GROUND_RAY_COUNT];
 
             minGroundDistance = float.MaxValue;
-            List<Collider> toRemove = null;
+            List<GameObject> toRemove = null;
             foreach (var item in groundCollisionHashes)
             {
                 if (item == null || item.gameObject == null)
                 {
-                    if (toRemove == null) toRemove = new List<Collider>();
+                    if (toRemove == null) toRemove = new();
                     toRemove.Add(item);
                 }
             }
@@ -396,7 +401,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
 
 
-    private SortedSet<Collider> groundCollisionHashes = new();
+    private SortedSet<GameObject> groundCollisionHashes = new();
     private readonly SyncHashSet<uint> inventoryIds = new();
     private void OnCollisionEnter(Collision collision)
     {
@@ -404,7 +409,14 @@ public class NetworkCharacterController : NetworkBehaviour
         {
             if (IsColisionWithGround(collision))
             {
-                groundCollisionHashes.Add(collision.collider);
+                try
+                {
+                    groundCollisionHashes.Add(collision.gameObject);
+                }
+                catch (System.ArgumentException)
+                {
+                    //For an exception "At least one object must implement IComparable"
+                }
             }
 
 
@@ -544,7 +556,14 @@ public class NetworkCharacterController : NetworkBehaviour
     {
         if (isServer)
         {
-            groundCollisionHashes.Remove(collision.collider);
+            try
+            {
+                groundCollisionHashes.Remove(collision.gameObject);
+            }
+            catch (System.ArgumentException)
+            {
+                //For an exception "At least one object must implement IComparable"
+            }
         }
     }
     private bool IsColisionWithGround(Collision collision)

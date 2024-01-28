@@ -55,8 +55,10 @@ public class EventManager : NetworkBehaviour
         yield return new WaitForSeconds(data.EndingDelay);
         if (eventSource != PlayerHealth.INVALID_SRC)
         {
-            if (!scores.ContainsKey(eventSource)) scores.Add(eventSource, 0);
-            scores[eventSource] += players.Count * data.scoreMultiplier;
+            foreach (var item in players)
+            {
+                item.Value.TakeRandomDamage(1.1f, eventSource);
+            }
         }
 
     }
