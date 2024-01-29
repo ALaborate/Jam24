@@ -2209,7 +2209,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2136384257}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &383858889
 GameObject:
@@ -7221,7 +7221,7 @@ GameObject:
   - component: {fileID: 487268976}
   - component: {fileID: 487268975}
   m_Layer: 0
-  m_Name: Cone (1)(Clone) (1)
+  m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12132,7 +12132,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2136384257}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &498704321
 Mesh:
@@ -13143,7 +13143,7 @@ GameObject:
   - component: {fileID: 675335240}
   - component: {fileID: 675335239}
   m_Layer: 0
-  m_Name: Cube (5)
+  m_Name: CastleClose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39453,7 +39453,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2136384257}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &690250639
 GameObject:
@@ -39470,7 +39470,7 @@ GameObject:
   - component: {fileID: 690250641}
   - component: {fileID: 690250640}
   m_Layer: 0
-  m_Name: Cube (3)(Clone) (1)
+  m_Name: CastleFar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66895,7 +66895,7 @@ GameObject:
   - component: {fileID: 921876246}
   - component: {fileID: 921876245}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: Floor1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77048,7 +77048,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2136384257}
-  m_RootOrder: 12
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1005794353
 GameObject:
@@ -82697,7 +82697,7 @@ GameObject:
   - component: {fileID: 1192635655}
   - component: {fileID: 1192635654}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Ramp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83237,7 +83237,7 @@ GameObject:
   - component: {fileID: 1365012753}
   - component: {fileID: 1365012752}
   m_Layer: 0
-  m_Name: Cube (1)(Clone)
+  m_Name: WallFar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89143,7 +89143,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2136384257}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1459684049
 GameObject:
@@ -94767,7 +94767,7 @@ GameObject:
   - component: {fileID: 1651867035}
   - component: {fileID: 1651867034}
   m_Layer: 0
-  m_Name: Cube (4)
+  m_Name: Stairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99991,7 +99991,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2136384257}
-  m_RootOrder: 10
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1837739867
 GameObject:
@@ -100902,13 +100902,13 @@ Transform:
   - {fileID: 1005794359}
   - {fileID: 101450231}
   - {fileID: 1651867039}
+  - {fileID: 1005391849}
   - {fileID: 1365012757}
   - {fileID: 675335244}
-  - {fileID: 1820259633}
   - {fileID: 690250645}
-  - {fileID: 1005391849}
-  - {fileID: 487268980}
+  - {fileID: 1820259633}
   - {fileID: 311469307}
+  - {fileID: 487268980}
   - {fileID: 383858895}
   - {fileID: 1554323188}
   - {fileID: 1095622913}
