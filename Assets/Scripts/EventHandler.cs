@@ -80,5 +80,6 @@ public class EventHandler : MonoBehaviour
         HtoYa,
         Zavtra,
         Menshego,
+        NeKrali,
     }
 }

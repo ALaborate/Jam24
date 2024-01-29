@@ -623,7 +623,7 @@ public class NetworkCharacterController : NetworkBehaviour
     {
         if (cam != null)
         {
-            if (scoreLabelGuiStyle == null)
+            if (scoreLabelGuiStyle == null || Mathf.Abs(scoreLabelRect.x - cam.pixelWidth) > 164)
             {
                 scoreLabelGuiStyle = new GUIStyle();
                 scoreLabelGuiStyle.fontSize = 24;
