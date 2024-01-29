@@ -63,8 +63,10 @@ public class CustomNetworkHUD : MonoBehaviour
             // Client + IP (+ PORT)
             GUILayout.BeginHorizontal();
 
+#if !UNITY_WEBGL
             if (GUILayout.Button("Client", GUILayout.ExpandWidth(false)))
-                manager.StartClient();
+                manager.StartClient(); 
+#endif
             PortTransport portTransport = Transport.active as PortTransport;
             string fullAddress = GUILayout.TextField(manager.networkAddress + (portTransport == null ? "" : $":{portTransport.Port}"));
             // only show a port field if we have a port transport
