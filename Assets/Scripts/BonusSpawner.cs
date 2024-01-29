@@ -14,6 +14,7 @@ public class BonusSpawner : NetworkBehaviour
     //ParticleSystem ps;
     RoflBomb spawned = null;
     static EventHandler.EvtKind[] allKinds;
+    static Dictionary<EventHandler.EvtKind, int> kindCount = new Dictionary<EventHandler.EvtKind, int>();
     private void Start()
     {
         if (allKinds == null)
@@ -42,15 +43,36 @@ public class BonusSpawner : NetworkBehaviour
         }
     }
 
+    List<EventHandler.EvtKind> kindsToSpawn = new();
     [Server]
     private void Spawn()
     {
         var go = Instantiate(prefab, transform.position, Quaternion.identity);
         var bonus = go.GetComponent<RoflBomb>();
-        bonus.kind = allKinds[Random.Range(0, allKinds.Length)];
+
+        if(kindCount.Count < allKinds.Length)
+        {
+            foreach (var item in allKinds)
+            {
+                if (!kindCount.ContainsKey(item))
+                    kindCount.Add(item, 0);
+            }
+        }
+
+        kindsToSpawn.Clear();
+        var minCount = kindCount.Values.Min();
+        foreach (var item in kindCount)
+        {
+            if (item.Value == minCount)
+                kindsToSpawn.Add(item.Key);
+        }
+
+        bonus.kind = kindsToSpawn[Random.Range(0, kindsToSpawn.Count)];
+
         NetworkServer.Spawn(go);
 
         spawned = bonus;
+        kindCount[bonus.kind] = kindCount.ContainsKey(bonus.kind) ? kindCount[bonus.kind] + 1 : 1;
         nextTimeToSpawn = float.MaxValue;
     }
 
