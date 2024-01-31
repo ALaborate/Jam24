@@ -22,6 +22,7 @@ public class NetworkCharacterController : NetworkBehaviour
     [Space]
     public float camRotationSpeed = 1f;
     public float bodyYRotationTorque = 1f;
+    public float touchRotationSensitivity = 5f;
     public float minCamAngle = -30;
     public float maxCamAngle = 60;
     public Vector3 camOffset = new Vector3(1, 0, 0);
@@ -90,6 +91,7 @@ public class NetworkCharacterController : NetworkBehaviour
             health = GetComponent<PlayerHealth>();
             height = col.center.y + col.height / 2;
             healthVisualizer = GetComponent<HealthVisualizer>();
+            isTouchPresent = false;
 
             if (isServer)
             {
@@ -130,9 +132,11 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private float targetLookAngleY = 0f;
     private float ticklingIntensity = 0f;
+    private Vector2 touchMvtInitialPos = Vector2.zero;
 
     [SyncVar]
     private float ticklingIntensityVisual = 0f;
+    bool isTouchPresent;
     private void Update()
     {
         if (isLocalPlayer)
@@ -145,17 +149,47 @@ public class NetworkCharacterController : NetworkBehaviour
             ticklingIntensity += mouseSpeed * ticklingGainCoef;
             ticklingIntensity = Mathf.Clamp01(ticklingIntensity);
 
+            if (!isTouchPresent)
+            {
+                if (Input.GetAxisRaw("Fire1") > 0)
+                    userInput = userInput | UserInput.Push;
+                else
+                    userInput = userInput & ~UserInput.Push;
+            }
+
             if (Input.GetKey(KeyCode.Space))
                 userInput = userInput | UserInput.Jump;
             else
                 userInput = userInput & ~UserInput.Jump;
 
-            if (Input.GetAxisRaw("Fire1") > 0)
-                userInput = userInput | UserInput.Push;
-            else
-                userInput = userInput & ~UserInput.Push;
+            var touchMvt = Vector2.zero;
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                isTouchPresent = true;
+                var t = Input.GetTouch(i);
+                if (t.position.x < Screen.width / 2)
+                {
+                    if (t.phase == TouchPhase.Began)
+                    {
+                        touchMvtInitialPos = t.position;
+                    }
+                    if (touchMvtInitialPos != Vector2.zero)
+                        touchMvt = t.position - touchMvtInitialPos;
+                    if (t.phase == TouchPhase.Ended)
+                    {
+                        touchMvtInitialPos = Vector2.zero;
+                    }
+                }
+            }
 
+            if (isTouchPresent)
+            {
+                vertical = touchMvt.y / cam.pixelHeight;
+                horizontal = touchMvt.x / cam.pixelHeight / 2;
+            }
             CmdMove(vertical, horizontal, targetLookAngleY, ticklingIntensity, userInput);
+            if (isTouchPresent)
+                userInput = userInput & ~UserInput.Push;
         }
 
 
@@ -191,6 +225,7 @@ public class NetworkCharacterController : NetworkBehaviour
         var dt = NetworkTime.time - lastCmdMoveTime;
         lastCmdMoveTime = NetworkTime.time;
         Vector3 moveDirection = new Vector3(strafe, 0, run);
+        moveDirection.Normalize();
         moveDirection = transform.TransformDirection(moveDirection);
         var groundVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         var speed = groundVelocity.magnitude;
@@ -670,13 +705,40 @@ public class NetworkCharacterController : NetworkBehaviour
 
     }
 
+
     private void RotateCamera()
     {
         if (cam == null)
             return;
         var container = cam.transform.parent;
         container.position = transform.position + container.TransformDirection(camOffset);
-        var rot = new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X")) * (camRotationSpeed);
+
+        Touch rotationTouch = new();
+        bool rotTouchPresent = false;
+        for (int i = 0; i < Input.touchCount; i++)
+        {
+            if (Input.GetTouch(i).position.x > Screen.width / 2)
+            {
+                rotTouchPresent = true;
+                rotationTouch = Input.GetTouch(i);
+                if (rotationTouch.phase == TouchPhase.Began)
+                {
+                    userInput = userInput | UserInput.Push;
+                }
+                break;
+            }
+        }
+
+        var rot = Vector3.zero;
+        if (isTouchPresent)
+        {
+            if (rotTouchPresent)
+                rot = new Vector3(-rotationTouch.deltaPosition.y, rotationTouch.deltaPosition.x) * camRotationSpeed * rotationTouch.deltaTime * touchRotationSensitivity;
+        }
+        else
+        {
+            rot = new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X")) * (camRotationSpeed);
+        }
         var newEuler = container.rotation.eulerAngles + rot;
         newEuler.z = 0;
         while (newEuler.x > 180)
