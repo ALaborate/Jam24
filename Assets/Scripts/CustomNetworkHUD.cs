@@ -15,6 +15,13 @@ public class CustomNetworkHUD : MonoBehaviour
         manager = GetComponent<NetworkManager>();
     }
 
+    private void Start()
+    {
+#if UNITY_WEBGL
+        manager.StartHost(); //dont show gui in webgl
+#endif
+    }
+
     void OnGUI()
     {
         // If this width is changed, also change offsetX in GUIConsole::OnGUI
@@ -42,6 +49,7 @@ public class CustomNetworkHUD : MonoBehaviour
 
         GUILayout.EndArea();
     }
+
 
     void StartButtons()
     {
