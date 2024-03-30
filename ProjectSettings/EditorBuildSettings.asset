@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MirrorTest.unity
     guid: 4c8d0b73fc22d4b45aa80a3fd4f5b7f7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MapTest1.unity
     guid: 9f6c24b011d96e641a027880dd29c36d
   - enabled: 1
