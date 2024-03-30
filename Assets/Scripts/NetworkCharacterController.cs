@@ -733,7 +733,7 @@ public class NetworkCharacterController : NetworkBehaviour
         if (isTouchPresent)
         {
             if (rotTouchPresent)
-                rot = new Vector3(-rotationTouch.deltaPosition.y, rotationTouch.deltaPosition.x) * camRotationSpeed * rotationTouch.deltaTime * touchRotationSensitivity;
+                rot = new Vector3(-rotationTouch.deltaPosition.y / cam.pixelHeight, rotationTouch.deltaPosition.x / cam.pixelWidth / 0.5f) * touchRotationSensitivity;
         }
         else
         {
