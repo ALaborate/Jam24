@@ -156,6 +156,8 @@ public class NetworkCharacterController : NetworkBehaviour
                 else
                     userInput = userInput & ~UserInput.Push;
             }
+            else
+                userInput = userInput & ~UserInput.Push; //see raising of push below in iteration over touches
 
             if (Input.GetKey(KeyCode.Space))
                 userInput = userInput | UserInput.Jump;
@@ -171,14 +173,18 @@ public class NetworkCharacterController : NetworkBehaviour
                 {
                     if (t.phase == TouchPhase.Began)
                     {
-                        touchMvtInitialPos = t.position;
+                        if (t.tapCount > 1)
+                            userInput = userInput | UserInput.Jump;
+                        else
+                            touchMvtInitialPos = t.position;
                     }
-                    if (touchMvtInitialPos != Vector2.zero)
+                    else if (t.phase == TouchPhase.Stationary || t.phase == TouchPhase.Moved)
                         touchMvt = t.position - touchMvtInitialPos;
-                    if (t.phase == TouchPhase.Ended)
-                    {
-                        touchMvtInitialPos = Vector2.zero;
-                    }
+                }
+                else
+                {
+                    if (t.phase == TouchPhase.Began && t.tapCount > 1)
+                        userInput |= UserInput.Push;
                 }
             }
 
@@ -188,8 +194,6 @@ public class NetworkCharacterController : NetworkBehaviour
                 horizontal = touchMvt.x / cam.pixelHeight / 2;
             }
             CmdMove(vertical, horizontal, targetLookAngleY, ticklingIntensity, userInput);
-            if (isTouchPresent)
-                userInput = userInput & ~UserInput.Push;
         }
 
 
