@@ -7366,9 +7366,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: This WEB GL build is demonstarion-only as we didn't manage to make it connectable
+  m_Text: multiplayer, please download desktop build.e didn't manage to make it connectable
     to any outside server. You may just find some memes here. If you want full multiplayer,
-    please download desktop build.
+    please download desktop build. Also, on mobile touch input is fugged and bugged
 --- !u!222 &1975805507
 CanvasRenderer:
   m_ObjectHideFlags: 0
