@@ -146,8 +146,9 @@ public class NetworkCharacterController : NetworkBehaviour
 
             var mouseSpeed = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")).magnitude;
             ticklingIntensity -= Time.deltaTime * ticklingCooling;
-            ticklingIntensity += mouseSpeed * ticklingGainCoef;
-            ticklingIntensity = Mathf.Clamp01(ticklingIntensity);
+            if (!isTouchPresent)
+                ticklingIntensity += mouseSpeed * ticklingGainCoef;
+
 
             if (!isTouchPresent)
             {
@@ -177,14 +178,18 @@ public class NetworkCharacterController : NetworkBehaviour
                             userInput = userInput | UserInput.Jump;
                         else
                             touchMvtInitialPos = t.position;
+
                     }
                     else if (t.phase == TouchPhase.Stationary || t.phase == TouchPhase.Moved)
                         touchMvt = t.position - touchMvtInitialPos;
+                    if (health.IsRofled)
+                        userInput |= UserInput.Jump; //any touch considered jump in rofled state
                 }
                 else
                 {
                     if (t.phase == TouchPhase.Began && t.tapCount > 1)
                         userInput |= UserInput.Push;
+                    ticklingIntensity += t.deltaPosition.magnitude * ticklingGainCoef;
                 }
             }
 
@@ -193,6 +198,8 @@ public class NetworkCharacterController : NetworkBehaviour
                 vertical = touchMvt.y / cam.pixelHeight;
                 horizontal = touchMvt.x / cam.pixelHeight / 2;
             }
+
+            ticklingIntensity = Mathf.Clamp01(ticklingIntensity);
             CmdMove(vertical, horizontal, targetLookAngleY, ticklingIntensity, userInput);
         }
 
@@ -458,6 +465,7 @@ public class NetworkCharacterController : NetworkBehaviour
         pushingTrail.gameObject.SetActive(false);
     }
 
+    [Server]
     private void TickleOpponents()
     {
         ticklingIntensityVisual = ticklingIntensity;
