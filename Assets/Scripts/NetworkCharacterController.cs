@@ -311,7 +311,7 @@ public class NetworkCharacterController : NetworkBehaviour
                 Debug.DrawLine(ray.origin, ray.origin + ray.direction * groundCastDistance, Color.green, 0f, true);
                 var hit = Physics.Raycast(ray, out groundHits[i], groundCastDistance, groundLayer);
                 if (!hit) groundHits[i].distance = float.PositiveInfinity;
-                if (groundHits[i].distance < minGroundDistance)
+                if (groundHits[i].distance < minGroundDistance && !groundHits[i].collider.isTrigger)
                     minGroundDistance = groundHits[i].distance;
                 if (hit)
                     footGrip = (footGrip * i + groundHits[i].collider.material.dynamicFriction) / (i + 1);
@@ -656,6 +656,7 @@ public class NetworkCharacterController : NetworkBehaviour
     private bool IsColisionWithGround(Collision collision)
     {
         var isGroundLayer = ((1 << collision.gameObject.layer) & groundLayer) > 0;
+        isGroundLayer = isGroundLayer && !collision.collider.isTrigger;
         var averageColinearity = 0f;
         if (isGroundLayer)
             for (int i = 0; i < collision.contactCount; i++)
