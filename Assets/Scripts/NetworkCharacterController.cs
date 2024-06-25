@@ -193,14 +193,14 @@ public class NetworkCharacterController : NetworkBehaviour
                 }
             }
 
-            const float TOUCH_SENS_BOOST = 2.4f;
+            const float TOUCH_SENS_BOOST = 3.7f;
             if (isTouchPresent)
             {
                 vertical = TOUCH_SENS_BOOST * touchMvt.y / cam.pixelHeight;
-                horizontal = TOUCH_SENS_BOOST * touchMvt.x / cam.pixelWidth;
+                horizontal = 2 * TOUCH_SENS_BOOST * touchMvt.x / cam.pixelWidth;
             }
 
-            JoysticVisualizer.direction = new Vector2 (horizontal, vertical);
+            JoysticVisualizer.direction = new Vector2(horizontal, vertical);
 
             ticklingIntensity = Mathf.Clamp01(ticklingIntensity);
             CmdMove(vertical, horizontal, targetLookAngleY, ticklingIntensity, userInput);
