@@ -26,6 +26,8 @@ public class CustomNetworkHUD : MonoBehaviour
     {
         // If this width is changed, also change offsetX in GUIConsole::OnGUI
         int width = 300;
+        var cam = Camera.main;
+        width = Mathf.RoundToInt(cam.pixelWidth / 2);
 
         GUILayout.BeginArea(new Rect(10 + offsetX, 40 + offsetY, width, 9999));
 
