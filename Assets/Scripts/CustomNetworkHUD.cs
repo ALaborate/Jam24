@@ -9,10 +9,15 @@ public class CustomNetworkHUD : MonoBehaviour
 
     public int offsetX;
     public int offsetY;
+    [Range(1e-5f, 0.2f)]
+    public float btnHeightCoef = 0.03f;
+
+    private Camera mainCam;
 
     void Awake()
     {
         manager = GetComponent<NetworkManager>();
+        mainCam = Camera.main;
     }
 
     private void Start()
@@ -66,7 +71,7 @@ public class CustomNetworkHUD : MonoBehaviour
                 }
 #else
             // Server + Client
-            if (GUILayout.Button("Host (Server + Client)"))
+            if (GUILayout.Button("Host (Server + Client)", GUILayout.Height(mainCam.pixelHeight * btnHeightCoef)))
                 manager.StartHost();
 #endif
 
@@ -74,11 +79,11 @@ public class CustomNetworkHUD : MonoBehaviour
             GUILayout.BeginHorizontal();
 
 #if !UNITY_WEBGL
-            if (GUILayout.Button("Client", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button("Client", GUILayout.ExpandWidth(false), GUILayout.Height(mainCam.pixelHeight * btnHeightCoef)))
                 manager.StartClient(); 
 #endif
             PortTransport portTransport = Transport.active as PortTransport;
-            string fullAddress = GUILayout.TextField(manager.networkAddress + (portTransport == null ? "" : $":{portTransport.Port}"));
+            string fullAddress = GUILayout.TextField(manager.networkAddress + (portTransport == null ? "" : $":{portTransport.Port}"), GUILayout.Height(mainCam.pixelHeight * btnHeightCoef));
             // only show a port field if we have a port transport
             // we can't have "IP:PORT" in the address field since this only
             // works for IPV4:PORT.
@@ -108,15 +113,15 @@ public class CustomNetworkHUD : MonoBehaviour
                 // cant be a server in webgl build
                 GUILayout.Box("( WebGL cannot be server )");
 #else
-            if (GUILayout.Button("Server Only"))
+            if (GUILayout.Button("Server Only", GUILayout.Height(mainCam.pixelHeight * btnHeightCoef)))
                 manager.StartServer();
 #endif
         }
         else
         {
             // Connecting
-            GUILayout.Label($"Connecting to {manager.networkAddress}..");
-            if (GUILayout.Button("Cancel Connection Attempt"))
+            GUILayout.Label($"Connecting to {manager.networkAddress}..", GUILayout.Height(mainCam.pixelHeight * btnHeightCoef));
+            if (GUILayout.Button("Cancel Connection Attempt", GUILayout.Height(mainCam.pixelHeight * btnHeightCoef)))
                 manager.StopClient();
         }
     }
