@@ -283,6 +283,7 @@ public class NetworkCharacterController : NetworkBehaviour
     UserInput userInput = UserInput.None;
     private Vector3 targetRotation;
     private float nextTimeToPush = 0;
+
     private void FixedUpdate()
     {
         if (rb != null)
@@ -349,40 +350,59 @@ public class NetworkCharacterController : NetworkBehaviour
         }
     }
 
+    public bool rotate = true;
     private void RotateToCameraDirection()
     {
-        if (health.IsRofled) return;
-        Vector3 torqueVector = Vector3.zero;
-        ///this vertical stabilization does not work well in conjunction with Y rotation. That sucks.
-        //var predictedUp = Quaternion.AngleAxis(
-        //     rb.angularVelocity.magnitude * Mathf.Rad2Deg * bodyStability / bodyStabilizationSpeed,
-        //     rb.angularVelocity) * transform.up;
-        //torqueVector = Vector3.Cross(predictedUp, Vector3.up);
-        //if (torqueVector.sqrMagnitude > 0.001f)
-        //{
-        //    rb.AddTorque(torqueVector * bodyStabilizationSpeed * bodyStabilizationSpeed, ForceMode.Acceleration);
-        //}
-        //else
-
+        if (!health.IsRofled)
         {
-            var yVelocity = rb.angularVelocity.y * Mathf.Rad2Deg;
-            var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y);
-            var breakingDistance = yVelocity * yVelocity / (2 * bodyYRotationTorque);
-            if (Mathf.Abs(yDelta) < 2 * bodyYRotationTorque * Time.fixedDeltaTime && Mathf.Abs(yVelocity) < 2 * bodyYRotationTorque * Time.fixedDeltaTime)
+            Vector3 torqueVector = Vector3.zero;
+
+            ///this vertical stabilization does not work well in conjunction with Y rotation. That sucks. The crunch is to constraint rotation on x and y, <see cref="OnRoflOver"/>
+            //var predictedUp = Quaternion.AngleAxis(
+            //     rb.angularVelocity.magnitude * Mathf.Rad2Deg * bodyStability / bodyStabilizationSpeed,
+            //     rb.angularVelocity) * transform.up;
+            //torqueVector = Vector3.Cross(predictedUp, Vector3.up);
+            //if (torqueVector.sqrMagnitude > 0.001f)
+            //{
+            //    rb.AddTorque(torqueVector * bodyStabilizationSpeed * bodyStabilizationSpeed, ForceMode.Acceleration);
+            //}
+            //else
+            if (rotate)
             {
-                rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0, rb.angularVelocity.z);
-                rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles.x, targetRotation.y, rb.rotation.eulerAngles.z);
+                if (rb.isKinematic)
+                    rb.isKinematic = false;
+
+                var yVelocity = rb.angularVelocity.y * Mathf.Rad2Deg;
+                var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y);
+                var breakingDelta = yVelocity * yVelocity / (2 * bodyYRotationTorque);
+                if (Mathf.Abs(yDelta) < 2 * bodyYRotationTorque * Time.fixedDeltaTime && Mathf.Abs(yVelocity) < 2 * bodyYRotationTorque * Time.fixedDeltaTime)
+                {
+                    rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0, rb.angularVelocity.z);
+                    rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles.x, targetRotation.y, rb.rotation.eulerAngles.z);
+                }
+                else if (Mathf.Abs(yDelta) > breakingDelta)
+                {
+                    torqueVector.y = bodyYRotationTorque * Mathf.Sign(yDelta);
+                    //torqueVector.y *= Mathf.Clamp01(Mathf.Abs(yDelta) / bodyYRotationSpeed * Time.fixedDeltaTime * Time.fixedDeltaTime * 0.5f); //dont speed up more than necessary
+                }
+                else
+                {
+                    torqueVector.y = -Mathf.Min(Mathf.Abs(yVelocity) / Time.fixedDeltaTime, bodyYRotationTorque) * Mathf.Sign(yVelocity);
+                }
+                rb.AddTorque(torqueVector * Time.fixedDeltaTime, ForceMode.Acceleration);
+
+                //var accumulatedTorque = rb.GetAccumulatedTorque(); ///somehow immediately after <see cref="OnRoflOver"/> player stands up unity phisics accumulate weird torque. Despite we rotate obect only on Y axis, unity torque becomes non-zero along all axis after AddTorque call. To crunchfix it we neutralize accumulated torque on everything that is not Y.
+                //accumulatedTorque.y = 0f;
+                //if (float.IsNaN(accumulatedTorque.sqrMagnitude))
+                //{
+                //    //accumulatedTorque = Vector3.zero;
+                //    Debug.LogError($"Accumulated torque {rb.GetAccumulatedTorque()}");
+                //}
+
+                //rb.AddTorque(-accumulatedTorque, ForceMode.Force);
+
+                //rb.angularVelocity = new Vector3(0, rb.angularVelocity.y, 0);
             }
-            else if (Mathf.Abs(yDelta) > breakingDistance)
-            {
-                torqueVector.y = bodyYRotationTorque * Mathf.Sign(yDelta);
-                //torqueVector.y *= Mathf.Clamp01(Mathf.Abs(yDelta) / bodyYRotationSpeed * Time.fixedDeltaTime * Time.fixedDeltaTime * 0.5f); //dont speed up more than necessary
-            }
-            else
-            {
-                torqueVector.y = -Mathf.Min(Mathf.Abs(yVelocity) / Time.fixedDeltaTime, bodyYRotationTorque) * Mathf.Sign(yVelocity);
-            }
-            rb.AddTorque(torqueVector * Time.fixedDeltaTime, ForceMode.Acceleration);
         }
     }
 
@@ -699,10 +719,18 @@ public class NetworkCharacterController : NetworkBehaviour
     {
         if (!isServer) return;
 
-        //rb.AddTorque(-rb.angularVelocity * Mathf.Rad2Deg, ForceMode.VelocityChange);
+
+        rb.isKinematic = true;
+
         rb.angularVelocity = Vector3.zero;
         rb.constraints = RB_ROT_CONSTR;
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+
+        //Crunches I've tried but they did not fix the problem
+        //var accumulatedTorque = rb.GetAccumulatedTorque(); 
+        //rb.AddTorque(-accumulatedTorque, ForceMode.Force);
+
+        //UnityEditor.Unsupported.SmartReset(rb);
     }
 
     private void OnDisable()
