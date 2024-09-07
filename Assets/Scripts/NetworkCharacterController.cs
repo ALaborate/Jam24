@@ -179,25 +179,13 @@ public class NetworkCharacterController : NetworkBehaviour
                 var t = Input.GetTouch(i);
                 if (t.position.x < Screen.width / 2)
                 {
+                    var prevInput = new Vector2(horizontal, vertical); //rudimentary, just in case
+
                     touchMvt = t.position - touchMvtInitialPos;
-                    var prevInput = new Vector2(horizontal, vertical);
-                   
-                    if (t.phase == TouchPhase.Began)
+
+                    if (t.phase == TouchPhase.Began && t.tapCount != 2)
                     {
-                        var playerWasMoving = prevInput.magnitude > .3f; //heuristics
-                        var jumpTapCount = 2;
-                        var resetTapCount = 1;
-                        if(playerWasMoving)
-                        {
-                            jumpTapCount = 1;
-                            resetTapCount = 3; //jump, return finger, 3rd is reset
-                        }
-
-                        if (t.tapCount == jumpTapCount)
-                            userInput = userInput | UserInput.Jump;
-                        if(t.tapCount == resetTapCount)
-                            touchMvtInitialPos = t.position;
-
+                        touchMvtInitialPos = t.position;
                     }
                     if (health.IsRofled)
                         userInput |= UserInput.Jump; //any touch considered jump in rofled state

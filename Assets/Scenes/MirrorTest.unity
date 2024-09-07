@@ -5348,7 +5348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fce878af64e0fe4ab25eb2de4fd328b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filter: 1
+  filter: 0.67
   threshold: 0.64
   timeout: 0.5
   OnShake:
