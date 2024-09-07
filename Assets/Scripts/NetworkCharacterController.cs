@@ -4,7 +4,6 @@ using UnityEngine;
 using Mirror;
 using UnityEngine.Android;
 
-
 public class NetworkCharacterController : NetworkBehaviour
 {
 
@@ -137,13 +136,12 @@ public class NetworkCharacterController : NetworkBehaviour
     [SyncVar]
     private float ticklingIntensityVisual = 0f;
     bool isTouchPresent;
+    float horizontal;
+    float vertical;
     private void Update()
     {
         if (isLocalPlayer)
         {
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
-
             var mouseSpeed = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")).magnitude;
             ticklingIntensity -= Time.deltaTime * ticklingCooling;
             if (!isTouchPresent)
@@ -172,16 +170,26 @@ public class NetworkCharacterController : NetworkBehaviour
                 var t = Input.GetTouch(i);
                 if (t.position.x < Screen.width / 2)
                 {
+                    touchMvt = t.position - touchMvtInitialPos;
+                    var prevInput = new Vector2(horizontal, vertical);
+                   
                     if (t.phase == TouchPhase.Began)
                     {
-                        if (t.tapCount > 1)
+                        var playerWasMoving = prevInput.magnitude > .3f; //heuristics
+                        var jumpTapCount = 2;
+                        var resetTapCount = 1;
+                        if(playerWasMoving)
+                        {
+                            jumpTapCount = 1;
+                            resetTapCount = 3; //jump, return finger, 3rd is reset
+                        }
+
+                        if (t.tapCount == jumpTapCount)
                             userInput = userInput | UserInput.Jump;
-                        else
+                        if(t.tapCount == resetTapCount)
                             touchMvtInitialPos = t.position;
 
                     }
-                    else if (t.phase == TouchPhase.Stationary || t.phase == TouchPhase.Moved)
-                        touchMvt = t.position - touchMvtInitialPos;
                     if (health.IsRofled)
                         userInput |= UserInput.Jump; //any touch considered jump in rofled state
                 }
@@ -198,6 +206,11 @@ public class NetworkCharacterController : NetworkBehaviour
             {
                 vertical = TOUCH_SENS_BOOST * touchMvt.y / cam.pixelHeight;
                 horizontal = 2 * TOUCH_SENS_BOOST * touchMvt.x / cam.pixelWidth;
+            }
+            else
+            {
+                horizontal = Input.GetAxis("Horizontal");
+                vertical = Input.GetAxis("Vertical");
             }
 
             JoysticVisualizer.direction = new Vector2(horizontal, vertical);
