@@ -45,13 +45,21 @@ public class Sentry : NetworkBehaviour
     private float charge = 0f;
     private void OnTriggerEnter(Collider other)
     {
-        if (isServer && other.attachedRigidbody != null)
-            PushPlayer(other);
+        if (isServer && other.attachedRigidbody)
+        {
+            var directlyVisible = Physics.Raycast(transform.position, other.transform.position - transform.position, out var rhi, float.PositiveInfinity, Physics.DefaultRaycastLayers);
+            if (directlyVisible && rhi.collider.attachedRigidbody && rhi.collider.attachedRigidbody == other.attachedRigidbody)
+                PushPlayer(other);
+        }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (isServer && other.attachedRigidbody != null)
-            PushPlayer(other);
+        if (isServer && other.attachedRigidbody)
+        {
+            var directlyVisible = Physics.Raycast(transform.position, other.transform.position - transform.position, out var rhi, float.PositiveInfinity, Physics.DefaultRaycastLayers);
+            if (directlyVisible && rhi.collider.attachedRigidbody && rhi.collider.attachedRigidbody == other.attachedRigidbody)
+                PushPlayer(other);
+        }
     }
 
     [Server]
