@@ -11,7 +11,7 @@ public class JoysticVisualizer : MonoBehaviour
     private Image background;
 
 
-    public static Vector2 direction = Vector2.zero;
+    public Vector2 direction = Vector2.zero;
     // Start is called before the first frame update
     void Start()
     {

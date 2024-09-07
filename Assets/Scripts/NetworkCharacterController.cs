@@ -55,6 +55,7 @@ public class NetworkCharacterController : NetworkBehaviour
     private PlayerHealth health;
     private HealthVisualizer healthVisualizer;
     private float height;
+    private JoysticVisualizer JoysticVisualizer => Bootstrap.Instance.joysticVisualizer;
 
 
     public bool HasFeather => inventoryIds.Count > 0;
@@ -79,6 +80,7 @@ public class NetworkCharacterController : NetworkBehaviour
             OnInventoryChange(SyncSet<uint>.Operation.OP_ADD, item);
         }
         inventoryIds.Callback += OnInventoryChange;
+        Bootstrap.Instance.accelShake.OnShake.AddListener(delta => accelJump = true);
     }
 
     private void Initialize()
@@ -138,6 +140,7 @@ public class NetworkCharacterController : NetworkBehaviour
     bool isTouchPresent;
     float horizontal;
     float vertical;
+    bool accelJump = false; ///jump from accelerometer
     private void Update()
     {
         if (isLocalPlayer)
@@ -162,6 +165,12 @@ public class NetworkCharacterController : NetworkBehaviour
                 userInput = userInput | UserInput.Jump;
             else
                 userInput = userInput & ~UserInput.Jump;
+
+            if (accelJump)
+            {
+                userInput = userInput | UserInput.Jump;
+                accelJump = false;
+            }
 
             var touchMvt = Vector2.zero;
             for (int i = 0; i < Input.touchCount; i++)
