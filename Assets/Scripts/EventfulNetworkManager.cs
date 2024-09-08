@@ -6,32 +6,60 @@ using UnityEngine.Events;
 
 public class EventfulNetworkManager : NetworkManager
 {
-    public event UnityAction OnClientStart;
-    public event UnityAction OnClientStop;
-    public event UnityAction OnServerStart;
-    public event UnityAction OnServerStop;
+    public event UnityAction OnClientStarted;
+    public event UnityAction OnClientStopped;
+    public event UnityAction OnServerStarted;
+    public event UnityAction OnServerStopped;
+    /// <summary>
+    /// On client fired when client is connected to server and the address is known
+    /// </summary>
+    public event UnityAction<string> OnConnectedToServer;
+    public static EventfulNetworkManager Instance => singleton as EventfulNetworkManager;
+
+    [System.Flags]
+    public enum State
+    {
+        None, Server = 1, Client = 2, Host = 3
+    }
+
+    public State state { get; private set; }
 
     public override void OnStartClient()
     {
         base.OnStartClient();
-        OnClientStart?.Invoke();
+        OnClientStarted?.Invoke();
+        state |= State.Client;
     }
 
     public override void OnStopClient()
     {
         base.OnStopClient();
-        OnClientStop?.Invoke();
+        OnClientStopped?.Invoke();
+        state &= ~State.Client;
     }
 
     public override void OnStartServer()
     {
         base.OnStartServer();
-        OnServerStart?.Invoke();
+        OnServerStarted?.Invoke();
+        state |= State.Server;
     }
 
     public override void OnStopServer()
     {
         base.OnStopServer();
-        OnServerStop?.Invoke();
+        OnServerStopped?.Invoke();
+        state &= ~State.Server;
+    }
+
+    public override void OnClientConnect()
+    {
+        base.OnClientConnect();
+        var address = networkAddress;
+        if(Transport.active is PortTransport portTransport)
+        {
+            address = $"{networkAddress}:{portTransport.Port}";
+        }
+        OnConnectedToServer?.Invoke(address);
     }
 }

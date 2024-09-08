@@ -750,6 +750,7 @@ public class NetworkCharacterController : NetworkBehaviour
             OnInventoryChange(SyncSet<uint>.Operation.OP_CLEAR, 0);
         }
         EventManager.Instance.RemovePlayer(this);
+        JoysticVisualizer.direction = Vector2.zero;
     }
 
 

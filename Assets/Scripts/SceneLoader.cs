@@ -17,10 +17,17 @@ public class SceneLoader : MonoBehaviour
     private void Awake()
     {
         var enm = NetworkManager.singleton as EventfulNetworkManager;
-        enm.OnServerStart += () => enm.StartCoroutine(InitializeScene(isServer: true));
-        enm.OnServerStop += () => enm.StartCoroutine(Deinit());
-        enm.OnClientStart += () => enm.StartCoroutine(InitializeScene(isServer: false));
-        enm.OnClientStop += () => { enm.StartCoroutine(Deinit()); };
+        enm.OnServerStarted += () => enm.StartCoroutine(InitializeScene(isServer: true));
+        enm.OnServerStopped += () => enm.StartCoroutine(Deinit());
+        enm.OnClientStarted += () => enm.StartCoroutine(InitializeScene(isServer: false));
+        enm.OnClientStopped += () => { enm.StartCoroutine(Deinit()); };
+    }
+
+    private void Start()
+    {
+#if UNITY_WEBGL
+        NetworkManager.singleton.StartHost();
+#endif
     }
 
 
