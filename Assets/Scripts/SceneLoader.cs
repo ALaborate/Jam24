@@ -1,10 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using Mirror;
 
-public class SceneLoader : NetworkBehaviour
+public class SceneLoader : MonoBehaviour
 {
     public string sceneName;
     [Space]
@@ -15,30 +14,27 @@ public class SceneLoader : NetworkBehaviour
     public float bsMinHeight = 1f;
     public float bsMaxHeight = 3f;
 
-
-    public override void OnStartServer()
+    private void Awake()
     {
-        base.OnStartServer();
-        InitializeScene();
-    }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        InitializeScene();
+        var enm = NetworkManager.singleton as EventfulNetworkManager;
+        enm.OnServerStart += () => enm.StartCoroutine(InitializeScene(isServer: true));
+        enm.OnServerStop += () => enm.StartCoroutine(Deinit());
+        enm.OnClientStart += () => enm.StartCoroutine(InitializeScene(isServer: false));
+        enm.OnClientStop += () => { enm.StartCoroutine(Deinit()); };
     }
 
 
     private bool isInitialized = false;
-    private void InitializeScene()
+    private System.Collections.IEnumerator InitializeScene(bool isServer)
     {
+        if(isServer)
+            SceneManager.sceneLoaded += FinishInitialization;
         if (!isInitialized)
         {
             isInitialized = true;
-            SceneManager.sceneLoaded += FinishInitialization;
             var parameters = new LoadSceneParameters(LoadSceneMode.Additive);
-            var scene = SceneManager.LoadSceneAsync(sceneName, parameters);
-
+            var scene = SceneManager.LoadScene(sceneName, parameters);
+            yield return null; //dont need coroutine without async operation, but let it be
         }
     }
 
@@ -50,56 +46,47 @@ public class SceneLoader : NetworkBehaviour
         }
 
         var spawns = GameObject.FindGameObjectsWithTag("FeatherSpawn");
-        if (isServer)
+
+        for (int i = 0; i < numberOfFeathers; i++)
         {
-            for (int i = 0; i < numberOfFeathers; i++)
+            Vector3 spawnPos = Vector3.up * 30;
+            if (spawns.Length > 0)
             {
-                Vector3 spawnPos = Vector3.up * 30;
-                if (spawns.Length > 0)
-                {
-                    var spawnInx = Random.Range(0, spawns.Length);
-                    spawnPos = spawns[spawnInx].transform.position;
-                }
-
-                var feather = Instantiate(featherPrefab, spawnPos + Random.onUnitSphere, Quaternion.identity);
-                SceneManager.MoveGameObjectToScene(feather, scene);
-                NetworkServer.Spawn(feather);
+                var spawnInx = Random.Range(0, spawns.Length);
+                spawnPos = spawns[spawnInx].transform.position;
             }
 
-            var bonusSpawns = GameObject.FindGameObjectsWithTag("BonusSpawn");
-            foreach (var spawn in bonusSpawns)
+            var feather = Instantiate(featherPrefab, spawnPos + Random.onUnitSphere, Quaternion.identity);
+            SceneManager.MoveGameObjectToScene(feather, scene);
+            NetworkServer.Spawn(feather);
+        }
+
+        var bonusSpawns = GameObject.FindGameObjectsWithTag("BonusSpawn");
+        foreach (var spawn in bonusSpawns)
+        {
+            var spawnPos = spawn.transform.position;
+            if (Physics.Raycast(spawnPos, Vector3.down, out RaycastHit hit))
             {
-                var spawnPos = spawn.transform.position;
-                if(Physics.Raycast(spawnPos, Vector3.down, out RaycastHit hit))
+                if (hit.point != Vector3.zero)
                 {
-                    if(hit.point != Vector3.zero)
-                    {
-                        spawnPos = hit.point + Vector3.up * Random.Range(bsMinHeight, bsMaxHeight);
-                    }
+                    spawnPos = hit.point + Vector3.up * Random.Range(bsMinHeight, bsMaxHeight);
                 }
-                var bonusSpawn = Instantiate(bonusSpawnPrefab, spawnPos, Quaternion.identity);
-                SceneManager.MoveGameObjectToScene(bonusSpawn, scene);
-                NetworkServer.Spawn(bonusSpawn);
             }
+            var bonusSpawn = Instantiate(bonusSpawnPrefab, spawnPos, Quaternion.identity);
+            SceneManager.MoveGameObjectToScene(bonusSpawn, scene);
+            NetworkServer.Spawn(bonusSpawn);
         }
     }
 
-    public override void OnStopClient()
+    private System.Collections.IEnumerator Deinit()
     {
-        base.OnStopClient();
-        SceneManager.UnloadSceneAsync(sceneName);
-        Deinit();
-    }
-    public override void OnStopServer()
-    {
-        base.OnStopServer();
-        SceneManager.UnloadSceneAsync(sceneName);
-        Deinit();
-    }
-
-    private void Deinit()
-    {
-        isInitialized = false;
-        SceneManager.sceneLoaded -= FinishInitialization;
+        if (isInitialized)
+        {
+            if (SceneManager.GetSceneByName(sceneName).IsValid() || SceneManager.GetSceneByPath(sceneName).IsValid())
+                yield return SceneManager.UnloadSceneAsync(sceneName);
+            isInitialized = false;
+            SceneManager.sceneLoaded -= FinishInitialization;
+            yield return Resources.UnloadUnusedAssets(); 
+        }
     }
 }
