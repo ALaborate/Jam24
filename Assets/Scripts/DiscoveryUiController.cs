@@ -1,6 +1,7 @@
 using Mirror;
 using Mirror.Discovery;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class DiscoveryUiController : MonoBehaviour
@@ -40,11 +41,17 @@ public class DiscoveryUiController : MonoBehaviour
         manager.OnClientStopped += OnStopped;
 
         manager.OnConnectedToServer +=
-            address => AddAddress(address);
+            address =>
+            {
+                AddAddress(address);
+                #if UNITY_ANDROID
+                SaveAddresses();
+                #endif
+            };
 
         var addresses = PlayerPrefs.GetString(ADDRESSES_KEY, string.Empty);
         if (string.IsNullOrEmpty(addresses))
-            knownAddresses.Add(DEFAULT_ADDRESS);
+            AddAddress(DEFAULT_ADDRESS);
         foreach (var addr in addresses.Split(ADDRESS_SEPAR))
             AddAddress(addr);
     }
@@ -125,6 +132,11 @@ public class DiscoveryUiController : MonoBehaviour
     }
 
     private void OnDisable()
+    {
+        SaveAddresses();
+    }
+
+    private void SaveAddresses()
     {
         PlayerPrefs.SetString(ADDRESSES_KEY, string.Join(ADDRESS_SEPAR, knownAddresses));
     }
