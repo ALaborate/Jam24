@@ -7152,23 +7152,11 @@ MonoBehaviour:
   enableActiveDiscovery: 1
   BroadcastAddress: 
   serverBroadcastListenPort: 47777
-  ActiveDiscoveryInterval: 9.81
+  ActiveDiscoveryInterval: 2.4
   transport: {fileID: 1066113811}
   OnServerFound:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1066113815}
-        m_TargetAssemblyTypeName: DiscoveryUiController, Assembly-CSharp
-        m_MethodName: ServerFound
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   secretHandshake: 7066326714020251896
 --- !u!114 &1066113815
 MonoBehaviour:

@@ -1,6 +1,5 @@
 using Mirror;
 using Mirror.Discovery;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,48 +7,57 @@ public class DiscoveryUiController : MonoBehaviour
 {
     public const string ADDRESSES_KEY = "KNOWN_ADDRESSES";
     public const string ADDRESS_SEPAR = ";";
-    public const string DEFAULT_ADDRESS = "localhost:7777";
+    public static string DEFAULT_ADDRESS => $"localhost:7777";
 
     [SerializeField] DiscoveryUiView view;
     public IReadOnlyCollection<string> KnownAddresses => knownAddresses;
 
     public void ServerFound(ServerResponse response)
-    {
-        view.SetAddress($"{response.EndPoint.Address}:{response.EndPoint.Port}");
+    { 
+        view.SetAddress($"{response.EndPoint.Address}:{(manager.transport as PortTransport).Port}");
     }
 
-    List<string> knownAddresses = new() { DEFAULT_ADDRESS };
+    List<string> knownAddresses = new();
     EventfulNetworkManager manager;
     NetworkDiscovery networkDiscovery;
     private void Start()
     {
         manager = EventfulNetworkManager.Instance;
         networkDiscovery = GetComponent<NetworkDiscovery>();
+        networkDiscovery.OnServerFound.AddListener(ServerFound);
+
         view.ConnectClicked += ConnectClicked;
         view.RemoveClicked += i => RemoveAddressAt(i);
         view.stopButton.onClick.AddListener(StopWhateverClicked);
         view.hostButton.onClick.AddListener(HostClicked);
-        view.pingLanButton.onClick.AddListener(() => networkDiscovery.StartDiscovery());
 
-        manager.OnClientStarted += () => networkDiscovery.StopDiscovery();
+        view.pingLanButton.onClick.AddListener(PingLanClicked);
+
+        manager.OnClientStarted += () => { if (!NetworkServer.active) networkDiscovery.StopDiscovery(); };
         manager.OnServerStarted += () => networkDiscovery.AdvertiseServer();
 
         manager.OnServerStopped += OnStopped;
         manager.OnClientStopped += OnStopped;
-        
-        manager.OnConnectedToServer += 
+
+        manager.OnConnectedToServer +=
             address => AddAddress(address);
 
         var addresses = PlayerPrefs.GetString(ADDRESSES_KEY, string.Empty);
-        if (!string.IsNullOrEmpty(addresses))
-            knownAddresses.Clear(); //remove localhost
+        if (string.IsNullOrEmpty(addresses))
+            knownAddresses.Add(DEFAULT_ADDRESS);
         foreach (var addr in addresses.Split(ADDRESS_SEPAR))
             AddAddress(addr);
     }
 
-    private void OnStopped()
+    private void PingLanClicked()
     {
         networkDiscovery.StartDiscovery();
+        networkDiscovery.Invoke(nameof(networkDiscovery.BroadcastDiscoveryRequest), 1);
+    }
+
+    private void OnStopped()
+    {
+        networkDiscovery.StopDiscovery();
     }
 
     private void HostClicked()
