@@ -79,7 +79,7 @@ public class NetworkCharacterController : NetworkBehaviour
         {
             OnInventoryChange(SyncSet<uint>.Operation.OP_ADD, item);
         }
-        inventoryIds.Callback += OnInventoryChange;
+        inventoryIds.OnChange += OnInventoryChange;
         Bootstrap.Instance.accelShake.OnShake.AddListener(delta => accelJump = true);
     }
 
@@ -251,7 +251,7 @@ public class NetworkCharacterController : NetworkBehaviour
         Vector3 moveDirection = new Vector3(strafe, 0, run);
         moveDirection.Normalize();
         moveDirection = transform.TransformDirection(moveDirection);
-        var groundVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        var groundVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
         var speed = groundVelocity.magnitude;
         var forceSpeedReduction = Mathf.Clamp01(1 - speed / maxRunningSpeed);
         forceSpeedReduction = Mathf.Lerp(1, forceSpeedReduction, Vector3.Dot(groundVelocity.normalized, moveDirection.normalized));
@@ -331,7 +331,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
             var jump = userInput.HasFlag(UserInput.Jump);
             userInput = userInput & ~UserInput.Jump;
-            if ((isGrounded || health.IsRofled) && rb.velocity.y < 0.1f && jump && rb.velocity.sqrMagnitude < maxRunningSpeed * maxRunningSpeed * 10)
+            if ((isGrounded || health.IsRofled) && rb.linearVelocity.y < 0.1f && jump && rb.linearVelocity.sqrMagnitude < maxRunningSpeed * maxRunningSpeed * 10)
             {
                 // Add an upward force to the rigidbody to make the character jump
                 rb.AddForce(transform.up * (health.IsRofled ? roflJumpForce : jumpForce), ForceMode.VelocityChange);
@@ -422,7 +422,7 @@ public class NetworkCharacterController : NetworkBehaviour
         if (!receivedUserInput && !health.IsRofled)
         {
             //apply counterforce
-            var moveDirection = new Vector3(-rb.velocity.x, 0, -rb.velocity.z);
+            var moveDirection = new Vector3(-rb.linearVelocity.x, 0, -rb.linearVelocity.z);
             rb.AddForce(moveDirection.normalized * moveAcceleration * Time.fixedDeltaTime * footGrip, ForceMode.Acceleration);
         }
     }
@@ -432,8 +432,8 @@ public class NetworkCharacterController : NetworkBehaviour
         if (health.IsRofled)
             return;
         var floatingForceValue = floatingForceCurve.Evaluate(minGroundDistance) * maxFloatingForce;
-        if (rb.velocity.y > 0)
-            floatingForceValue *= Mathf.Clamp01(1 - rb.velocity.y / floatingForceReductionDenominator);
+        if (rb.linearVelocity.y > 0)
+            floatingForceValue *= Mathf.Clamp01(1 - rb.linearVelocity.y / floatingForceReductionDenominator);
         rb.AddForce(Vector3.up * floatingForceValue * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
 
@@ -575,7 +575,6 @@ public class NetworkCharacterController : NetworkBehaviour
     private void OnInventoryChange(SyncSortedSet<uint>.Operation op, uint itemNetId)
     {
         StartCoroutine(OnInventoryChangeDelayed(op, itemNetId));
-
     }
 
     private IEnumerator OnInventoryChangeDelayed(SyncSet<uint>.Operation op, uint itemNetId)
