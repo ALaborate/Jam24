@@ -6,7 +6,6 @@ using UnityEngine.Android;
 
 public class NetworkCharacterController : NetworkBehaviour
 {
-
     private const RigidbodyConstraints RB_ROT_CONSTR = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
     public Transform hand;
@@ -363,6 +362,7 @@ public class NetworkCharacterController : NetworkBehaviour
     public bool rotate = true;
     private void RotateToCameraDirection()
     {
+        const float POSITION_SNAP_TRESHOLD = 0.41f; //TODO write a good, precise gradually stopping simulation
         if (!health.IsRofled)
         {
             Vector3 torqueVector = Vector3.zero;
@@ -385,7 +385,7 @@ public class NetworkCharacterController : NetworkBehaviour
                 var yVelocity = rb.angularVelocity.y * Mathf.Rad2Deg;
                 var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y);
                 var breakingDelta = yVelocity * yVelocity / (2 * bodyYRotationTorque);
-                if (Mathf.Abs(yDelta) < 2 * bodyYRotationTorque * Time.fixedDeltaTime && Mathf.Abs(yVelocity) < 2 * bodyYRotationTorque * Time.fixedDeltaTime)
+                if (Mathf.Abs(yDelta) < POSITION_SNAP_TRESHOLD && Mathf.Abs(yVelocity) < bodyYRotationTorque)
                 {
                     rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0, rb.angularVelocity.z);
                     rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles.x, targetRotation.y, rb.rotation.eulerAngles.z);
@@ -393,13 +393,13 @@ public class NetworkCharacterController : NetworkBehaviour
                 else if (Mathf.Abs(yDelta) > breakingDelta)
                 {
                     torqueVector.y = bodyYRotationTorque * Mathf.Sign(yDelta);
-                    //torqueVector.y *= Mathf.Clamp01(Mathf.Abs(yDelta) / bodyYRotationSpeed * Time.fixedDeltaTime * Time.fixedDeltaTime * 0.5f); //dont speed up more than necessary
+                    //torqueVector.y *= Mathf.Clamp01(Mathf.Abs(yDelta) / bodyYRotationTorque * Time.fixedDeltaTime * Time.fixedDeltaTime * 0.5f); //dont speed up more than necessary
                 }
                 else
                 {
                     torqueVector.y = -Mathf.Min(Mathf.Abs(yVelocity) / Time.fixedDeltaTime, bodyYRotationTorque) * Mathf.Sign(yVelocity);
                 }
-                rb.AddTorque(torqueVector * Time.fixedDeltaTime, ForceMode.Acceleration);
+                rb.AddTorque(torqueVector, ForceMode.Acceleration);
 
                 //var accumulatedTorque = rb.GetAccumulatedTorque(); ///somehow immediately after <see cref="OnRoflOver"/> player stands up unity phisics accumulate weird torque. Despite we rotate obect only on Y axis, unity torque becomes non-zero along all axis after AddTorque call. To crunchfix it we neutralize accumulated torque on everything that is not Y.
                 //accumulatedTorque.y = 0f;
@@ -733,7 +733,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
         rb.angularVelocity = Vector3.zero;
         rb.constraints = RB_ROT_CONSTR;
-        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+        rb.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
 
         //Crunches I've tried but they did not fix the problem
         //var accumulatedTorque = rb.GetAccumulatedTorque(); 
