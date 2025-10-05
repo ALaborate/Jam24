@@ -8,6 +8,8 @@ public class NetworkCharacterController : NetworkBehaviour
 {
     private const RigidbodyConstraints RB_ROT_CONSTR = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
+    [System.NonSerialized]
+    public string nickname = "JamPlayer98";
     public Transform hand;
     public ParticleSystem ticklingParticles;
     public TrailRenderer pushingTrail;
@@ -80,6 +82,7 @@ public class NetworkCharacterController : NetworkBehaviour
         }
         inventoryIds.OnChange += OnInventoryChange;
         Bootstrap.Instance.accelShake.OnShake.AddListener(delta => accelJump = true);
+        nickname = Bootstrap.Instance.playerNameField.text;
     }
 
     private void Initialize()

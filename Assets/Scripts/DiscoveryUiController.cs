@@ -51,7 +51,7 @@ public class DiscoveryUiController : MonoBehaviour
 
         var addresses = PlayerPrefs.GetString(ADDRESSES_KEY, string.Empty);
         if (string.IsNullOrEmpty(addresses))
-            AddAddress(DEFAULT_ADDRESS);
+            AddAddress(DEFAULT_ADDRESS); //we add default just not to go through the hussle of showing/hiding label
         foreach (var addr in addresses.Split(ADDRESS_SEPAR))
             AddAddress(addr);
     }

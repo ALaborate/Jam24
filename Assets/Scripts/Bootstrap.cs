@@ -7,6 +7,7 @@ public class Bootstrap : MonoBehaviour
     public static Bootstrap Instance { get; private set; }
     public AccelShake accelShake;
     public JoysticVisualizer joysticVisualizer;
+    public UnityEngine.UI.InputField playerNameField;
 
     private void Awake()
     {
