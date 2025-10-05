@@ -478,11 +478,12 @@ public class NetworkCharacterController : NetworkBehaviour
     {
         StartCoroutine(VisualizePush());
     }
+    private float PUSH_RIGHT_DISPLACEMENT = .95f;
     [Client]
     private IEnumerator VisualizePush()
     {
         pushingTrail.transform.SetParent(null);
-        pushingTrail.transform.position = transform.position + Vector3.left * col.radius * .8f;
+        pushingTrail.transform.position = transform.position + (health.IsRofled ? Vector3.zero : transform.right * col.radius * PUSH_RIGHT_DISPLACEMENT);
         pushingTrail.startColor = healthVisualizer.CurrentColor;
         pushingTrail.Clear();
         pushingTrail.gameObject.SetActive(true);
@@ -498,7 +499,7 @@ public class NetworkCharacterController : NetworkBehaviour
             }
             else
             {
-                pushingTrail.transform.position = transform.position + transform.forward * distance;
+                pushingTrail.transform.position = transform.position + transform.right * col.radius * PUSH_RIGHT_DISPLACEMENT + transform.forward * distance;
             }
         }
         yield return new WaitForSeconds(pushCooldown - pushVisualizationMvtDuration);
