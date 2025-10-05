@@ -4958,7 +4958,7 @@ MonoBehaviour:
   roflJumpForce: 1.5
   roflRandomTorqueMultiplier: 3.14
   camRotationSpeed: 16
-  bodyYRotationTorque: 384
+  bodyYRotationTorque: 3.1415927
   touchRotationSensitivity: 180
   minCamAngle: -30
   maxCamAngle: 60

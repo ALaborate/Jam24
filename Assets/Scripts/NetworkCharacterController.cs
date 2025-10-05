@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-using UnityEngine.Android;
+using UnityEngine.Profiling;
 
 public class NetworkCharacterController : NetworkBehaviour
 {
@@ -245,6 +245,7 @@ public class NetworkCharacterController : NetworkBehaviour
     [Command]
     private void CmdMove(float run, float strafe, float targetRotationY, float ticklingIntensity, UserInput incoming)
     {
+        Profiler.BeginSample(nameof(CmdMove));
         var dt = NetworkTime.time - lastCmdMoveTime;
         lastCmdMoveTime = NetworkTime.time;
         Vector3 moveDirection = new Vector3(strafe, 0, run);
@@ -276,6 +277,8 @@ public class NetworkCharacterController : NetworkBehaviour
             userInput = userInput | UserInput.Push;
         else
             userInput = userInput & ~UserInput.Push;
+
+        Profiler.EndSample();
     }
 
     [System.Flags]
@@ -382,24 +385,26 @@ public class NetworkCharacterController : NetworkBehaviour
                 if (rb.isKinematic)
                     rb.isKinematic = false;
 
-                var yVelocity = rb.angularVelocity.y * Mathf.Rad2Deg;
-                var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y);
+                var yVelocity = rb.angularVelocity.y;
+                var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y) * Mathf.Deg2Rad;
                 var breakingDelta = yVelocity * yVelocity / (2 * bodyYRotationTorque);
-                if (Mathf.Abs(yDelta) < POSITION_SNAP_TRESHOLD && Mathf.Abs(yVelocity) < bodyYRotationTorque)
+                var accelerationInfluencePerFrame = 0.5f * bodyYRotationTorque * Time.fixedDeltaTime * Time.fixedDeltaTime;
+                if (Mathf.Abs(yDelta) * Mathf.Rad2Deg < POSITION_SNAP_TRESHOLD && Mathf.Abs(yVelocity) < 13 * accelerationInfluencePerFrame)
                 {
                     rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0, rb.angularVelocity.z);
                     rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles.x, targetRotation.y, rb.rotation.eulerAngles.z);
                 }
                 else if (Mathf.Abs(yDelta) > breakingDelta)
                 {
-                    torqueVector.y = bodyYRotationTorque * Mathf.Sign(yDelta);
-                    //torqueVector.y *= Mathf.Clamp01(Mathf.Abs(yDelta) / bodyYRotationTorque * Time.fixedDeltaTime * Time.fixedDeltaTime * 0.5f); //dont speed up more than necessary
+                    var maxTorque = Mathf.Abs(yDelta) / (Time.fixedDeltaTime * Time.fixedDeltaTime);
+                    torqueVector.y = Mathf.Min(bodyYRotationTorque, maxTorque) * Mathf.Sign(yDelta);
+                    //0.5f * maxTorue * Time.fixedDeltaTime * Time.fixedDeltaTime = Mathf.Abs(yDelta) / 2
                 }
                 else
                 {
                     torqueVector.y = -Mathf.Min(Mathf.Abs(yVelocity) / Time.fixedDeltaTime, bodyYRotationTorque) * Mathf.Sign(yVelocity);
                 }
-                rb.AddTorque(torqueVector, ForceMode.Acceleration);
+                rb.AddTorque(torqueVector, ForceMode.VelocityChange);
 
                 //var accumulatedTorque = rb.GetAccumulatedTorque(); ///somehow immediately after <see cref="OnRoflOver"/> player stands up unity phisics accumulate weird torque. Despite we rotate obect only on Y axis, unity torque becomes non-zero along all axis after AddTorque call. To crunchfix it we neutralize accumulated torque on everything that is not Y.
                 //accumulatedTorque.y = 0f;
@@ -431,10 +436,12 @@ public class NetworkCharacterController : NetworkBehaviour
     {
         if (health.IsRofled)
             return;
+        Profiler.BeginSample(nameof(AddFloatingForce));
         var floatingForceValue = floatingForceCurve.Evaluate(minGroundDistance) * maxFloatingForce;
         if (rb.linearVelocity.y > 0)
             floatingForceValue *= Mathf.Clamp01(1 - rb.linearVelocity.y / floatingForceReductionDenominator);
         rb.AddForce(Vector3.up * floatingForceValue * Time.fixedDeltaTime, ForceMode.Acceleration);
+        Profiler.EndSample();
     }
 
     private void PushOpponents()
