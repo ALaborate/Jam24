@@ -107,7 +107,12 @@ public class NetworkCharacterController : NetworkBehaviour
                 health.OnRoflOver.AddListener(OnRoflOver);
             }
 
-            DisableControlAndCamera();
+            if (isServer)
+                rb.constraints = RB_ROT_CONSTR;
+
+            if (isLocalPlayer)
+                cam = Camera.main;
+
             pushingTrail.gameObject.SetActive(false);
 
             if (isClient) //pick up all objects picked earlier than connectioxn
@@ -119,21 +124,6 @@ public class NetworkCharacterController : NetworkBehaviour
             }
 
             EventManager.Instance.AddPlayer(this);
-        }
-    }
-    private void DisableControlAndCamera()
-    {
-        if (!isServer)
-        {
-            Destroy(rb);
-        }
-        else
-        {
-            rb.constraints = RB_ROT_CONSTR;
-        }
-        if (isLocalPlayer)
-        {
-            cam = Camera.main;
         }
     }
 
@@ -306,8 +296,8 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (rb != null)
-        {//server
+        if (isServer)
+        {
             const int GROUND_RAY_COUNT = 4;
             if (groundHits == null) groundHits = new RaycastHit[GROUND_RAY_COUNT];
 
@@ -345,7 +335,6 @@ public class NetworkCharacterController : NetworkBehaviour
             {
                 // Add an upward force to the rigidbody to make the character jump
                 rb.AddForce(transform.up * (health.IsRofled ? roflJumpForce : jumpForce), ForceMode.VelocityChange);
-                //rb.AddTorque(Vector3.one * jumpForce, ForceMode.VelocityChange);
             }
 
             AddFloatingForce();
@@ -371,25 +360,16 @@ public class NetworkCharacterController : NetworkBehaviour
     }
 
     public bool rotate = true;
-
+    ///<summary>Saving rb linear velocity between rofled and unrofled state (while discarding angular)</summary>
     Vector3 tempRbVelocity = Vector3.zero;
+
+    [Server]
     private void RotateToCameraDirection()
     {
-        const float POSITION_SNAP_TRESHOLD = 0.41f; //TODO write a good, precise gradually stopping simulation
         if (!health.IsRofled)
         {
             Vector3 torqueVector = Vector3.zero;
 
-            ///this vertical stabilization does not work well in conjunction with Y rotation. That sucks. The crunch is to constraint rotation on x and y, <see cref="OnRoflOver"/>
-            //var predictedUp = Quaternion.AngleAxis(
-            //     rb.angularVelocity.magnitude * Mathf.Rad2Deg * bodyStability / bodyStabilizationSpeed,
-            //     rb.angularVelocity) * transform.up;
-            //torqueVector = Vector3.Cross(predictedUp, Vector3.up);
-            //if (torqueVector.sqrMagnitude > 0.001f)
-            //{
-            //    rb.AddTorque(torqueVector * bodyStabilizationSpeed * bodyStabilizationSpeed, ForceMode.Acceleration);
-            //}
-            //else
             if (rotate)
             {
                 if (rb.isKinematic)
@@ -401,18 +381,6 @@ public class NetworkCharacterController : NetworkBehaviour
                 var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y) * Mathf.Deg2Rad;
                 torqueVector.y = yDelta * bodyYRotationTorque;
                 rb.AddTorque(torqueVector);
-
-                //var accumulatedTorque = rb.GetAccumulatedTorque(); ///somehow immediately after <see cref="OnRoflOver"/> player stands up unity phisics accumulate weird torque. Despite we rotate obect only on Y axis, unity torque becomes non-zero along all axis after AddTorque call. To crunchfix it we neutralize accumulated torque on everything that is not Y.
-                //accumulatedTorque.y = 0f;
-                //if (float.IsNaN(accumulatedTorque.sqrMagnitude))
-                //{
-                //    //accumulatedTorque = Vector3.zero;
-                //    Debug.LogError($"Accumulated torque {rb.GetAccumulatedTorque()}");
-                //}
-
-                //rb.AddTorque(-accumulatedTorque, ForceMode.Force);
-
-                //rb.angularVelocity = new Vector3(0, rb.angularVelocity.y, 0);
             }
         }
     }
@@ -742,7 +710,7 @@ public class NetworkCharacterController : NetworkBehaviour
         rb.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
         rb.angularDamping = bodyRotationDrag;
 
-        //Crunches I've tried but they did not fix the problem
+        //Crunches I've tried but they did not fix the problem of rigidbody having inertial residue in angular velocity
         //var accumulatedTorque = rb.GetAccumulatedTorque(); 
         //rb.AddTorque(-accumulatedTorque, ForceMode.Force);
 
@@ -763,7 +731,6 @@ public class NetworkCharacterController : NetworkBehaviour
     private void LateUpdate()
     {
         RotateCamera();
-
     }
 
 
@@ -809,7 +776,6 @@ public class NetworkCharacterController : NetworkBehaviour
             newEuler.x += 360;
         container.rotation = Quaternion.Euler(newEuler);
 
-        //container.localRotation = ClampRotationAroundXAxis(container.localRotation);
         targetLookAngleY = container.rotation.eulerAngles.y;
     }
 }
