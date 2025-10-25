@@ -29,11 +29,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2254898970624
-    m_Localized: Find LAN server
+    m_Localized: Find address in LAN
     m_Metadata:
       m_Items: []
   - m_Id: 2380212191232
-    m_Localized: Connect to what's written above
+    m_Localized: Manual connection to address below
     m_Metadata:
       m_Items: []
   - m_Id: 2537590865920
