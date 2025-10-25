@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using UnityEngine.Profiling;
+using System.Reflection;
 
 public class NetworkCharacterController : NetworkBehaviour
 {
@@ -10,43 +11,45 @@ public class NetworkCharacterController : NetworkBehaviour
 
     [System.NonSerialized]
     public string nickname = "JamPlayer98";
-    public Transform hand;
-    public ParticleSystem ticklingParticles;
-    public TrailRenderer pushingTrail;
+    [SerializeField] Transform hand;
+    [SerializeField] ParticleSystem ticklingParticles;
+    [SerializeField] TrailRenderer pushingTrail;
     [Space]
-    public float moveAcceleration = 556;
-    public float maxRunningSpeed = 10;
-    public float jumpForce = 10f;
-    public float roflJumpForce = 1;
-    public float roflRandomTorqueMultiplier = 3.14f;
+    [SerializeField] float moveAcceleration = 556;
+    [SerializeField] float maxRunningSpeed = 10;
+    [SerializeField] float jumpForce = 10f;
+    [SerializeField] float roflJumpForce = 1;
+    [SerializeField] float roflRandomTorqueMultiplier = 3.14f;
     [Space]
-    public float camRotationSpeed = 1f;
-    public float bodyYRotationTorque = 1f;
-    public float touchRotationSensitivity = 5f;
-    public float minCamAngle = -30;
-    public float maxCamAngle = 60;
-    public Vector3 camOffset = new Vector3(1, 0, 0);
+    [SerializeField] float camRotationSpeed = 1f;
+    [SerializeField] float bodyYRotationTorque = 1f;
+    [SerializeField] float touchRotationSensitivity = 5f;
+    [SerializeField] float bodyRotationDrag = 10;
+    [SerializeField] float bodyRoflDrag = 0;
+    [SerializeField] float minCamAngle = -30;
+    [SerializeField] float maxCamAngle = 60;
+    [SerializeField] Vector3 camOffset = new Vector3(1, 0, 0);
     [Space]
-    public float maxFloatingForce = 500;
-    public AnimationCurve floatingForceCurve = AnimationCurve.Linear(0.5f, 1, 1.5f, 0);
-    public float floatingForceReductionDenominator = 10;
-    public float groundCastDistance = 1.1f;
-    public LayerMask groundLayer = Physics.DefaultRaycastLayers;
+    [SerializeField] float maxFloatingForce = 500;
+    [SerializeField] AnimationCurve floatingForceCurve = AnimationCurve.Linear(0.5f, 1, 1.5f, 0);
+    [SerializeField] float floatingForceReductionDenominator = 10;
+    [SerializeField] float groundCastDistance = 1.1f;
+    [SerializeField] LayerMask groundLayer = Physics.DefaultRaycastLayers;
     [Header("Interactions")]
-    public float maxVelocityDamage = .8f;
+    [SerializeField] float maxVelocityDamage = .8f;
     public float pushMaxForce = 600f;
-    public float pushRadius = 2f;
-    public float pushCooldown = 1f;
+    [SerializeField] float pushRadius = 2f;
+    [SerializeField] float pushCooldown = 1f;
     [Space]
-    public float ticklingGainCoef = 2f;
-    public float ticklingCooling = 1.5f;
-    public float ticklingRadius = 3.3f;
-    public float ticklingDamage = 0.7f;
+    [SerializeField] float ticklingGainCoef = 2f;
+    [SerializeField] float ticklingCooling = 1.5f;
+    [SerializeField] float ticklingRadius = 3.3f;
+    [SerializeField] float ticklingDamage = 0.7f;
     [Header("Visual")]
-    public float tpMinEmision = 3;
-    public float tpMaxEmision = 11;
-    public float tpVisualThreshold = 0.4f;
-    public float pushVisualizationMvtDuration = .5f;
+    [SerializeField] float tpMinEmision = 3;
+    [SerializeField] float tpMaxEmision = 11;
+    [SerializeField] float tpVisualThreshold = 0.4f;
+    [SerializeField] float pushVisualizationMvtDuration = .5f;
 
 
 
@@ -83,6 +86,7 @@ public class NetworkCharacterController : NetworkBehaviour
         inventoryIds.OnChange += OnInventoryChange;
         Bootstrap.Instance.accelShake.OnShake.AddListener(delta => accelJump = true);
         nickname = Bootstrap.Instance.playerNameField.text;
+        
     }
 
     private void Initialize()
@@ -95,6 +99,7 @@ public class NetworkCharacterController : NetworkBehaviour
             height = col.center.y + col.height / 2;
             healthVisualizer = GetComponent<HealthVisualizer>();
             isTouchPresent = false;
+            rb.angularDamping = bodyRotationDrag;
 
             if (isServer)
             {
@@ -366,6 +371,8 @@ public class NetworkCharacterController : NetworkBehaviour
     }
 
     public bool rotate = true;
+
+    Vector3 tempRbVelocity = Vector3.zero;
     private void RotateToCameraDirection()
     {
         const float POSITION_SNAP_TRESHOLD = 0.41f; //TODO write a good, precise gradually stopping simulation
@@ -386,28 +393,14 @@ public class NetworkCharacterController : NetworkBehaviour
             if (rotate)
             {
                 if (rb.isKinematic)
+                {
                     rb.isKinematic = false;
+                    rb.AddForce(tempRbVelocity, ForceMode.VelocityChange);
+                }
 
-                var yVelocity = rb.angularVelocity.y;
                 var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y) * Mathf.Deg2Rad;
-                var breakingDelta = yVelocity * yVelocity / (2 * bodyYRotationTorque);
-                var accelerationInfluencePerFrame = 0.5f * bodyYRotationTorque * Time.fixedDeltaTime * Time.fixedDeltaTime;
-                if (Mathf.Abs(yDelta) * Mathf.Rad2Deg < POSITION_SNAP_TRESHOLD && Mathf.Abs(yVelocity) < 13 * accelerationInfluencePerFrame)
-                {
-                    rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0, rb.angularVelocity.z);
-                    rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles.x, targetRotation.y, rb.rotation.eulerAngles.z);
-                }
-                else if (Mathf.Abs(yDelta) > breakingDelta)
-                {
-                    var maxTorque = Mathf.Abs(yDelta) / (Time.fixedDeltaTime * Time.fixedDeltaTime);
-                    torqueVector.y = Mathf.Min(bodyYRotationTorque, maxTorque) * Mathf.Sign(yDelta);
-                    //0.5f * maxTorue * Time.fixedDeltaTime * Time.fixedDeltaTime = Mathf.Abs(yDelta) / 2
-                }
-                else
-                {
-                    torqueVector.y = -Mathf.Min(Mathf.Abs(yVelocity) / Time.fixedDeltaTime, bodyYRotationTorque) * Mathf.Sign(yVelocity);
-                }
-                rb.AddTorque(torqueVector, ForceMode.VelocityChange);
+                torqueVector.y = yDelta * bodyYRotationTorque;
+                rb.AddTorque(torqueVector, ForceMode.Acceleration);
 
                 //var accumulatedTorque = rb.GetAccumulatedTorque(); ///somehow immediately after <see cref="OnRoflOver"/> player stands up unity phisics accumulate weird torque. Despite we rotate obect only on Y axis, unity torque becomes non-zero along all axis after AddTorque call. To crunchfix it we neutralize accumulated torque on everything that is not Y.
                 //accumulatedTorque.y = 0f;
@@ -733,6 +726,7 @@ public class NetworkCharacterController : NetworkBehaviour
         inventoryIds.Clear();
 
         rb.constraints = RigidbodyConstraints.None;
+        rb.angularDamping = bodyRoflDrag;
     }
 
     private void OnRoflOver()
@@ -740,11 +734,13 @@ public class NetworkCharacterController : NetworkBehaviour
         if (!isServer) return;
 
 
+        tempRbVelocity = rb.linearVelocity;
         rb.isKinematic = true;
 
         rb.angularVelocity = Vector3.zero;
         rb.constraints = RB_ROT_CONSTR;
         rb.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+        rb.angularDamping = bodyRotationDrag;
 
         //Crunches I've tried but they did not fix the problem
         //var accumulatedTorque = rb.GetAccumulatedTorque(); 
