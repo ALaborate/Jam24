@@ -400,7 +400,7 @@ public class NetworkCharacterController : NetworkBehaviour
 
                 var yDelta = Mathf.DeltaAngle(rb.rotation.eulerAngles.y, targetRotation.y) * Mathf.Deg2Rad;
                 torqueVector.y = yDelta * bodyYRotationTorque;
-                rb.AddTorque(torqueVector, ForceMode.Acceleration);
+                rb.AddTorque(torqueVector);
 
                 //var accumulatedTorque = rb.GetAccumulatedTorque(); ///somehow immediately after <see cref="OnRoflOver"/> player stands up unity phisics accumulate weird torque. Despite we rotate obect only on Y axis, unity torque becomes non-zero along all axis after AddTorque call. To crunchfix it we neutralize accumulated torque on everything that is not Y.
                 //accumulatedTorque.y = 0f;
