@@ -11,8 +11,18 @@ public class ForceLocalizationUpdate : MonoBehaviour
         gameObjectLocalizer = GetComponent<GameObjectLocalizer>();
     }
 
+
+    Coroutine delayedUpdateRoutine = null;
     private void OnEnable()
     {
+        if(delayedUpdateRoutine != null)
+            StopCoroutine(delayedUpdateRoutine);
+        delayedUpdateRoutine = StartCoroutine(DelayedUpdateRoutine());
+    }
+
+    System.Collections.IEnumerator DelayedUpdateRoutine()
+    {
+        yield return UnityEngine.Localization.Settings.LocalizationSettings.InitializationOperation;
         if (gameObjectLocalizer)
             gameObjectLocalizer.ApplyLocaleVariant(UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocale);
     }

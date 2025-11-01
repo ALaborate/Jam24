@@ -35,8 +35,10 @@ public class DiscoveryUiController : MonoBehaviour
 
         view.pingLanButton.onClick.AddListener(PingLanClicked);
 
+#if !UNITY_WEBGL
         manager.OnClientStarted += () => { if (!NetworkServer.active) networkDiscovery.StopDiscovery(); };
-        manager.OnServerStarted += () => networkDiscovery.AdvertiseServer();
+        manager.OnServerStarted += () => networkDiscovery.AdvertiseServer(); 
+#endif
 
         manager.OnServerStopped += OnStopped;
         manager.OnClientStopped += OnStopped;
