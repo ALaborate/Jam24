@@ -25,7 +25,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2115723575296
-    m_Localized: Host
+    m_Localized: Create host
     m_Metadata:
       m_Items: []
   - m_Id: 2254898970624
@@ -46,6 +46,22 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 19637374009344
     m_Localized: Stop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9666176522371072
+    m_Localized: Create a game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9666255685664768
+    m_Localized: Create server (no player)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9666359117201408
+    m_Localized: Connect to ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9666672918249472
+    m_Localized: Select mode
     m_Metadata:
       m_Items: []
   references:

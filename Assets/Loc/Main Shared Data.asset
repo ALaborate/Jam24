@@ -44,6 +44,22 @@ MonoBehaviour:
     m_Key: MirrorTest/Canvas/StopButton/Text (Legacy)
     m_Metadata:
       m_Items: []
+  - m_Id: 9666176522371072
+    m_Key: MirrorTest/Canvas/DiscoveryMenuUI/CreateScreen/Text (Legacy)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9666255685664768
+    m_Key: MirrorTest/Canvas/DiscoveryMenuUI/Headless/Text (Legacy)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9666359117201408
+    m_Key: MirrorTest/Canvas/DiscoveryMenuUI/ConnectScreen/Text (Legacy)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9666672918249472
+    m_Key: MirrorTest/Canvas/DiscoveryMenuUI/SelectModeScreen/Text (Legacy)
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

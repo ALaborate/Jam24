@@ -31,6 +31,7 @@ public class DiscoveryUiController : MonoBehaviour
         view.RemoveClicked += i => RemoveAddressAt(i);
         view.stopButton.onClick.AddListener(StopWhateverClicked);
         view.hostButton.onClick.AddListener(HostClicked);
+        view.headlessButton.onClick.AddListener(HeadlessClicked);
 
         view.pingLanButton.onClick.AddListener(PingLanClicked);
 
@@ -70,6 +71,11 @@ public class DiscoveryUiController : MonoBehaviour
     private void HostClicked()
     {
         manager.StartHost();
+    }
+
+    private void HeadlessClicked()
+    {
+        manager.StartServer();
     }
 
     private void StopWhateverClicked()
