@@ -14063,6 +14063,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   target: {fileID: 177251392}
+  frameDelay: 1
 --- !u!1 &1177721188
 GameObject:
   m_ObjectHideFlags: 0
