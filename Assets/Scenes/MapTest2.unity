@@ -964,6 +964,60 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &851608559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 851608560}
+  - component: {fileID: 851608561}
+  m_Layer: 0
+  m_Name: ScoreCompleteGameMode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &851608560
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851608559}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &851608561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851608559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce994d27886049b4eae17845664e4a68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMethod: 0
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  numberOfFeathers: 1
+  featherPrefab: {fileID: 1521906417817054294, guid: 4c9f75cdcc79fc34581c6a5f3110a98f, type: 3}
+  bonusSpawnPrefab: {fileID: 561372296323130859, guid: 06fa794f5707b344aaee38181fbae576, type: 3}
+  bsMinHeight: 1
+  bsMaxHeight: 3
+  endGameScore: 10
 --- !u!1 &1051808906
 GameObject:
   m_ObjectHideFlags: 0
@@ -89200,6 +89254,7 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 851608560}
   - {fileID: 2136384257}
   - {fileID: 503181854}
   - {fileID: 41059039}

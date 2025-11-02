@@ -1,7 +1,6 @@
 using Mirror;
 using Mirror.Discovery;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 public class DiscoveryUiController : MonoBehaviour

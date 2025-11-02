@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using UnityEngine.Profiling;
-using System.Reflection;
 
 public class NetworkCharacterController : NetworkBehaviour
 {

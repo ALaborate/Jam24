@@ -576,7 +576,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -587,7 +587,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -598,7 +598,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -609,7 +609,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -183
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -620,7 +620,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 400
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -631,7 +631,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 36
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -6168,7 +6168,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -6179,7 +6179,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -6190,7 +6190,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 280.1111
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -6201,7 +6201,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -10
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -6212,7 +6212,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 199.77777
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -6497,7 +6497,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 356936309696414534, guid: 458bbc7a480f02e499eda1207cd33cf7, type: 3}
       propertyPath: m_Text
-      value: Select mode
+      value: back
       objectReference: {fileID: 0}
     - target: {fileID: 6066558717379873436, guid: 458bbc7a480f02e499eda1207cd33cf7, type: 3}
       propertyPath: m_AnchorMax.y
@@ -6708,7 +6708,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -6719,7 +6719,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -6730,7 +6730,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -6741,7 +6741,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -18
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -6752,7 +6752,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 102.666664
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -6763,7 +6763,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 15.333333
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7251,7 +7251,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7262,7 +7262,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7273,7 +7273,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7284,7 +7284,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -18
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7295,7 +7295,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 166.66667
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7306,7 +7306,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 15.333333
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7389,7 +7389,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7400,7 +7400,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7411,7 +7411,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7422,7 +7422,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -18
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7433,7 +7433,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 150
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7444,7 +7444,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 15.333333
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7919,7 +7919,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7930,7 +7930,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7941,7 +7941,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7952,7 +7952,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -219.2
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7963,7 +7963,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 400
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -7974,7 +7974,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 36
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -8312,7 +8312,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -8323,7 +8323,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -8334,7 +8334,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -8345,7 +8345,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -18
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -8356,7 +8356,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 87.333336
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -8367,7 +8367,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 15.333333
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13371,7 +13371,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13382,7 +13382,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13393,7 +13393,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13404,7 +13404,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -38.2
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13415,7 +13415,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 400
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13426,7 +13426,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 36
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13676,7 +13676,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13687,7 +13687,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13698,7 +13698,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 32
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13709,7 +13709,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -32
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13720,7 +13720,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 40
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13731,7 +13731,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 15.333333
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -13976,11 +13976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: MapTest2
-  featherPrefab: {fileID: 1521906417817054294, guid: 4c9f75cdcc79fc34581c6a5f3110a98f, type: 3}
-  numberOfFeathers: 2
-  bonusSpawnPrefab: {fileID: 561372296323130859, guid: 06fa794f5707b344aaee38181fbae576, type: 3}
-  bsMinHeight: 1
-  bsMaxHeight: 3
+  gameMode: 0
 --- !u!4 &1147598161
 Transform:
   m_ObjectHideFlags: 0
@@ -14770,7 +14766,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -14781,7 +14777,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -14792,7 +14788,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 16
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -14803,7 +14799,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -10
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -14814,7 +14810,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 32
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15182,7 +15178,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15193,7 +15189,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15204,7 +15200,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15215,7 +15211,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -146.8
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15226,7 +15222,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 400
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15237,7 +15233,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 36
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15298,7 +15294,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15309,7 +15305,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15320,7 +15316,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15331,7 +15327,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -287.6
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15342,7 +15338,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 400
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15353,7 +15349,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 36
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15442,7 +15438,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15453,7 +15449,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15464,7 +15460,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15475,7 +15471,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -110.6
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15486,7 +15482,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 400
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15497,7 +15493,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 36
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -15991,7 +15987,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16002,7 +15998,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16013,7 +16009,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16024,7 +16020,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -18
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16035,7 +16031,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 113.333336
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16046,7 +16042,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 15.333333
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16236,7 +16232,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16247,7 +16243,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16258,7 +16254,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16269,7 +16265,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -315.80002
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16280,7 +16276,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 400
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16291,7 +16287,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 20
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16336,7 +16332,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16347,7 +16343,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16358,7 +16354,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16369,7 +16365,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -74.4
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16380,7 +16376,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 400
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16391,7 +16387,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 36
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16469,7 +16465,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16480,7 +16476,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16491,7 +16487,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16502,7 +16498,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -18
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16513,7 +16509,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 264
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16524,7 +16520,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 15.333333
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16737,7 +16733,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16748,7 +16744,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16759,7 +16755,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16770,7 +16766,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -253.4
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16781,7 +16777,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 400
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16792,7 +16788,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 32
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16870,7 +16866,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16881,7 +16877,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16892,7 +16888,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16903,7 +16899,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -18
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16914,7 +16910,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 228
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -16925,7 +16921,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 15.333333
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -17692,7 +17688,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -17703,7 +17699,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -17714,7 +17710,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 106.111115
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -17725,7 +17721,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -10
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -17736,7 +17732,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 148.22223
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -17823,7 +17819,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -17834,7 +17830,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -17845,7 +17841,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 200
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -17856,7 +17852,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -10
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -17867,7 +17863,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 400
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -17878,7 +17874,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 20
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -18066,7 +18062,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -18077,7 +18073,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -18088,7 +18084,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 390
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -18099,7 +18095,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -10
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -18110,7 +18106,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 20
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -18225,7 +18221,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -18236,7 +18232,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 1
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -18247,7 +18243,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 74.111115
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -18258,7 +18254,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: -10
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -18269,7 +18265,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 148.22223
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0
@@ -18280,7 +18276,7 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: 15.333333
+          value: 0
         - localeIdentifier:
             m_Code: uk-UA
           value: 0

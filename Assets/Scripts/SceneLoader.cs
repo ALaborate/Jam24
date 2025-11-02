@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using Mirror;
@@ -6,13 +7,7 @@ using Mirror;
 public class SceneLoader : MonoBehaviour
 {
     public string sceneName;
-    [Space]
-    public GameObject featherPrefab;
-    public int numberOfFeathers = 1;
-    [Space]
-    public GameObject bonusSpawnPrefab;
-    public float bsMinHeight = 1f;
-    public float bsMaxHeight = 3f;
+    public GameModeType gameMode = GameModeType.ScoreCompete;
 
     private void Awake()
     {
@@ -45,6 +40,7 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
+    [Server]
     private void FinishInitialization(Scene scene, LoadSceneMode mode)
     {
         if (scene.name != sceneName)
@@ -52,37 +48,16 @@ public class SceneLoader : MonoBehaviour
             return;
         }
 
-        var spawns = GameObject.FindGameObjectsWithTag("FeatherSpawn");
+        var modes = from rgo in scene.GetRootGameObjects() let gmo = rgo.GetComponent<GameModeController>() where gmo != null select gmo;
 
-        for (int i = 0; i < numberOfFeathers; i++)
-        {
-            Vector3 spawnPos = Vector3.up * 30;
-            if (spawns.Length > 0)
-            {
-                var spawnInx = Random.Range(0, spawns.Length);
-                spawnPos = spawns[spawnInx].transform.position;
-            }
+        var currentMode = modes.FirstOrDefault(m => m.Type == gameMode);
+        if (currentMode == null)
+            currentMode = modes.FirstOrDefault();
 
-            var feather = Instantiate(featherPrefab, spawnPos + Random.onUnitSphere, Quaternion.identity);
-            SceneManager.MoveGameObjectToScene(feather, scene);
-            NetworkServer.Spawn(feather);
-        }
-
-        var bonusSpawns = GameObject.FindGameObjectsWithTag("BonusSpawn");
-        foreach (var spawn in bonusSpawns)
-        {
-            var spawnPos = spawn.transform.position;
-            if (Physics.Raycast(spawnPos, Vector3.down, out RaycastHit hit))
-            {
-                if (hit.point != Vector3.zero)
-                {
-                    spawnPos = hit.point + Vector3.up * Random.Range(bsMinHeight, bsMaxHeight);
-                }
-            }
-            var bonusSpawn = Instantiate(bonusSpawnPrefab, spawnPos, Quaternion.identity);
-            SceneManager.MoveGameObjectToScene(bonusSpawn, scene);
-            NetworkServer.Spawn(bonusSpawn);
-        }
+        if (currentMode)
+            currentMode.Activate();
+        else
+            NetworkManager.singleton.StopHost();
     }
 
     private System.Collections.IEnumerator Deinit()
