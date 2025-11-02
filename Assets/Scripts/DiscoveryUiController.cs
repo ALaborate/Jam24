@@ -16,6 +16,7 @@ public class DiscoveryUiController : MonoBehaviour
     public void ServerFound(ServerResponse response)
     { 
         view.SetAddress($"{response.EndPoint.Address}:{(manager.transport as PortTransport).Port}");
+        view.SetConnectInteractable();
     }
 
     List<string> knownAddresses = new();
@@ -59,16 +60,23 @@ public class DiscoveryUiController : MonoBehaviour
             AddAddress(addr);
     }
 
+    const float DISCOVERY_TIME = 6f;
     private void PingLanClicked()
     {
         networkDiscovery.StartDiscovery();
-        networkDiscovery.Invoke(nameof(networkDiscovery.BroadcastDiscoveryRequest), 1);
+        const int REPEAT_PERIOD = 1;
+        view.SetAddress(DEFAULT_ADDRESS);
+        networkDiscovery.InvokeRepeating(nameof(networkDiscovery.BroadcastDiscoveryRequest), DISCOVERY_TIME, REPEAT_PERIOD);
+        view.SetConnectNotInteractable();
+        view.Invoke(nameof(view.SetConnectInteractable), DISCOVERY_TIME+REPEAT_PERIOD);
     }
 
     private void OnStopped()
     {
         networkDiscovery.StopDiscovery();
+        view.SetConnectInteractable();
     }
+
 
     private void HostClicked()
     {

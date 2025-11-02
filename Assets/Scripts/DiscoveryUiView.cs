@@ -116,6 +116,18 @@ public class DiscoveryUiView : MonoBehaviour
         newAddresses = knownAddresses;
     }
 
+
+
+    public void SetConnectInteractable() => SetConnectInteractability(true);
+    public void SetConnectNotInteractable() => SetConnectInteractability(false);
+    ///<remarks>Primary use is to show user when UI discovery is happening and when it stops</remarks>
+    private void SetConnectInteractability(bool interactablity)
+    {
+        connectToButton.interactable = interactablity;
+        unknownAddress.interactable = interactablity;
+        pingLanButton.interactable = interactablity;
+    }
+
     Screen _currentScreen;
     Screen[] _allScreens;
     private void ChangeScreen(Screen newScreen)
