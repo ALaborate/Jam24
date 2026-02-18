@@ -1,18 +1,20 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using Mirror;
 
 [RequireComponent(typeof(NetworkIdentity))]
 public class EventManager : NetworkBehaviour
 {
     [SerializeField] EventHandler handler;
-
+    [SerializeField] GameOverView gameOver;
     [SerializeField] float scoreForRofling = 1f;
 
     private void Awake()
     {
         instance = this;
+        gameOver.Prepare();
     }
 
     public override void OnStartServer()
@@ -20,10 +22,24 @@ public class EventManager : NetworkBehaviour
         base.OnStartServer();
         scores.Clear();
     }
+    public override void OnStopServer()
+    {
+        base.OnStopServer();
+        currentMode = null;
+    }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        gameOver.Prepare();
+    }
 
     private readonly SyncDictionary<uint, float> scores = new();
 
+    private GameModeController currentMode = null;
     private Dictionary<uint, NetworkCharacterController> players = new();
+
+
     public void AddPlayer(NetworkCharacterController player)
     {
         players.Add(player.netId, player);
@@ -68,6 +84,21 @@ public class EventManager : NetworkBehaviour
         handler.TriggerEvent(kind);
     }
 
+    [Server]
+    public void InitializeGameMode(UnityEngine.SceneManagement.Scene gameScene, GameModeType type)
+    {
+        var modes = from rgo in gameScene.GetRootGameObjects() let gmo = rgo.GetComponent<GameModeController>() where gmo != null select gmo;
+
+        currentMode = modes.FirstOrDefault(m => m.Type == type);
+        if (currentMode == null)
+            currentMode = modes.FirstOrDefault();
+
+        if (currentMode)
+            currentMode.Activate();
+        else
+            NetworkManager.singleton.StopHost();
+    }
+
     public EventHandler.Data GetEventData(EventHandler.EvtKind kind)
     {
         EventHandler.Data ret = null;
@@ -81,6 +112,18 @@ public class EventManager : NetworkBehaviour
             }
         }
         return ret;
+    }
+
+    private void Update()
+    {
+        if (currentMode)
+        {
+            if(currentMode.FinishPredicate())
+            {
+                currentMode = null;
+                Invoke(nameof(Gameover), 15f + Random.value * 15f);
+            }
+        }
     }
 
 
@@ -103,5 +146,10 @@ public class EventManager : NetworkBehaviour
             }
         }
         return ret;
+    }
+
+    public void Gameover()
+    {
+        gameOver.Trigger();
     }
 }

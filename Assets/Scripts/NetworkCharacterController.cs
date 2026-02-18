@@ -9,6 +9,7 @@ public class NetworkCharacterController : NetworkBehaviour
     private const RigidbodyConstraints RB_ROT_CONSTR = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
     [System.NonSerialized]
+    [SyncVar]
     public string nickname = "JamPlayer98";
     [SerializeField] Transform hand;
     [SerializeField] ParticleSystem ticklingParticles;
@@ -72,7 +73,13 @@ public class NetworkCharacterController : NetworkBehaviour
 
     private void Awake()
     {
-
+        if(isLocalPlayer)
+            nickname = Bootstrap.Instance.playerNameField.text;
+    }
+    [Command]
+    private void CmdSyncName(string name)
+    {
+        nickname = name;
     }
     // Start is called before the first frame update
     void Start()
@@ -84,8 +91,6 @@ public class NetworkCharacterController : NetworkBehaviour
         }
         inventoryIds.OnChange += OnInventoryChange;
         Bootstrap.Instance.accelShake.OnShake.AddListener(delta => accelJump = true);
-        nickname = Bootstrap.Instance.playerNameField.text;
-        
     }
 
     private void Initialize()

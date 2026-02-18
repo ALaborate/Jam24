@@ -27,6 +27,7 @@ public class SceneLoader : MonoBehaviour
 
 
     private bool isInitialized = false;
+
     private System.Collections.IEnumerator InitializeScene(bool isServer)
     {
         if(isServer)
@@ -48,17 +49,10 @@ public class SceneLoader : MonoBehaviour
             return;
         }
 
-        var modes = from rgo in scene.GetRootGameObjects() let gmo = rgo.GetComponent<GameModeController>() where gmo != null select gmo;
-
-        var currentMode = modes.FirstOrDefault(m => m.Type == gameMode);
-        if (currentMode == null)
-            currentMode = modes.FirstOrDefault();
-
-        if (currentMode)
-            currentMode.Activate();
-        else
-            NetworkManager.singleton.StopHost();
+        EventManager.Instance?.InitializeGameMode(scene, gameMode);
     }
+
+
 
     private System.Collections.IEnumerator Deinit()
     {

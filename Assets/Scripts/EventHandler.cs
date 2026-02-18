@@ -11,6 +11,8 @@ public class EventHandler : MonoBehaviour
     [SerializeField] float fullImageTime = .5f;
     [SerializeField] float fadeOutTime = 1f;
     [SerializeField] List<Data> events = new List<Data>();
+    [Header("Gameover")]
+
 
 
 
@@ -20,11 +22,6 @@ public class EventHandler : MonoBehaviour
     void Start()
     {
         eventPicture.gameObject.SetActive(false);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
 
     }
 
